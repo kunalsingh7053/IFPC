@@ -1,6 +1,51 @@
 const Event = require("../models/events.model");
 const { uploadImage, uploadMultiple } = require("../service/imagekit.service");
 
+// Public: get all events (no login required)
+async function getEvents(req, res) {
+  try {
+    // Exclude the full images array from the list view
+    const events = await Event.find({}, "title description eventDate location thumbnail createdBy")
+      .sort({ eventDate: 1 });
+
+    return res.json({
+      success: true,
+      data: events,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+// Public: get single event by id (full details + photos)
+async function getEventById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const event = await Event.findById(id);
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found",
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: event,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 async function createEvent(req, res) {
   try {
     const { title, description, eventDate, location } = req.body;
@@ -116,4 +161,4 @@ async function deleteEvent(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-module.exports = { createEvent, updateEvent , deleteEvent };
+module.exports = { getEvents, getEventById, createEvent, updateEvent , deleteEvent };
