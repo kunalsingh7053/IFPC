@@ -13,19 +13,28 @@ async function loginAdmin(req, res) {
     const admin = await Admin.findOne({ email });
 
     if (!admin) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
     }
 
-    // check status allow/block
+    // check status
     if (admin.status !== "allow") {
-      return res.status(403).json({ message: "Admin not allowed by system" });
+      return res.status(403).json({
+        message: "Admin not allowed by system",
+      });
     }
 
     // compare password
-    const isMatch = await bcrypt.compare(password, admin.password);
+    const isMatch = await bcrypt.compare(
+      password,
+      admin.password
+    );
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
     }
 
     // update last login
@@ -34,32 +43,40 @@ async function loginAdmin(req, res) {
 
     // create token
     const token = jwt.sign(
-      { id: admin._id, role: admin.role },
+      {
+        id: admin._id,
+        role: admin.role,
+        type: "admin",
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // set cookie
-    res.cookie("token", token, {
+    // ✅ cookie name changed
+    res.cookie("adminToken", token, {
       httpOnly: true,
-      secure: false, // true in production
+      secure: false,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    // ✅ response also changed
     res.json({
       message: "Login successful",
+      adminToken: token,
       admin: {
         id: admin._id,
         username: admin.username,
         email: admin.email,
         role: admin.role,
-        fullName: admin.fullName
-      }
+        fullName: admin.fullName,
+      },
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message,
+    });
   }
 }
 async function registerAdmin(req, res) {
@@ -182,6 +199,25 @@ async function updateAdminProfile(req, res) {
   }
 }
 
+async function logoutAdmin(req, res) {
+
+try {
+  res.clearCookie("adminToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  });
+  res.json({ message: "Logout successful" });
+} catch (error) {
+  res.status(500).json({ message: error.message });
+}
+
+
+
+}
+
+
+
 
 
 
@@ -189,5 +225,6 @@ module.exports = {
   loginAdmin,
   registerAdmin,
   getAdminProfile,
-  updateAdminProfile
+  updateAdminProfile,
+  logoutAdmin
 };

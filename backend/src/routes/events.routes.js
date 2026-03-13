@@ -1,9 +1,12 @@
 const express = require('express');
-const { adminAuthMiddleware } = require('../middleware/auth.middleware');
+const { adminAuthMiddleware } = require('../middleware/admin.middleware');
 const eventController = require('../controllers/event.controller');
 const upload = require('../middleware/upload.middleware');
 const router = express.Router();
 
+// Public routes: anyone can see events
+router.get('/', eventController.getEvents); // list
+router.get('/:id', eventController.getEventById); // detail
 
 router.post(
   '/',
