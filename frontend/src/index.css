@@ -1,1 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap");
 @import "tailwindcss";
+
+:root {
+	color-scheme: dark;
+	--photo-bg: #06090f;
+	--photo-surface: #0d1421;
+	--photo-surface-2: #111d2d;
+	--photo-text: #e6edf6;
+	--photo-muted: #9caac0;
+	--photo-accent: #f59e0b;
+	--photo-accent-soft: #22d3ee;
+	--photo-border: rgba(168, 184, 210, 0.2);
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: "Manrope", "Segoe UI", sans-serif;
+	background:
+		radial-gradient(circle at 12% 10%, rgba(245, 158, 11, 0.2), transparent 26%),
+		radial-gradient(circle at 88% 18%, rgba(34, 211, 238, 0.16), transparent 25%),
+		radial-gradient(circle at 50% 120%, rgba(56, 189, 248, 0.11), transparent 30%),
+		linear-gradient(155deg, #05070c 0%, #0a111c 55%, #101a28 100%);
+	color: var(--photo-text);
+	overflow-x: hidden;
+}
+
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+	background-size: 3px 3px;
+	opacity: 0.08;
+	z-index: -1;
+}
+
+#root {
+	min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Sora", "Manrope", sans-serif;
+	letter-spacing: -0.02em;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+	transition: all 180ms ease;
+}
+
+article,
+section,
+aside,
+header,
+footer {
+	transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.glass-panel {
+	background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+	border: 1px solid var(--photo-border);
+	backdrop-filter: blur(14px);
+	box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+.photo-title-glow {
+	text-shadow: 0 2px 18px rgba(245, 158, 11, 0.35);
+}
+
+.animate-float-slow {
+	animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-float-fast {
+	animation: floatFast 4.5s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+	0%,
+	100% {
+		transform: translateY(0px) translateX(0px);
+	}
+	50% {
+		transform: translateY(-10px) translateX(5px);
+	}
+}
+
+@keyframes floatFast {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-6px);
+	}
+}
+
+.bg-grid {
+	background-image:
+		linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+	background-size: 28px 28px;
+	background-color: rgba(7, 11, 20, 0.65);
+}
+
+.bg-hero {
+	background:
+		radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.3), transparent 38%),
+		radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.24), transparent 35%),
+		linear-gradient(145deg, rgba(7, 14, 24, 0.92), rgba(18, 31, 48, 0.88));
+}
+
+.bg-about {
+	background:
+		linear-gradient(120deg, rgba(8, 26, 44, 0.88), rgba(19, 41, 63, 0.82)),
+		radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.25), transparent 45%);
+}
+
+.bg-portfolio-band {
+	background:
+		radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.2), transparent 35%),
+		radial-gradient(circle at 88% 70%, rgba(34, 211, 238, 0.2), transparent 35%),
+		linear-gradient(135deg, rgba(15, 22, 34, 0.78), rgba(10, 18, 30, 0.78));
+}
+
+.auth-shell {
+	position: relative;
+}
+
+.auth-shell::before,
+.auth-shell::after {
+	content: "";
+	position: absolute;
+	width: 220px;
+	height: 220px;
+	border-radius: 999px;
+	filter: blur(18px);
+	pointer-events: none;
+	opacity: 0.38;
+	z-index: 0;
+}
+
+.auth-shell::before {
+	top: 6%;
+	left: 2%;
+	background: radial-gradient(circle, rgba(245, 158, 11, 0.5), transparent 68%);
+	animation: authOrbFloatA 9s ease-in-out infinite;
+}
+
+.auth-shell::after {
+	bottom: 4%;
+	right: 4%;
+	background: radial-gradient(circle, rgba(34, 211, 238, 0.45), transparent 70%);
+	animation: authOrbFloatB 10s ease-in-out infinite;
+}
+
+.auth-card {
+	position: relative;
+	z-index: 1;
+	background:
+		linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)),
+		radial-gradient(circle at 78% -10%, rgba(34, 211, 238, 0.16), transparent 38%),
+		radial-gradient(circle at 10% 115%, rgba(245, 158, 11, 0.14), transparent 34%);
+	backdrop-filter: blur(14px);
+	box-shadow: 0 22px 58px rgba(0, 0, 0, 0.45);
+}
+
+.auth-animate-in {
+	opacity: 0;
+	transform: translateY(20px) scale(0.985);
+	animation: authCardIn 620ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes authCardIn {
+	0% {
+		opacity: 0;
+		transform: translateY(20px) scale(0.985);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes authOrbFloatA {
+	0%,
+	100% {
+		transform: translate(0, 0);
+	}
+	50% {
+		transform: translate(10px, -12px);
+	}
+}
+
+@keyframes authOrbFloatB {
+	0%,
+	100% {
+		transform: translate(0, 0);
+	}
+	50% {
+		transform: translate(-12px, 10px);
+	}
+}
+
+@media (pointer: fine) {
+	body.cursor-custom-enabled,
+	body.cursor-custom-enabled * {
+		cursor: none !important;
+	}
+}
+
+.custom-cursor-ring,
+.custom-cursor-dot {
+	position: fixed;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	z-index: 9999;
+	will-change: transform;
+	transform: translate3d(-100px, -100px, 0);
+}
+
+.custom-cursor-ring {
+	width: 32px;
+	height: 32px;
+	margin-left: -16px;
+	margin-top: -16px;
+	border-radius: 50%;
+	border: 1.5px solid rgba(34, 211, 238, 0.8);
+	box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
+	transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.custom-cursor-dot {
+	width: 8px;
+	height: 8px;
+	margin-left: -4px;
+	margin-top: -4px;
+	border-radius: 50%;
+	background: radial-gradient(circle, #f59e0b 0%, #22d3ee 100%);
+	box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+}
+
+.team-card-enter {
+	opacity: 0;
+	transform: translateY(16px) scale(0.985);
+	animation: teamCardEnter 560ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.team-avatar-zoom {
+	transition: transform 420ms ease;
+}
+
+.group:hover .team-avatar-zoom {
+	transform: scale(1.06);
+}
+
+.team-badge-glow {
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.team-vip-card {
+	background:
+		radial-gradient(circle at 18% 8%, rgba(245, 158, 11, 0.25), transparent 38%),
+		linear-gradient(165deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+	box-shadow: 0 16px 45px rgba(245, 158, 11, 0.2);
+}
+
+@keyframes teamCardEnter {
+	0% {
+		opacity: 0;
+		transform: translateY(16px) scale(0.985);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}

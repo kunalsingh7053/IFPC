@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/register',validators.validateRegister, authController.registerAdmin)
 router.post('/login', validators.validateLogin, authController.loginAdmin) 
 router.get('/profile', adminAuthMiddleware, authController.getAdminProfile)
+router.get('/dashboard-stats', adminAuthMiddleware, authController.getAdminDashboardStats)
 router.patch(
   "/profile",
   adminAuthMiddleware,

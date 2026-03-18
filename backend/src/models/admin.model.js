@@ -22,6 +22,11 @@ const adminSchema = new mongoose.Schema({
         required:true,
 
     },
+    position: {
+        type: String,
+        enum: ["president", "vice-president", "secretary", "treasurer", "head", "admin", "member", "presedent"],
+        default: "admin",
+    },
     password:{
         type:String,
         required:true,

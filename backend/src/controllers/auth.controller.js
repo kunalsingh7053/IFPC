@@ -1,13 +1,25 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin.model');
+const User = require('../models/member.model');
+const Event = require('../models/events.model');
 const bcrypt = require("bcryptjs");
 const { uploadImage} = require("../service/imagekit.service");
+
+const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
+const isMedicapsEmail = (email = "") =>
+  String(email).trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN);
 
 
 
 async function loginAdmin(req, res) {
   try {
     const { email, password } = req.body;
+
+    if (!isMedicapsEmail(email)) {
+      return res.status(400).json({
+        message: "Only @medicaps.ac.in email is allowed",
+      });
+    }
 
     // find admin
     const admin = await Admin.findOne({ email });
@@ -41,11 +53,13 @@ async function loginAdmin(req, res) {
     admin.lastLogin = new Date();
     await admin.save();
 
+    const adminPosition = admin.position || admin.role || "admin";
+
     // create token
     const token = jwt.sign(
       {
         id: admin._id,
-        role: admin.role,
+        position: adminPosition,
         type: "admin",
       },
       process.env.JWT_SECRET,
@@ -68,7 +82,7 @@ async function loginAdmin(req, res) {
         id: admin._id,
         username: admin.username,
         email: admin.email,
-        role: admin.role,
+        position: adminPosition,
         fullName: admin.fullName,
       },
     });
@@ -90,8 +104,13 @@ async function registerAdmin(req, res) {
       email,
       password,
       phone,
+      position,
     
     } = req.body;
+
+    if (!isMedicapsEmail(email)) {
+      return res.status(400).json({ message: "Only @medicaps.ac.in email is allowed" });
+    }
 
     // check existing admin
     const existing = await Admin.findOne({ email });
@@ -102,6 +121,8 @@ async function registerAdmin(req, res) {
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const normalizedPosition = (position || "admin").toLowerCase().trim();
+
     // create admin
     const admin = await Admin.create({
       username,
@@ -110,9 +131,10 @@ async function registerAdmin(req, res) {
         lastName
       },
       email,
+      position: normalizedPosition,
       password: hashedPassword,
       phone,
-      status: "block" // or "block" if approval needed
+      status: "allow"
     });
 
     res.status(201).json({
@@ -122,6 +144,7 @@ async function registerAdmin(req, res) {
         username: admin.username,
         fullName: admin.fullName,
         email: admin.email,
+        position: admin.position || "admin",
         status: admin.status
       }
     });
@@ -143,6 +166,7 @@ async function getAdminProfile(req, res) {
       username: admin.username,
       fullName: admin.fullName,
       email: admin.email,
+      position: admin.position || "admin",
       phone: admin.phone,
       profileImage: admin.profileImage,
       status: admin.status,
@@ -170,6 +194,9 @@ async function updateAdminProfile(req, res) {
     if (username !== undefined) admin.username = username;
     if (email !== undefined) admin.email = email;
     if (phone !== undefined) admin.phone = phone;
+    if (req.body?.position !== undefined) {
+      admin.position = String(req.body.position).toLowerCase().trim();
+    }
 
     if (firstName !== undefined) admin.fullName.firstName = firstName;
     if (lastName !== undefined) admin.fullName.lastName = lastName;
@@ -189,6 +216,7 @@ async function updateAdminProfile(req, res) {
         username: admin.username,
         fullName: admin.fullName,
         email: admin.email,
+        position: admin.position || "admin",
         phone: admin.phone,
         profileImage: admin.profileImage
       }
@@ -200,31 +228,86 @@ async function updateAdminProfile(req, res) {
 }
 
 async function logoutAdmin(req, res) {
-
-try {
-  res.clearCookie("adminToken", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "strict",
-  });
-  res.json({ message: "Logout successful" });
-} catch (error) {
-  res.status(500).json({ message: error.message });
+  try {
+    res.clearCookie("adminToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+    });
+    res.json({ message: "Logout successful" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
+async function getAdminDashboardStats(req, res) {
+  try {
+    const now = new Date();
 
+    const [
+      totalMembers,
+      approvedMembers,
+      activeMembers,
+      totalEvents,
+      eventsCovered,
+      upcomingEvents,
+      rawPositionCounts,
+    ] = await Promise.all([
+      User.countDocuments(),
+      User.countDocuments({ canLogin: true }),
+      User.countDocuments({ isActive: true }),
+      Event.countDocuments(),
+      Event.countDocuments({ eventDate: { $lte: now } }),
+      Event.countDocuments({ eventDate: { $gt: now } }),
+      User.aggregate([
+        {
+          $group: {
+            _id: "$position",
+            count: { $sum: 1 },
+          },
+        },
+      ]),
+    ]);
 
+    const positionCounts = rawPositionCounts.reduce((acc, item) => {
+      const key = item._id || "member";
+      acc[key] = item.count;
+      return acc;
+    }, {});
+
+    const corePositions = ["president", "vice-president", "secretary", "treasurer", "head"];
+    const coreMembers = corePositions.reduce(
+      (sum, role) => sum + (positionCounts[role] || 0),
+      0
+    );
+
+    return res.json({
+      success: true,
+      data: {
+        totalMembers,
+        approvedMembers,
+        activeMembers,
+        totalEvents,
+        eventsCovered,
+        upcomingEvents,
+        positionCounts,
+        headMembers: positionCounts.head || 0,
+        coreMembers,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 }
-
-
-
-
-
 
 module.exports = {
   loginAdmin,
   registerAdmin,
   getAdminProfile,
   updateAdminProfile,
-  logoutAdmin
+  logoutAdmin,
+  getAdminDashboardStats,
 };

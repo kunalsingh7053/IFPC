@@ -1,10 +1,12 @@
-import React from 'react'
+import Mainroutes from './routes/Mainroutes'
+import AnimatedCursor from './components/AnimatedCursor'
 
-const App = () => {
+function App() {
   return (
-    <div>
-      <h1 className="text-center text-3xl font-bold text-red-500">IFPC</h1>
-    </div>
+    <>
+      <AnimatedCursor />
+      <Mainroutes />
+    </>
   )
 }
 

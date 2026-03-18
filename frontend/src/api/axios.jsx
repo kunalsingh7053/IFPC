@@ -1,8 +1,28 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://translator-lo1e.onrender.com/api", // backend base URL
-  withCredentials: true, // send cookies automatically 
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+  withCredentials: true,
+  timeout: 10000,
+});
+
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+
+    if (role === "admin") {
+      config.headers.admintoken = token;
+    }
+
+    if (role === "member") {
+      config.headers.membertoken = token;
+    }
+  }
+
+  return config;
 });
 
 export default API;

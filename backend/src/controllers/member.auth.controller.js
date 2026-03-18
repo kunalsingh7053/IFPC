@@ -1,6 +1,13 @@
 const User = require("../models/member.model");
+const Admin = require("../models/admin.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { uploadImage } = require("../service/imagekit.service");
+
+const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
+const isMedicapsEmail = (email = "") =>
+  String(email).trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN);
+
 async function register(req, res) {
   try {
     const {
@@ -17,6 +24,13 @@ async function register(req, res) {
       return res.status(400).json({
         success: false,
         message: "All fields required",
+      });
+    }
+
+    if (!isMedicapsEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Only @medicaps.ac.in email is allowed",
       });
     }
 
@@ -45,8 +59,8 @@ async function register(req, res) {
       position,
       department,
 
-      // important
-      canLogin: false,
+      // allow login right after registration
+      canLogin: true,
     });
 
     return res.status(201).json({
@@ -66,6 +80,12 @@ async function register(req, res) {
 async function loginMember(req, res) {
   try {
     const { email, password } = req.body;
+
+    if (!isMedicapsEmail(email)) {
+      return res.status(400).json({
+        message: "Only @medicaps.ac.in email is allowed",
+      });
+    }
 
     const user = await User.findOne({ email });
 
@@ -200,6 +220,91 @@ try {
 }
 }
 
+async function getMembers(req, res) {
+  try {
+    const members = await User.find()
+      .select("fullName email position department profileImage canLogin isActive createdAt")
+      .sort({ createdAt: -1 });
+
+    return res.json({
+      success: true,
+      data: members,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+// Public endpoint: show only approved and active members without login
+async function getPublicMembers(req, res) {
+  try {
+    const leadershipPositions = ["president", "vice-president", "presedent"];
+
+    const [members, leadershipAdmins] = await Promise.all([
+      User.find({
+        isActive: true,
+        $or: [
+          { canLogin: true },
+          { position: { $in: leadershipPositions } }
+        ]
+      })
+        .select("fullName email position department profileImage createdAt")
+        .sort({ createdAt: -1 }),
+      Admin.find({
+        status: "allow",
+        $or: [
+          { role: { $in: leadershipPositions } },
+          { position: { $in: leadershipPositions } },
+        ],
+      }).select("fullName email role position profileImage createdAt")
+    ]);
+
+    const memberEmailSet = new Set(
+      members
+        .map((member) => (member.email || "").toLowerCase())
+        .filter(Boolean)
+    );
+
+    const adminAsTeamMembers = leadershipAdmins
+      .filter((admin) => !memberEmailSet.has((admin.email || "").toLowerCase()))
+      .map((admin) => ({
+        _id: `admin-${admin._id}`,
+        fullName: admin.fullName,
+        email: admin.email,
+        position: (admin.position || admin.role) === "presedent" ? "president" : (admin.position || admin.role),
+        department: "Administration",
+        profileImage: admin.profileImage,
+        createdAt: admin.createdAt,
+      }));
+
+    const teamMembers = [...members, ...adminAsTeamMembers]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const positionCounts = teamMembers.reduce((acc, member) => {
+      const key = member.position || "member";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    return res.json({
+      success: true,
+      summary: {
+        totalApprovedMembers: teamMembers.length,
+        positionCounts,
+      },
+      data: teamMembers,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 
 
 
@@ -208,6 +313,8 @@ module.exports = {
   loginMember,
   getProfile,
   logoutMember,
-  updateProfile
+  updateProfile,
+  getMembers,
+  getPublicMembers
 
 };
