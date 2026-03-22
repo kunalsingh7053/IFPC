@@ -1,43 +1,39 @@
 import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import API from '../api/axios'
 import PageWrapper from '../components/PageWrapper'
-import EventCard from '../components/EventCard'
+import SplitText from '../components/SplitText'
 
-const skillTracks = [
-  {
-    title: 'Leadership & Public Speaking',
-    summary: 'Build confidence, stage presence, and communication that creates impact.',
-  },
-  {
-    title: 'Technology & Innovation',
-    summary: 'Hands-on exposure to modern tools, problem solving, and digital creativity.',
-  },
-  {
-    title: 'Community & Social Impact',
-    summary: 'Collaborate across regions and contribute to meaningful initiatives.',
-  },
-  {
-    title: 'Career & Entrepreneurship',
-    summary: 'Grow practical skills for internships, jobs, and startup journeys.',
-  },
+const courses = [
+	{ title: 'Cinematic Composition', summary: 'Frame storytelling with lens language, depth, and emotion.' },
+	{ title: 'Color Science & Grading', summary: 'Build signature looks with modern grading pipelines.' },
+	{ title: 'Video Editing Workflow', summary: 'Professional timeline, cuts, transitions, and final delivery.' },
+	{ title: 'Studio Lighting Design', summary: 'Master key, fill, practicals, and dynamic lighting rigs.' },
 ]
 
-const timeline = [
-	{ year: 'Phase 01', title: 'Learn', desc: 'Master core skills with hands-on sessions and guided projects.' },
-	{ year: 'Phase 02', title: 'Build', desc: 'Create portfolio-quality work with team collaboration.' },
-	{ year: 'Phase 03', title: 'Showcase', desc: 'Present projects publicly in events across regions.' },
+const faculty = [
+	{ name: 'Aarav Verma', role: 'Direction & Visual Storytelling' },
+	{ name: 'Meera Shah', role: 'Color & Post Production' },
+	{ name: 'Kabir Khan', role: 'Lens, Focus, and Motion' },
 ]
 
-const cityTags = ['Delhi', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Kolkata', 'Chennai', 'Pune', 'Ahmedabad']
+const galleryFallback = [
+	'/images/ifpc-icon.png',
+	'/images/ifpc-icon.png',
+	'/images/ifpc-icon.png',
+	'/images/ifpc-icon.png',
+	'/images/ifpc-icon.png',
+	'/images/ifpc-icon.png',
+]
 
 function Home() {
 	const [events, setEvents] = useState([])
 	const [loadingEvents, setLoadingEvents] = useState(true)
+	const [previewImage, setPreviewImage] = useState('')
 
 	useEffect(() => {
-		async function loadFeaturedEvents() {
+		async function loadEvents() {
 			try {
 				const { data } = await API.get('/events')
 				setEvents(Array.isArray(data?.data) ? data.data : [])
@@ -48,173 +44,253 @@ function Home() {
 			}
 		}
 
-		loadFeaturedEvents()
+		loadEvents()
 	}, [])
 
-	const featuredEvents = useMemo(() => events.slice(0, 3), [events])
+	const heroImage = useMemo(() => events[0]?.thumbnail || '/images/ifpc-icon.png', [events])
+
+	const projectCards = useMemo(() => events.slice(0, 3), [events])
+
+	const galleryImages = useMemo(() => {
+		const fromEvents = events
+			.map((event) => event?.thumbnail)
+			.filter(Boolean)
+			.slice(0, 6)
+
+		if (fromEvents.length >= 6) return fromEvents
+		return [...fromEvents, ...galleryFallback].slice(0, 6)
+	}, [events])
+
+	const particles = useMemo(
+		() =>
+			Array.from({ length: 20 }, (_, i) => ({
+				id: i,
+				size: 2 + (i % 3),
+				left: `${(i * 19) % 100}%`,
+				top: `${(i * 31) % 100}%`,
+				delay: i * 0.18,
+			})),
+		[]
+	)
 
 	return (
 		<PageWrapper>
-			<section className="relative overflow-hidden rounded-3xl border border-white/10 bg-hero p-8 md:p-12 lg:p-16">
-				<motion.div
-					aria-hidden="true"
-					animate={{ x: [0, 28, 0], y: [0, -18, 0] }}
-					transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-					className="pointer-events-none absolute -top-16 -right-10 h-48 w-48 rounded-full bg-amber-400/25 blur-3xl"
+			<section className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-black">
+				<motion.img
+					src={heroImage}
+					alt="IFPC studio"
+					className="absolute inset-0 h-full w-full object-cover"
+					initial={{ scale: 1.05 }}
+					animate={{ scale: 1.14 }}
+					transition={{ duration: 16, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
 				/>
-				<motion.div
-					aria-hidden="true"
-					animate={{ x: [0, -18, 0], y: [0, 12, 0] }}
-					transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-					className="pointer-events-none absolute -bottom-16 -left-10 h-52 w-52 rounded-full bg-emerald-400/20 blur-3xl"
-				/>
+				<div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(1,4,10,0.82),rgba(4,10,20,0.58)_45%,rgba(0,2,8,0.88)),radial-gradient(circle_at_15%_20%,rgba(59,130,246,0.24),transparent_38%),radial-gradient(circle_at_80%_30%,rgba(147,51,234,0.22),transparent_36%)]" />
 
-				<motion.h1
-					initial={{ opacity: 0, y: 14 }}
-					animate={{ opacity: 1, y: 0 }}
-					className="relative z-10 max-w-5xl text-4xl font-black leading-tight text-white md:text-6xl"
-				>
-					Build Your Portfolio, Showcase Your Skills, Join India-Wide Events
-				</motion.h1>
-				<p className="relative z-10 mt-4 max-w-3xl text-slate-200 md:text-lg">
-					A long-scroll interactive home experience designed for students and professionals to discover programs, track growth, and present their work publicly.
-				</p>
-				<div className="relative z-10 mt-7 flex flex-wrap gap-3">
-					<Link to="/events" className="rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-amber-600/25">
-						Explore Live Events
-					</Link>
-					<Link to="/register" className="rounded-xl border border-white/20 bg-white/10 px-5 py-3 font-semibold text-slate-100">
-						Create Your Profile
-					</Link>
-				</div>
-
-				<div className="relative z-10 mt-8 grid gap-3 sm:grid-cols-3">
-					{[
-						{ label: 'Open Access', value: 'All India' },
-						{ label: 'Showcase Tracks', value: '4+' },
-						{ label: 'Community Type', value: 'Students + Pros' },
-					].map((item) => (
-						<div key={item.label} className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl">
-							<p className="text-xs uppercase tracking-wide text-slate-300">{item.label}</p>
-							<p className="mt-1 text-lg font-semibold text-white">{item.value}</p>
-						</div>
-					))}
-				</div>
-			</section>
-
-			<section className="mt-10 rounded-3xl border border-white/10 bg-portfolio-band p-6 md:p-8">
-				<div className="flex flex-wrap gap-2">
-					{cityTags.map((city) => (
+				<div className="pointer-events-none absolute inset-0">
+					{particles.map((particle) => (
 						<motion.span
-							key={city}
-							whileHover={{ y: -3 }}
-							className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm text-slate-100"
-						>
-							{city}
-						</motion.span>
+							key={particle.id}
+							className="absolute rounded-full bg-cyan-300/60 shadow-[0_0_14px_rgba(56,189,248,0.8)]"
+							style={{ left: particle.left, top: particle.top, width: particle.size, height: particle.size }}
+							animate={{ opacity: [0.15, 0.9, 0.15], y: [0, -10, 0] }}
+							transition={{ duration: 3.2, delay: particle.delay, repeat: Infinity, ease: 'easeInOut' }}
+						/>
 					))}
 				</div>
-			</section>
 
-			<section className="mt-10">
-				<div className="mb-4 flex items-end justify-between gap-3">
-					<div>
-						<h2 className="text-2xl font-bold text-white">Portfolio Skill Tracks</h2>
-						<p className="mt-1 text-slate-300">Designed to help participants learn, build, and present their abilities.</p>
+				<motion.div
+					aria-hidden="true"
+					className="pointer-events-none absolute right-[10%] top-[18%] h-52 w-52 rounded-full border border-cyan-300/40"
+					animate={{ rotate: 360 }}
+					transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+				>
+					<div className="absolute inset-4 rounded-full border border-fuchsia-300/40" />
+					<div className="absolute inset-8 rounded-full border border-white/25" />
+					<motion.div
+						className="absolute inset-0 rounded-full border border-cyan-200/70"
+						animate={{ scale: [1, 1.12, 1], opacity: [0.4, 0.9, 0.4] }}
+						transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+					/>
+				</motion.div>
+
+				<div className="relative z-10 flex min-h-screen w-full items-end px-6 pb-14 pt-24 sm:px-10 lg:items-center lg:px-14">
+					<div className="max-w-4xl">
+						<p className="inline-flex rounded-full border border-cyan-300/45 bg-cyan-500/10 px-4 py-1 text-xs font-bold uppercase tracking-[0.2em] text-cyan-100 backdrop-blur-xl">
+							IFPC Creative Studio
+						</p>
+						<SplitText
+							text="IFPC Creative Studio"
+							tag="h1"
+							delay={0.08}
+							stagger={0.04}
+							className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl"
+						/>
+						<p className="mt-4 max-w-2xl text-sm text-slate-200 sm:text-base">
+							Futuristic camera-inspired portfolio experience with lens focus visuals, neon glass layers, and cinematic storytelling.
+						</p>
+
+						<div className="mt-7 flex flex-wrap gap-3">
+							<Link to="/events" className="rounded-xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(59,130,246,0.45)]">
+								Explore Projects
+							</Link>
+							<Link to="/contact" className="rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xl hover:bg-white/20">
+								Contact Studio
+							</Link>
+						</div>
 					</div>
 				</div>
-				<div className="grid gap-4 md:grid-cols-2">
-					{skillTracks.map((item, index) => (
+			</section>
+
+			<section id="about" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#050910,#0a1222_50%,#111b30)] px-6 py-20 sm:px-10 lg:px-14">
+				<div className="flex min-h-[calc(100vh-10rem)] w-full items-center">
+					<div className="max-w-4xl">
+						<h2 className="text-4xl font-black text-white sm:text-5xl">About IFPC</h2>
+						<p className="mt-5 text-base leading-relaxed text-slate-300 sm:text-lg">
+							IFPC is a modern creative studio focused on photography, film production, and visual storytelling. We blend camera aesthetics, post-production craft, and portfolio-driven training to create cinematic content.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<section id="courses" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#070c17,#0b1326_48%,#121c35)] px-6 py-20 sm:px-10 lg:px-14">
+				<div className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
+					<h2 className="text-4xl font-black text-white sm:text-5xl">Courses</h2>
+					<div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+					{courses.map((item, index) => (
 						<motion.article
 							key={item.title}
-							initial={{ opacity: 0, y: 14 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.4, delay: index * 0.08 }}
+							initial={{ opacity: 0, y: 12, scale: 0.98 }}
+							whileInView={{ opacity: 1, y: 0, scale: 1 }}
 							viewport={{ once: true, amount: 0.2 }}
-							whileHover={{ y: -6 }}
-							className="rounded-2xl border border-white/10 bg-white/5 p-5"
+							transition={{ duration: 0.4, delay: index * 0.06 }}
+							whileHover={{ y: -6, rotateX: 2, rotateY: -2 }}
+							className="rounded-2xl border border-cyan-300/25 bg-[linear-gradient(160deg,rgba(14,22,40,0.78),rgba(9,16,30,0.65))] p-5 shadow-[0_12px_30px_rgba(3,10,24,0.45)] backdrop-blur-xl"
 						>
-							<h3 className="text-lg font-semibold text-slate-100">{item.title}</h3>
+							<h3 className="text-lg font-bold text-cyan-100">{item.title}</h3>
 							<p className="mt-2 text-sm text-slate-300">{item.summary}</p>
 						</motion.article>
 					))}
+					</div>
 				</div>
 			</section>
 
-			<section className="mt-12">
-				<div className="mb-4">
-					<h2 className="text-2xl font-bold text-white">Growth Journey</h2>
-					<p className="mt-1 text-slate-300">A portfolio-style path from learning to public showcase.</p>
+			<section id="projects" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#050b14,#091225_45%,#111b32)] px-6 py-20 sm:px-10 lg:px-14">
+				<div className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
+					<div className="mb-5 flex items-end justify-between">
+						<h2 className="text-4xl font-black text-white sm:text-5xl">Projects / Portfolio</h2>
+						<Link to="/events" className="text-sm font-semibold text-cyan-300 hover:text-cyan-200">View all</Link>
+					</div>
+
+					{loadingEvents ? (
+						<div className="grid gap-4 md:grid-cols-3">
+							{[1, 2, 3].map((item) => (
+								<div key={item} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
+							))}
+						</div>
+					) : projectCards.length === 0 ? (
+						<p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">No projects published yet.</p>
+					) : (
+						<div className="grid gap-4 md:grid-cols-3">
+							{projectCards.map((event, index) => (
+								<motion.article
+									key={event._id || index}
+									whileHover={{ y: -6, scale: 1.01 }}
+									className="group overflow-hidden rounded-2xl border border-fuchsia-300/25 bg-[linear-gradient(170deg,rgba(7,13,25,0.85),rgba(11,17,33,0.66))] shadow-[0_16px_42px_rgba(0,0,0,0.42)]"
+								>
+									<img
+										src={event.thumbnail || '/images/ifpc-icon.png'}
+										alt={event.title || 'IFPC Project'}
+										className="h-44 w-full object-cover transition duration-700 group-hover:scale-110"
+									/>
+									<div className="space-y-2 p-4">
+										<h3 className="line-clamp-1 text-lg font-semibold text-slate-100">{event.title || 'Untitled Project'}</h3>
+										<p className="line-clamp-2 text-sm text-slate-300">{event.description || 'Creative visual production showcase.'}</p>
+									</div>
+								</motion.article>
+							))}
+						</div>
+					)}
 				</div>
-				<div className="grid gap-4 md:grid-cols-3">
-					{timeline.map((step, idx) => (
-						<motion.article
-							key={step.title}
-							initial={{ opacity: 0, y: 16 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.35, delay: idx * 0.1 }}
-							viewport={{ once: true }}
-							className="rounded-2xl border border-white/10 bg-white/5 p-5"
+			</section>
+
+			<section id="gallery" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-black">
+				<div className="px-6 pb-4 pt-20 sm:px-10 lg:px-14">
+					<h2 className="text-4xl font-black text-white sm:text-5xl">Gallery</h2>
+					<p className="mt-2 text-sm text-slate-300">Edge-to-edge camera roll. Click any frame to preview.</p>
+				</div>
+
+				<div className="grid min-h-[calc(100vh-11rem)] grid-cols-2 gap-0 lg:grid-cols-3">
+					{galleryImages.map((image, index) => (
+						<motion.button
+							key={`${image}-${index}`}
+							type="button"
+							whileHover={{ scale: 1.01 }}
+							onClick={() => setPreviewImage(image)}
+							className="group relative h-full min-h-[28vh] overflow-hidden border border-cyan-300/10 text-left"
 						>
-							<p className="text-xs uppercase tracking-wide text-amber-300">{step.year}</p>
-							<h3 className="mt-2 text-lg font-semibold text-white">{step.title}</h3>
-							<p className="mt-2 text-sm text-slate-300">{step.desc}</p>
-						</motion.article>
+							<img src={image} alt={`Gallery ${index + 1}`} className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+							<p className="absolute bottom-3 left-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/90">Shot {index + 1}</p>
+						</motion.button>
 					))}
 				</div>
 			</section>
 
-			<section className="mt-10">
-				<div className="mb-4 flex items-end justify-between gap-3">
-					<div>
-						<h2 className="text-2xl font-bold text-white">Featured Events</h2>
-						<p className="mt-1 text-slate-300">Public events with details and thumbnails. Open to explore.</p>
+			<section id="faculty" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(170deg,#060c19,#101a31_52%,#0b1224)] px-6 py-20 sm:px-10 lg:px-14">
+				<div className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
+					<h2 className="text-4xl font-black text-white sm:text-5xl">Faculty</h2>
+					<div className="mt-7 grid gap-4 md:grid-cols-3">
+					{faculty.map((member, index) => (
+						<motion.article
+							key={member.name}
+							initial={{ opacity: 0, y: 12 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.38, delay: index * 0.06 }}
+							className="rounded-2xl border border-fuchsia-300/25 bg-[linear-gradient(160deg,rgba(10,15,30,0.76),rgba(12,20,38,0.62))] p-5 backdrop-blur-xl"
+						>
+							<h3 className="text-lg font-bold text-white">{member.name}</h3>
+							<p className="mt-1 text-sm text-cyan-200">{member.role}</p>
+						</motion.article>
+					))}
 					</div>
-					<Link to="/events" className="text-sm font-semibold text-amber-300 hover:text-amber-200">
-						See All
-					</Link>
-				</div>
-
-				{loadingEvents ? (
-					<div className="grid gap-4 md:grid-cols-3">
-						{[1, 2, 3].map((item) => (
-							<div key={item} className="h-64 animate-pulse rounded-2xl border border-white/10 bg-white/5" />
-						))}
-					</div>
-				) : featuredEvents.length === 0 ? (
-					<p className="rounded-2xl border border-white/10 bg-white/5 p-5 text-slate-300">
-						No events published yet. New events will appear here automatically.
-					</p>
-				) : (
-					<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-						{featuredEvents.map((event) => (
-							<EventCard key={event._id} event={event} />
-						))}
-					</div>
-				)}
-			</section>
-
-			<section className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-				<motion.h3
-					initial={{ opacity: 0, y: 10 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					viewport={{ once: true }}
-					className="text-2xl font-bold text-white"
-				>
-					Ready To Showcase Your Work?
-				</motion.h3>
-				<p className="mx-auto mt-3 max-w-2xl text-slate-300">
-					Join the community, publish your growth journey, and participate in live skill-based events.
-				</p>
-				<div className="mt-6 flex justify-center gap-3">
-					<Link to="/register" className="rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 px-5 py-3 font-semibold text-white">
-						Get Started
-					</Link>
-					<Link to="/about" className="rounded-xl border border-white/20 bg-white/10 px-5 py-3 font-semibold text-slate-100">
-						Learn About IFPC
-					</Link>
 				</div>
 			</section>
+
+			<section id="contact" className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)] px-6 py-20 sm:px-10 lg:px-14">
+				<div className="flex min-h-[calc(100vh-10rem)] w-full items-center justify-center text-center">
+					<div className="max-w-3xl">
+						<h2 className="text-4xl font-black text-white sm:text-5xl">Contact</h2>
+						<p className="mx-auto mt-4 text-base text-slate-300 sm:text-lg">Start your next camera, film, or creative portfolio collaboration with IFPC Creative Studio.</p>
+						<div className="mt-7 flex flex-wrap justify-center gap-3">
+							<Link to="/contact" className="rounded-xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 px-5 py-3 font-semibold text-white shadow-[0_14px_36px_rgba(59,130,246,0.35)]">Open Contact</Link>
+							<Link to="/about" className="rounded-xl border border-white/20 bg-white/10 px-5 py-3 font-semibold text-slate-100 hover:bg-white/20">Learn More</Link>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<AnimatePresence>
+				{previewImage ? (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						className="fixed inset-0 z-[12000] grid place-items-center bg-black/85 p-4 backdrop-blur-sm"
+						onClick={() => setPreviewImage('')}
+					>
+						<motion.img
+							src={previewImage}
+							alt="Preview"
+							initial={{ scale: 0.92, opacity: 0, filter: 'blur(8px)' }}
+							animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+							exit={{ scale: 0.97, opacity: 0 }}
+							transition={{ duration: 0.28, ease: 'easeOut' }}
+							className="max-h-[86vh] w-full max-w-5xl rounded-2xl border border-cyan-300/35 object-cover shadow-[0_18px_50px_rgba(0,0,0,0.56)]"
+						/>
+					</motion.div>
+				) : null}
+			</AnimatePresence>
 		</PageWrapper>
 	)
 }

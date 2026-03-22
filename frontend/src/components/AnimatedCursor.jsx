@@ -6,6 +6,7 @@ function AnimatedCursor() {
   const frameRef = useRef(0)
   const mouseRef = useRef({ x: 0, y: 0 })
   const ringRefPos = useRef({ x: 0, y: 0 })
+  const ringScaleRef = useRef(1)
   const pointerStateRef = useRef(false)
   const pressedStateRef = useRef(false)
 
@@ -35,9 +36,19 @@ function AnimatedCursor() {
       ringRefPos.current.y += dy * 0.18
 
       if (ringRef.current) {
-        const scale = pressedStateRef.current ? 0.72 : pointerStateRef.current ? 1.35 : 1
-        ringRef.current.style.transform = `translate3d(${ringRefPos.current.x}px, ${ringRefPos.current.y}px, 0) scale(${scale})`
+        const targetScale = pressedStateRef.current ? 0.78 : pointerStateRef.current ? 2.05 : 1
+        ringScaleRef.current += (targetScale - ringScaleRef.current) * 0.2
+
+        ringRef.current.style.transform = `translate3d(${ringRefPos.current.x}px, ${ringRefPos.current.y}px, 0) scale(${ringScaleRef.current})`
         ringRef.current.style.borderColor = pointerStateRef.current ? 'rgba(245, 158, 11, 0.95)' : 'rgba(34, 211, 238, 0.8)'
+        ringRef.current.style.boxShadow = pointerStateRef.current
+          ? '0 0 28px rgba(245, 158, 11, 0.48)'
+          : '0 0 24px rgba(34, 211, 238, 0.35)'
+      }
+
+      if (dotRef.current) {
+        const dotScale = pointerStateRef.current ? 0.76 : 1
+        dotRef.current.style.transform = `translate3d(${mouseRef.current.x}px, ${mouseRef.current.y}px, 0) scale(${dotScale})`
       }
 
       frameRef.current = window.requestAnimationFrame(animateRing)
@@ -56,7 +67,10 @@ function AnimatedCursor() {
       pointerStateRef.current = next
     }
 
-    const handleMouseDown = () => {
+    const handleMouseDown = (event) => {
+      if (event.button !== 0) {
+        return
+      }
       pressedStateRef.current = true
     }
 

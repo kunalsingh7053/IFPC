@@ -6,6 +6,10 @@ import Footer from './Footer'
 function DashboardLayout() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-grid">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_16%,rgba(245,158,11,0.14),transparent_32%),radial-gradient(circle_at_82%_20%,rgba(34,211,238,0.13),transparent_34%),radial-gradient(circle_at_45%_110%,rgba(16,185,129,0.12),transparent_40%)]"
+      />
       <motion.div
         aria-hidden="true"
         animate={{ x: [0, 22, 0], y: [0, -16, 0] }}
@@ -20,10 +24,8 @@ function DashboardLayout() {
       />
       <div className="relative min-h-screen">
         <Navbar />
-        <main className="mx-auto w-full max-w-7xl px-4 py-6 md:px-8 lg:py-8">
-          <div className="glass-panel rounded-3xl p-4 md:p-6">
-            <Outlet />
-          </div>
+        <main className="w-full">
+          <Outlet />
         </main>
         <Footer />
       </div>

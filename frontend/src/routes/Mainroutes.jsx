@@ -20,6 +20,9 @@ import ChatPage from '../pages/ChatPage'
 import ProfilePage from '../pages/ProfilePage'
 import About from '../pages/About'
 import Contact from '../pages/Contact'
+import Courses from '../pages/Courses'
+import Gallery from '../pages/Gallery'
+import Faculty from '../pages/Faculty'
 import NotFound from '../pages/NotFound'
 
 function Mainroutes() {
@@ -37,6 +40,9 @@ function Mainroutes() {
 					<Route path="/events/:id" element={<EventDetails />} />
 					<Route path="/team" element={<TeamPage />} />
 					<Route path="/about" element={<About />} />
+					<Route path="/courses" element={<Courses />} />
+					<Route path="/gallery" element={<Gallery />} />
+					<Route path="/faculty" element={<Faculty />} />
 					<Route path="/contact" element={<Contact />} />
 
 					<Route element={<ProtectedRoute />}>

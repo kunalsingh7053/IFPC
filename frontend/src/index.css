@@ -18,10 +18,10 @@ body {
 	min-height: 100vh;
 	font-family: "Manrope", "Segoe UI", sans-serif;
 	background:
-		radial-gradient(circle at 12% 10%, rgba(245, 158, 11, 0.2), transparent 26%),
-		radial-gradient(circle at 88% 18%, rgba(34, 211, 238, 0.16), transparent 25%),
+		radial-gradient(circle at 12% 10%, rgba(245, 158, 11, 0.22), transparent 26%),
+		radial-gradient(circle at 88% 18%, rgba(34, 211, 238, 0.2), transparent 25%),
 		radial-gradient(circle at 50% 120%, rgba(56, 189, 248, 0.11), transparent 30%),
-		linear-gradient(155deg, #05070c 0%, #0a111c 55%, #101a28 100%);
+		linear-gradient(155deg, #04070d 0%, #09111b 50%, #111c2d 100%);
 	color: var(--photo-text);
 	overflow-x: hidden;
 }
@@ -108,17 +108,31 @@ footer {
 
 .bg-grid {
 	background-image:
-		linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px),
-		linear-gradient(90deg, rgba(34, 211, 238, 0.08) 1px, transparent 1px);
+		linear-gradient(rgba(245, 158, 11, 0.07) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(34, 211, 238, 0.06) 1px, transparent 1px);
 	background-size: 28px 28px;
-	background-color: rgba(7, 11, 20, 0.65);
+	background-color: rgba(7, 11, 20, 0.76);
 }
 
 .bg-hero {
 	background:
-		radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.3), transparent 38%),
-		radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.24), transparent 35%),
+		radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.34), transparent 38%),
+		radial-gradient(circle at 80% 30%, rgba(34, 211, 238, 0.28), transparent 35%),
 		linear-gradient(145deg, rgba(7, 14, 24, 0.92), rgba(18, 31, 48, 0.88));
+}
+
+.glass-panel {
+	position: relative;
+	overflow: hidden;
+}
+
+.glass-panel::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.06) 32%, transparent 64%);
+	opacity: 0.38;
 }
 
 .bg-about {
@@ -176,6 +190,18 @@ footer {
 	box-shadow: 0 22px 58px rgba(0, 0, 0, 0.45);
 }
 
+.login-side-panel {
+	background:
+		radial-gradient(circle at 22% 14%, rgba(245, 158, 11, 0.24), transparent 46%),
+		linear-gradient(155deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.login-form-panel {
+	background: linear-gradient(165deg, rgba(4, 10, 20, 0.62), rgba(9, 18, 30, 0.62));
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
 .auth-animate-in {
 	opacity: 0;
 	transform: translateY(20px) scale(0.985);
@@ -213,10 +239,37 @@ footer {
 	}
 }
 
+@media (max-width: 1024px) {
+	.auth-shell::before,
+	.auth-shell::after {
+		width: 180px;
+		height: 180px;
+		opacity: 0.3;
+	}
+}
+
+@media (max-width: 640px) {
+	.auth-shell::before,
+	.auth-shell::after {
+		filter: blur(14px);
+		opacity: 0.24;
+	}
+
+	.login-side-panel,
+	.login-form-panel {
+		border-radius: 1rem;
+	}
+}
+
 @media (pointer: fine) {
 	body.cursor-custom-enabled,
 	body.cursor-custom-enabled * {
 		cursor: none !important;
+	}
+
+	body.cursor-custom-enabled.cursor-native-zone .chatbot-native-cursor,
+	body.cursor-custom-enabled.cursor-native-zone .chatbot-native-cursor * {
+		cursor: auto !important;
 	}
 }
 
@@ -232,14 +285,14 @@ footer {
 }
 
 .custom-cursor-ring {
-	width: 32px;
-	height: 32px;
-	margin-left: -16px;
-	margin-top: -16px;
+	width: 36px;
+	height: 36px;
+	margin-left: -18px;
+	margin-top: -18px;
 	border-radius: 50%;
 	border: 1.5px solid rgba(34, 211, 238, 0.8);
 	box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
-	transition: border-color 200ms ease, box-shadow 200ms ease;
+	transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .custom-cursor-dot {
