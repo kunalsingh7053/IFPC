@@ -75,6 +75,7 @@ function AdvancedHeroSlider() {
 	const renderedFrameRef = useRef(-1)
 	const rafIdRef = useRef(0)
 	const [isReady, setIsReady] = useState(false)
+	const [isMobileView, setIsMobileView] = useState(() => window.innerWidth < 768)
 
 	const loadingBackgroundStyle = {
 		backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.34)), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
@@ -84,6 +85,24 @@ function AdvancedHeroSlider() {
 	}
 
 	useEffect(() => {
+		const handleResize = () => {
+			setIsMobileView(window.innerWidth < 768)
+		}
+
+		handleResize()
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
+	useEffect(() => {
+		if (isMobileView) {
+			setIsReady(true)
+			return undefined
+		}
+
 		gsap.registerPlugin(ScrollTrigger)
 
 		const section = sectionRef.current
@@ -222,10 +241,38 @@ function AdvancedHeroSlider() {
 			activeTrigger?.kill()
 			cancelAnimationFrame(rafIdRef.current)
 		}
-	}, [])
+	}, [isMobileView])
+
+	if (isMobileView) {
+		return (
+			<section
+				className="relative h-screen min-h-screen w-full overflow-hidden bg-black md:h-[100dvh] md:min-h-[100svh]"
+				style={{
+					backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.34)), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
+					backgroundSize: 'cover',
+					backgroundPosition: 'center',
+					backgroundRepeat: 'no-repeat',
+				}}
+			>
+				<div className="relative z-10 flex h-full items-end px-6 pb-14 pt-24 sm:px-10 lg:items-center lg:px-14">
+					<div className="max-w-xl rounded-2xl border border-white/10 bg-black/5 p-5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-[1px] sm:p-7">
+						<p className="inline-flex rounded-full border border-emerald-300/45 bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
+							WpDev Visual Lab
+						</p>
+						<h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
+							Cinematic Product Disassembly Experience
+						</h1>
+						<p className="mt-4 max-w-2xl text-sm text-slate-200 sm:text-base">
+							A 192-frame DSLR teardown rendered on canvas with GSAP-driven scroll sync for fluid, high-fidelity storytelling.
+						</p>
+					</div>
+				</div>
+			</section>
+		)
+	}
 
 	return (
-		<section ref={sectionRef} className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-black">
+		<section ref={sectionRef} className="relative h-screen min-h-screen w-full overflow-hidden bg-black md:h-[100dvh] md:min-h-[100svh]">
 			<canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="WpDev camera frame animation" />
 			<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.16)_55%,rgba(0,0,0,0.28))]" />
 

@@ -25,7 +25,7 @@ function Sidebar({ open, onClose }) {
 
   return (
     <aside
-      className={`glass-panel fixed inset-y-2 left-2 z-40 w-72 rounded-2xl p-6 text-slate-200 transition-transform md:translate-x-0 ${
+      className={`glass-panel fixed inset-y-2 left-2 z-40 w-64 max-w-[85vw] rounded-2xl p-6 text-slate-200 transition-transform sm:w-72 md:translate-x-0 ${
         open ? 'translate-x-0' : '-translate-x-full'
       }`}
     >

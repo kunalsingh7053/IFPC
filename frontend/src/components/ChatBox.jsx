@@ -65,7 +65,7 @@ function ChatBox() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70">
-      <div className="h-[55vh] space-y-3 overflow-y-auto p-4">
+      <div className="h-[45vh] max-h-[60vh] space-y-3 overflow-y-auto p-4 md:h-[55vh] md:max-h-none">
         {sortedMessages.map((msg) => {
           const mine = String(msg.senderId) === String(userId)
           const canDelete = role === 'admin' || mine

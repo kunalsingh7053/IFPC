@@ -121,7 +121,7 @@ function Gallery() {
                 e.currentTarget.src =
                   'https://via.placeholder.com/800x600?text=Image+Error'
               }}
-              className="max-h-[90vh] w-full max-w-5xl rounded-xl object-cover"
+              className="max-h-[85vh] w-[calc(100%-2rem)] max-w-md rounded-xl object-cover md:max-h-[90vh] md:w-full md:max-w-5xl"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}

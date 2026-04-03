@@ -31,7 +31,7 @@ function ScrollTopButton() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 14, scale: 0.92 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-5 right-5 z-[10950] grid h-12 w-12 place-items-center rounded-full border border-emerald-200/45 bg-[linear-gradient(145deg,rgba(34,211,238,0.18),rgba(245,158,11,0.18))] text-white shadow-[0_12px_30px_rgba(0,0,0,0.38)] backdrop-blur-xl transition duration-300 hover:scale-105 hover:shadow-[0_16px_34px_rgba(34,211,238,0.35)] sm:bottom-7 sm:right-7"
+          className="fixed bottom-5 right-4 z-[10950] grid h-10 w-10 place-items-center rounded-full border border-emerald-200/45 bg-[linear-gradient(145deg,rgba(34,211,238,0.18),rgba(245,158,11,0.18))] text-white shadow-[0_12px_30px_rgba(0,0,0,0.38)] backdrop-blur-xl transition duration-300 hover:scale-105 hover:shadow-[0_16px_34px_rgba(34,211,238,0.35)] sm:bottom-7 sm:right-7 sm:h-12 sm:w-12"
           aria-label="Scroll to top"
           data-cursor-label="Top"
         >

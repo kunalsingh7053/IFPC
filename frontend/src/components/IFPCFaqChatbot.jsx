@@ -320,7 +320,7 @@ function IFPCFaqChatbot() {
       ref={rootRef}
       onMouseEnter={enableNativeCursorZone}
       onMouseLeave={disableNativeCursorZone}
-      className="chatbot-native-cursor fixed bottom-4 left-4 z-[11000] sm:bottom-7 sm:left-7"
+      className="chatbot-native-cursor fixed bottom-16 left-4 z-[11000] sm:bottom-7 sm:left-7"
     >
       <AnimatePresence>
         {open ? (

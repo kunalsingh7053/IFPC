@@ -56,7 +56,7 @@ function Developers() {
 
   return (
     <PageWrapper>
-      <div className="relative left-1/2 w-screen -translate-x-1/2 overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(16,185,129,0.2),transparent_35%),radial-gradient(circle_at_80%_5%,rgba(34,197,94,0.2),transparent_35%),linear-gradient(175deg,#040a10,#06131f_48%,#0e1f22)] text-slate-100">
+      <div className="relative w-full overflow-hidden bg-[radial-gradient(circle_at_20%_10%,rgba(16,185,129,0.2),transparent_35%),radial-gradient(circle_at_80%_5%,rgba(34,197,94,0.2),transparent_35%),linear-gradient(175deg,#040a10,#06131f_48%,#0e1f22)] text-slate-100">
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.05)_1px,transparent_1px)] bg-[size:46px_46px]" />
 
         {floatingOrbs.map((orb) => (

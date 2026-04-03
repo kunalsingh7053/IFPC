@@ -188,7 +188,7 @@ function Home() {
 			</div>
 			<InteractiveMarquee variant="ifpc" fullScreen />
 
-			<section id="about" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#050910,#0a1222_50%,#111b30)] px-6 py-20 sm:px-10 lg:px-14">
+			<section id="about" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(160deg,#050910,#0a1222_50%,#111b30)] px-6 py-20 sm:px-10 lg:px-14">
 				<div className="flex min-h-[calc(100vh-10rem)] w-full items-center">
 					<div data-scroll-content className="max-w-4xl">
 						<h2 className="text-4xl font-black text-white sm:text-5xl">About IFPC</h2>
@@ -203,7 +203,7 @@ function Home() {
 				id="impact"
 				ref={countersSectionRef}
 				data-scroll-reveal
-				className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(155deg,#02060e,#071324_48%,#10213d)] px-6 py-20 sm:px-10 lg:px-14"
+				className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(155deg,#02060e,#071324_48%,#10213d)] px-6 py-20 sm:px-10 lg:px-14"
 			>
 				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
 					<div className="max-w-3xl">
@@ -237,7 +237,7 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="courses" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#070c17,#0b1326_48%,#121c35)] px-6 py-20 sm:px-10 lg:px-14">
+			<section id="courses" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(160deg,#070c17,#0b1326_48%,#121c35)] px-6 py-20 sm:px-10 lg:px-14">
 				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
 					<h2 className="text-4xl font-black text-white sm:text-5xl">Courses</h2>
 					<div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -259,7 +259,7 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="projects" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#050b14,#091225_45%,#111b32)] px-6 py-20 sm:px-10 lg:px-14">
+			<section id="projects" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(160deg,#050b14,#091225_45%,#111b32)] px-6 py-20 sm:px-10 lg:px-14">
 				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
 					<div className="mb-5 flex items-end justify-between">
 						<h2 className="text-4xl font-black text-white sm:text-5xl">Projects / Portfolio</h2>
@@ -309,7 +309,7 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="gallery" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-black">
+			<section id="gallery" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-black">
 				<div data-scroll-content>
 					<div className="px-6 pb-4 pt-20 sm:px-10 lg:px-14">
 						<h2 className="text-4xl font-black text-white sm:text-5xl">Gallery</h2>
@@ -342,7 +342,7 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="team" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(170deg,#060c19,#101a31_52%,#0b1224)] px-6 py-20 sm:px-10 lg:px-14">
+			<section id="team" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(170deg,#060c19,#101a31_52%,#0b1224)] px-6 py-20 sm:px-10 lg:px-14">
 				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
 					<h2 className="text-4xl font-black text-white sm:text-5xl">Team</h2>
 					<div className="mt-7 grid gap-4 md:grid-cols-3">
@@ -363,7 +363,7 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="contact" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)] px-6 py-20 sm:px-10 lg:px-14">
+			<section id="contact" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)] px-6 py-20 sm:px-10 lg:px-14">
 				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full items-center justify-center text-center">
 					<div className="max-w-3xl">
 						<h2 className="text-4xl font-black text-white sm:text-5xl">Contact</h2>
