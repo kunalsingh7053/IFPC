@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import Mainroutes from './routes/Mainroutes'
 import AnimatedCursor from './components/AnimatedCursor'
 import IFPCFaqChatbot from './components/IFPCFaqChatbot'
-import IntroScreen from './components/IntroScreen'
+import HelloIntro from './components/HelloIntro'
+import ScrollTopButton from './components/ScrollTopButton'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true)
@@ -18,10 +19,11 @@ function App() {
   return (
     <>
       <AnimatedCursor />
-      <AnimatePresence>{showIntro ? <IntroScreen onDone={handleIntroDone} /> : null}</AnimatePresence>
+      <AnimatePresence>{showIntro ? <HelloIntro onComplete={handleIntroDone} /> : null}</AnimatePresence>
       {!showIntro ? (
         <>
           <IFPCFaqChatbot />
+          <ScrollTopButton />
           <Mainroutes />
         </>
       ) : null}

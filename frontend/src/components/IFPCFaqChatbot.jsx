@@ -145,7 +145,7 @@ function IFPCFaqChatbot() {
       ref={rootRef}
       onMouseEnter={enableNativeCursorZone}
       onMouseLeave={disableNativeCursorZone}
-      className="chatbot-native-cursor fixed bottom-4 right-4 z-[11000]"
+      className="chatbot-native-cursor fixed bottom-4 left-4 z-[11000] sm:bottom-7 sm:left-7"
     >
       {open ? (
         <div className="w-[min(92vw,360px)] overflow-hidden rounded-2xl border border-white/15 bg-slate-950/90 shadow-[0_18px_55px_rgba(0,0,0,0.45)] backdrop-blur-xl">

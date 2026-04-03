@@ -19,13 +19,22 @@ const faculty = [
 ]
 
 const galleryFallback = [
-	'/images/ifpc-icon.png',
-	'/images/ifpc-icon.png',
-	'/images/ifpc-icon.png',
-	'/images/ifpc-icon.png',
-	'/images/ifpc-icon.png',
-	'/images/ifpc-icon.png',
+	'https://images.unsplash.com/photo-1620693778087-2bced33a4a06?q=80&w=1332',
+	'https://images.unsplash.com/photo-1665844092826-515257903c4c?q=80&w=687',
+	'https://images.unsplash.com/photo-1598607993929-b48389d1de94?q=80&w=1170',
+	'https://plus.unsplash.com/premium_photo-1665772800736-e655b2fec2e7?q=80&w=687&auto=format&fit=crop',
+	'https://images.unsplash.com/photo-1597942080393-4cecdfbcee17?q=80&w=735',
+	'https://images.unsplash.com/photo-1528788923685-864db0cbc312?q=80&w=730',
 ]
+
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+
+function resolveImageSrc(src) {
+	if (!src) return ''
+	if (src.startsWith('http')) return src
+	if (src.startsWith('/')) return `${apiBase}${src}`
+	return `${apiBase}/${src}`
+}
 
 function Home() {
 	const [events, setEvents] = useState([])
@@ -47,13 +56,13 @@ function Home() {
 		loadEvents()
 	}, [])
 
-	const heroImage = useMemo(() => events[0]?.thumbnail || '/images/ifpc-icon.png', [events])
+	const heroImage = useMemo(() => resolveImageSrc(events[0]?.thumbnail) || galleryFallback[0], [events])
 
 	const projectCards = useMemo(() => events.slice(0, 3), [events])
 
 	const galleryImages = useMemo(() => {
 		const fromEvents = events
-			.map((event) => event?.thumbnail)
+			.map((event) => resolveImageSrc(event?.thumbnail))
 			.filter(Boolean)
 			.slice(0, 6)
 
@@ -79,6 +88,10 @@ function Home() {
 				<motion.img
 					src={heroImage}
 					alt="IFPC studio"
+					referrerPolicy="no-referrer"
+					onError={(event) => {
+						event.currentTarget.src = '/images/ifpc-icon.png'
+					}}
 					className="absolute inset-0 h-full w-full object-cover"
 					initial={{ scale: 1.05 }}
 					animate={{ scale: 1.14 }}
@@ -198,8 +211,12 @@ function Home() {
 									className="group overflow-hidden rounded-2xl border border-fuchsia-300/25 bg-[linear-gradient(170deg,rgba(7,13,25,0.85),rgba(11,17,33,0.66))] shadow-[0_16px_42px_rgba(0,0,0,0.42)]"
 								>
 									<img
-										src={event.thumbnail || '/images/ifpc-icon.png'}
+										src={resolveImageSrc(event.thumbnail) || '/images/ifpc-icon.png'}
 										alt={event.title || 'IFPC Project'}
+										referrerPolicy="no-referrer"
+										onError={(imgEvent) => {
+											imgEvent.currentTarget.src = '/images/ifpc-icon.png'
+										}}
 										className="h-44 w-full object-cover transition duration-700 group-hover:scale-110"
 									/>
 									<div className="space-y-2 p-4">
@@ -228,7 +245,15 @@ function Home() {
 							onClick={() => setPreviewImage(image)}
 							className="group relative h-full min-h-[28vh] overflow-hidden border border-cyan-300/10 text-left"
 						>
-							<img src={image} alt={`Gallery ${index + 1}`} className="h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+							<img
+								src={image}
+								alt={`Gallery ${index + 1}`}
+								referrerPolicy="no-referrer"
+								onError={(event) => {
+									event.currentTarget.src = '/images/ifpc-icon.png'
+								}}
+								className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 							<p className="absolute bottom-3 left-3 text-xs font-semibold uppercase tracking-[0.14em] text-white/90">Shot {index + 1}</p>
 						</motion.button>
@@ -282,6 +307,10 @@ function Home() {
 						<motion.img
 							src={previewImage}
 							alt="Preview"
+							referrerPolicy="no-referrer"
+							onError={(event) => {
+								event.currentTarget.src = '/images/ifpc-icon.png'
+							}}
 							initial={{ scale: 0.92, opacity: 0, filter: 'blur(8px)' }}
 							animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
 							exit={{ scale: 0.97, opacity: 0 }}
