@@ -183,7 +183,9 @@ function Home() {
 
 	return (
 		<PageWrapper>
-			<AdvancedHeroSlider />
+			<div className="-mt-20 md:-mt-24">
+				<AdvancedHeroSlider />
+			</div>
 			<InteractiveMarquee variant="ifpc" fullScreen />
 
 			<section id="about" data-scroll-reveal className="relative left-1/2 min-h-screen w-screen -translate-x-1/2 overflow-hidden bg-[linear-gradient(160deg,#050910,#0a1222_50%,#111b30)] px-6 py-20 sm:px-10 lg:px-14">
