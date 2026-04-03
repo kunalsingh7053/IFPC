@@ -63,7 +63,7 @@ function Register() {
             </button>
             <Link
               to="/"
-              className="rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-sm font-medium text-cyan-200 hover:bg-cyan-500/20"
+              className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/20"
             >
               Home
             </Link>
@@ -71,7 +71,7 @@ function Register() {
 
           <h1 className="text-3xl font-bold text-white sm:text-4xl">Member Registration</h1>
           <p className="mt-2 text-sm text-slate-300">Create your IFPC member account</p>
-          <p className="mt-1 text-xs text-cyan-200/90">Use your Medicaps email only ({MEDICAPS_EMAIL_DOMAIN})</p>
+          <p className="mt-1 text-xs text-emerald-200/90">Use your Medicaps email only ({MEDICAPS_EMAIL_DOMAIN})</p>
 
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
             <FormInput label="First Name" name="firstName" value={form.firstName} onChange={handleChange} required />
@@ -81,7 +81,7 @@ function Register() {
             <FormInput label="Position" name="position" value={form.position} onChange={handleChange} />
             <FormInput label="Department" name="department" value={form.department} onChange={handleChange} />
 
-            <button className="md:col-span-2 w-full rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
+            <button className="md:col-span-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
               {loading ? 'Submitting...' : 'Register'}
             </button>
           </form>
@@ -90,7 +90,7 @@ function Register() {
           {message && <p className="mt-3 text-sm text-emerald-300">{message}</p>}
 
           <p className="mt-4 text-sm text-slate-300">
-            Already have an account? <Link to="/login" className="text-cyan-300">Login</Link>
+            Already have an account? <Link to="/login" className="text-emerald-300">Login</Link>
           </p>
         </div>
       </section>

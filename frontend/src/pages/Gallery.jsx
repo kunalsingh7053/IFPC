@@ -63,7 +63,7 @@ function Gallery() {
   return (
     <PageWrapper>
       <section className="w-full px-4 py-8 sm:px-6 lg:px-10">
-        <div className="rounded-3xl border border-cyan-300/20 bg-[linear-gradient(160deg,rgba(6,12,24,0.84),rgba(12,22,42,0.72))] p-6 backdrop-blur-xl sm:p-8">
+        <div className="rounded-3xl border border-emerald-300/20 bg-[linear-gradient(160deg,rgba(6,12,24,0.84),rgba(12,22,42,0.72))] p-6 backdrop-blur-xl sm:p-8">
           
           <h1 className="text-3xl font-black text-white sm:text-4xl">
             Gallery

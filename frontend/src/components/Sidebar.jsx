@@ -30,7 +30,7 @@ function Sidebar({ open, onClose }) {
       }`}
     >
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="photo-title-glow text-xl font-bold text-amber-300">IFPC</h2>
+        <h2 className="photo-title-glow text-xl font-bold text-emerald-300">IFPC</h2>
         <button onClick={onClose} className="rounded-lg border border-white/15 bg-white/10 px-2 py-1 md:hidden">X</button>
       </div>
 
@@ -43,7 +43,7 @@ function Sidebar({ open, onClose }) {
             className={({ isActive }) =>
               `block rounded-xl px-4 py-3 text-sm font-medium transition ${
                 isActive
-                  ? 'bg-gradient-to-r from-amber-500/25 to-cyan-500/20 text-amber-100 shadow-lg shadow-black/20'
+                  ? 'bg-gradient-to-r from-emerald-500/25 to-emerald-500/20 text-emerald-100 shadow-lg shadow-black/20'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`
             }

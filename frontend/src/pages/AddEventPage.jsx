@@ -63,7 +63,7 @@ function AddEventPage() {
           <input type="file" multiple accept="image/*" onChange={(e) => setImages(e.target.files || [])} className="w-full text-sm text-slate-200" />
         </label>
 
-        <button className="md:col-span-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 py-3 font-semibold text-white">
+        <button className="md:col-span-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white">
           Publish Event
         </button>
       </form>

@@ -56,7 +56,7 @@ function Login() {
         <div className="auth-card auth-animate-in w-full max-w-4xl rounded-3xl border border-white/15 p-4 sm:p-6 md:p-8">
           <div className="grid gap-4 lg:grid-cols-[0.95fr_1.15fr] lg:gap-6">
             <aside className="login-side-panel rounded-2xl border border-white/12 p-5 sm:p-6">
-              <p className="inline-flex rounded-full border border-cyan-300/35 bg-cyan-400/10 px-3 py-1 text-xs font-semibold tracking-wide text-cyan-100">
+              <p className="inline-flex rounded-full border border-emerald-300/35 bg-emerald-400/10 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-100">
                 IFPC Portal Access
               </p>
               <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">Welcome Back</h1>
@@ -82,7 +82,7 @@ function Login() {
                 </button>
                 <Link
                   to="/"
-                  className="w-full rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-center text-sm font-medium text-cyan-200 hover:bg-cyan-500/20 sm:w-auto"
+                  className="w-full rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-center text-sm font-medium text-emerald-200 hover:bg-emerald-500/20 sm:w-auto"
                 >
                   Home
                 </Link>
@@ -95,14 +95,14 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setRole('admin')}
-                  className={`rounded-xl py-2.5 text-sm font-semibold ${role === 'admin' ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30' : 'text-slate-300 hover:bg-white/10'}`}
+                  className={`rounded-xl py-2.5 text-sm font-semibold ${role === 'admin' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'text-slate-300 hover:bg-white/10'}`}
                 >
                   Admin
                 </button>
                 <button
                   type="button"
                   onClick={() => setRole('member')}
-                  className={`rounded-xl py-2.5 text-sm font-semibold ${role === 'member' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-300 hover:bg-white/10'}`}
+                  className={`rounded-xl py-2.5 text-sm font-semibold ${role === 'member' ? 'bg-green-500 text-white shadow-lg shadow-green-500/30' : 'text-slate-300 hover:bg-white/10'}`}
                 >
                   Member
                 </button>
@@ -112,7 +112,7 @@ function Login() {
                 <FormInput label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
                 <FormInput label="Password" name="password" type="password" value={form.password} onChange={handleChange} required />
 
-                <button className="mt-2 w-full rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
+                <button className="mt-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
@@ -120,7 +120,7 @@ function Login() {
               {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
               <p className="mt-4 text-sm text-slate-300">
-                New member? <Link to="/register" className="font-semibold text-cyan-300">Register here</Link>
+                New member? <Link to="/register" className="font-semibold text-emerald-300">Register here</Link>
               </p>
             </div>
           </div>

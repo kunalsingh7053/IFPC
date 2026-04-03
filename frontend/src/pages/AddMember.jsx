@@ -43,7 +43,7 @@ function AddMember() {
         <FormInput label="Position" name="position" value={form.position} onChange={handleChange} />
         <FormInput label="Department" name="department" value={form.department} onChange={handleChange} />
 
-        <button className="md:col-span-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 py-3 font-semibold text-white">
+        <button className="md:col-span-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white">
           Add Member
         </button>
       </form>

@@ -67,13 +67,13 @@ function IntroScreen({ onDone }) {
 		>
 			<motion.div
 				aria-hidden="true"
-				className="pointer-events-none absolute -left-14 top-10 h-72 w-72 rounded-full bg-amber-400/20 blur-3xl"
+				className="pointer-events-none absolute -left-14 top-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl"
 				animate={{ x: [0, 14, 0], y: [0, -16, 0] }}
 				transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
 			/>
 			<motion.div
 				aria-hidden="true"
-				className="pointer-events-none absolute -right-16 bottom-8 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl"
+				className="pointer-events-none absolute -right-16 bottom-8 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl"
 				animate={{ x: [0, -16, 0], y: [0, 14, 0] }}
 				transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
 			/>
@@ -90,7 +90,7 @@ function IntroScreen({ onDone }) {
 							className="transform-gpu space-y-2 will-change-transform"
 						>
 							<p className="text-4xl font-semibold tracking-wide text-slate-100 sm:text-5xl">{activeGreeting.word}</p>
-							<p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-100/90 sm:text-sm">{activeGreeting.lang}</p>
+							<p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-100/90 sm:text-sm">{activeGreeting.lang}</p>
 						</motion.div>
 					)}
 

@@ -2,28 +2,54 @@ import { motion } from 'framer-motion'
 import PageWrapper from '../components/PageWrapper'
 
 const missionPoints = [
-  { title: 'Promote photography and film making', icon: 'camera' },
-  { title: 'Help students learn creative skills', icon: 'spark' },
-  { title: 'Cover university events', icon: 'event' },
-  { title: 'Provide media support', icon: 'support' },
-  { title: 'Build strong creative team', icon: 'team' },
+  {
+    title: 'Promote photography and filmmaking culture',
+    detail: 'We build a creative ecosystem where visual storytelling is practiced with intent.',
+    icon: 'camera',
+  },
+  {
+    title: 'Mentor students with practical workflows',
+    detail: 'Learning happens through projects, feedback cycles, and real production constraints.',
+    icon: 'spark',
+  },
+  {
+    title: 'Document university life and flagship events',
+    detail: 'From cultural fests to workshops, we preserve campus memories with consistency.',
+    icon: 'event',
+  },
+  {
+    title: 'Deliver media support for academic and brand needs',
+    detail: 'Teams collaborate with departments for photo, video, and communication requirements.',
+    icon: 'support',
+  },
+  {
+    title: 'Develop a disciplined and collaborative team',
+    detail: 'Members grow with role clarity, ownership, and professional creative standards.',
+    icon: 'team',
+  },
 ]
 
 const whatWeDo = [
-  'Event Photography',
-  'Videography',
-  'Film Making',
-  'Editing',
-  'Workshops',
-  'Content Creation',
+  { name: 'Event Photography', desc: 'High-quality event coverage with editorial consistency.' },
+  { name: 'Videography', desc: 'Dynamic video capture for ceremonies, sessions, and highlights.' },
+  { name: 'Film Making', desc: 'Concept-to-screen workflow for short-form campus storytelling.' },
+  { name: 'Editing', desc: 'Professional post-production in pacing, color, and sound.' },
+  { name: 'Workshops', desc: 'Peer learning and mentor-led sessions on tools and craft.' },
+  { name: 'Content Creation', desc: 'Brand-ready visual assets for digital and campus channels.' },
 ]
 
 const teamRoles = [
-  { name: 'President', accent: 'from-amber-400/45 to-orange-500/30' },
-  { name: 'Vice President', accent: 'from-sky-400/40 to-cyan-500/25' },
-  { name: 'Head', accent: 'from-emerald-400/35 to-teal-500/25' },
-  { name: 'Core Members', accent: 'from-rose-400/35 to-fuchsia-500/25' },
-  { name: 'Members', accent: 'from-violet-400/35 to-indigo-500/25' },
+  { name: 'President', note: 'Leads vision, quality standards, and team direction.' },
+  { name: 'Vice President', note: 'Coordinates execution, planning, and cross-team alignment.' },
+  { name: 'Heads', note: 'Manage department-level tasks and production milestones.' },
+  { name: 'Core Members', note: 'Drive key projects and mentor growing team members.' },
+  { name: 'Members', note: 'Contribute in active shoots, edits, and event operations.' },
+]
+
+const quickStats = [
+  { label: 'Instagram Followers', value: '2,200+' },
+  { label: 'Creative Tracks', value: '6' },
+  { label: 'Campus Presence', value: 'MediCaps' },
 ]
 
 function SectionTitle({ title, subtitle }) {
@@ -40,7 +66,7 @@ function GlassCard({ children, className = '' }) {
 }
 
 function MissionIcon({ type }) {
-  const common = 'h-5 w-5 text-amber-200'
+  const common = 'h-5 w-5 text-emerald-200'
 
   if (type === 'camera') {
     return (
@@ -94,7 +120,7 @@ function About() {
           className="absolute inset-0 bg-cover bg-center opacity-25"
           style={{ backgroundImage: "url('/images/ifpc-icon.png')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/70 to-cyan-950/75" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/70 to-emerald-950/75" />
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -107,8 +133,20 @@ function About() {
           <h1 className="mt-5 max-w-4xl text-3xl font-black leading-tight text-white md:text-5xl">
             Ikshana Film and Photography Community
           </h1>
-          <p className="mt-3 text-lg text-slate-200">Official Photography Community of MediCaps University Indore</p>
-          <p className="mt-2 text-amber-300">Capturing Moments, Creating Memories</p>
+          <p className="mt-4 max-w-3xl text-base text-slate-200 md:text-lg">
+            Official photography and filmmaking community of MediCaps University. IFPC nurtures student creators through
+            practical production work, collaborative learning, and campus storytelling.
+          </p>
+          <p className="mt-2 text-emerald-300">Capturing Moments, Creating Memories</p>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-3">
+            {quickStats.map((item) => (
+              <div key={item.label} className="rounded-xl border border-emerald-200/20 bg-black/25 p-4 backdrop-blur">
+                <p className="text-2xl font-black text-emerald-200">{item.value}</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.12em] text-slate-300">{item.label}</p>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </section>
 
@@ -118,32 +156,38 @@ function About() {
         viewport={{ once: true, amount: 0.15 }}
         className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:p-8"
       >
-        <SectionTitle title="About IFPC" />
-        <div className="space-y-4 text-slate-200">
-          <p>
-            Ikshana Film and Photography Community (IFPC) is the official photography and film making community of
-            MediCaps University Indore.
-          </p>
-          <p>
-            This community is created for students who are passionate about photography, videography, editing, and film
-            making.
-          </p>
-          <p>
-            IFPC provides a platform where students can learn, create, and showcase their creative skills.
-          </p>
-          <p>
-            Our team covers university events, cultural programs, workshops, seminars, and special moments through
-            photography and films.
-          </p>
-          <p>
-            The goal of IFPC is to build a strong creative community and give students real experience in media
-            production.
-          </p>
+        <SectionTitle title="About IFPC" subtitle="A student-first creative community built on hands-on execution." />
+        <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+          <div className="space-y-4 text-slate-200">
+            <p>
+              Ikshana Film and Photography Community (IFPC) is the official visual media community of MediCaps
+              University Indore.
+            </p>
+            <p>
+              We provide a growth platform for students passionate about photography, videography, editing, and film
+              production through practical assignments and team projects.
+            </p>
+            <p>
+              Our work spans university events, cultural programs, seminars, workshops, and digital content support for
+              campus communication.
+            </p>
+          </div>
+
+          <GlassCard className="border-emerald-200/20 bg-emerald-300/[0.06]">
+            <p className="text-sm uppercase tracking-[0.16em] text-emerald-200">Vision</p>
+            <p className="mt-3 text-slate-100">
+              Build a disciplined creative team that blends storytelling, technical skill, and professional workflow.
+            </p>
+            <p className="mt-4 text-sm text-slate-300">Outcome: students graduate with portfolio-ready project experience.</p>
+          </GlassCard>
         </div>
       </motion.section>
 
       <section className="mt-8 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-950/90 p-6 md:p-8">
-        <SectionTitle title="Our Mission" subtitle="We shape creators through collaboration, practice, and real production experience." />
+        <SectionTitle
+          title="Our Mission"
+          subtitle="We shape creators through collaboration, practical training, and real production ownership."
+        />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {missionPoints.map((point, index) => (
             <motion.div
@@ -153,16 +197,19 @@ function About() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: index * 0.08 }}
             >
-              <GlassCard>
+              <GlassCard className="h-full">
                 <div className="flex items-start gap-3">
                   <motion.div
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', delay: index * 0.2 }}
-                    className="mt-1 flex h-10 w-10 items-center justify-center rounded-xl border border-amber-300/30 bg-amber-300/10"
+                    className="mt-1 flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-300/10"
                   >
                     <MissionIcon type={point.icon} />
                   </motion.div>
-                  <p className="text-slate-100">{point.title}</p>
+                  <div>
+                    <p className="font-semibold text-slate-100">{point.title}</p>
+                    <p className="mt-2 text-sm text-slate-300">{point.detail}</p>
+                  </div>
                 </div>
               </GlassCard>
             </motion.div>
@@ -175,7 +222,7 @@ function About() {
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {whatWeDo.map((item, index) => (
             <motion.article
-              key={item}
+              key={item.name}
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
@@ -183,7 +230,8 @@ function About() {
               whileHover={{ y: -6, scale: 1.01 }}
               className="rounded-2xl border border-white/15 bg-gradient-to-br from-white/10 to-white/5 p-5"
             >
-              <p className="text-lg font-semibold text-white">{item}</p>
+              <p className="text-lg font-semibold text-white">{item.name}</p>
+              <p className="mt-2 text-sm text-slate-300">{item.desc}</p>
             </motion.article>
           ))}
         </div>
@@ -199,22 +247,34 @@ function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: index * 0.07 }}
-              className={`rounded-2xl border border-white/15 bg-gradient-to-br ${role.accent} p-5 text-center`}
+              className="rounded-2xl border border-white/15 bg-gradient-to-br from-emerald-400/25 to-emerald-600/10 p-5 text-center"
             >
               <p className="text-sm uppercase tracking-wide text-slate-100">Role</p>
               <h3 className="mt-2 text-xl font-black text-white">{role.name}</h3>
+              <p className="mt-2 text-sm text-slate-300">{role.note}</p>
             </motion.article>
           ))}
         </div>
       </section>
 
       <section className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:p-8">
-        <SectionTitle title="Why This Website" />
-        <div className="space-y-4 text-slate-200">
-          <p>This website is created to showcase IFPC events for students and clients.</p>
-          <p>Only approved members can login and chat with team.</p>
-          <p>Public users can see events without login.</p>
-          <p>President and Admin manage members and events.</p>
+        <SectionTitle title="Why This Website" subtitle="Purpose-built for visibility, collaboration, and efficient community operations." />
+        <div className="grid gap-4 md:grid-cols-2">
+          <GlassCard className="bg-white/6">
+            <p className="text-sm uppercase tracking-[0.15em] text-emerald-200">Public Experience</p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-200 marker:text-emerald-300">
+              <li>Showcases IFPC projects and event highlights.</li>
+              <li>Helps students and visitors explore creative output.</li>
+            </ul>
+          </GlassCard>
+
+          <GlassCard className="bg-white/6">
+            <p className="text-sm uppercase tracking-[0.15em] text-emerald-200">Team Workspace</p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate-200 marker:text-emerald-300">
+              <li>Approved members can log in and coordinate internally.</li>
+              <li>Admin and President can manage members and event records.</li>
+            </ul>
+          </GlassCard>
         </div>
       </section>
 

@@ -8,7 +8,7 @@ const GREETINGS = [
   'こんにちは',
   '안녕하세요'
 ]
-const NAME_LINE = 'Ikshana Film and Photography Community'
+const NAME_LINE = 'IFPC'
 
 export default function HelloIntro({ onComplete, reducedMotion = false }) {
   const [phase, setPhase] = useState('greet')

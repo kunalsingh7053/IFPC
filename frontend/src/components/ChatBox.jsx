@@ -99,7 +99,7 @@ function ChatBox() {
           />
           <button
             disabled={loading}
-            className="rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white disabled:opacity-70"
+            className="rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-3 text-sm font-semibold text-white disabled:opacity-70"
           >
             {loading ? '...' : 'Send'}
           </button>

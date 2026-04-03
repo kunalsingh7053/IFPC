@@ -14,17 +14,17 @@ function DashboardLayout() {
         aria-hidden="true"
         animate={{ x: [0, 22, 0], y: [0, -16, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="animate-float-slow pointer-events-none absolute -top-16 -left-16 h-56 w-56 rounded-full bg-amber-400/20 blur-3xl"
+        className="animate-float-slow pointer-events-none absolute -top-16 -left-16 h-56 w-56 rounded-full bg-emerald-400/20 blur-3xl"
       />
       <motion.div
         aria-hidden="true"
         animate={{ x: [0, -16, 0], y: [0, 18, 0] }}
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-        className="animate-float-fast pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl"
+        className="animate-float-fast pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl"
       />
       <div className="relative min-h-screen">
         <Navbar />
-        <main className="w-full">
+        <main className="w-full pt-20 md:pt-24">
           <Outlet />
         </main>
         <Footer />

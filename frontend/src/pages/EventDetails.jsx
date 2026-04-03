@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import API from '../api/axios'
 import Loader from '../components/Loader'
 import PageWrapper from '../components/PageWrapper'
+import dummyEvents from '../utils/dummyEvents'
 
 function EventDetails() {
   const { id } = useParams()
@@ -14,9 +15,19 @@ function EventDetails() {
     async function fetchEvent() {
       try {
         const { data } = await API.get(`/events/${id}`)
-        setEvent(data?.data)
+        const fetchedEvent = data?.data || dummyEvents.find((item) => item._id === id)
+        setEvent(fetchedEvent || null)
+        if (!fetchedEvent) {
+          setError('Unable to fetch event details')
+        }
       } catch (err) {
-        setError(err?.response?.data?.message || 'Unable to fetch event details')
+        const fallbackEvent = dummyEvents.find((item) => item._id === id)
+        if (fallbackEvent) {
+          setEvent(fallbackEvent)
+          setError('')
+        } else {
+          setError(err?.response?.data?.message || 'Unable to fetch event details')
+        }
       } finally {
         setLoading(false)
       }

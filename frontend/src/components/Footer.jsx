@@ -1,16 +1,16 @@
 function Footer() {
   return (
-    <footer className="mt-8 w-full border-t border-cyan-300/20 bg-[linear-gradient(160deg,rgba(4,8,18,0.95),rgba(8,14,28,0.9))] px-4 py-8 md:px-8">
+    <footer className="mt-8 w-full border-t border-emerald-300/20 bg-[linear-gradient(160deg,rgba(4,8,18,0.95),rgba(8,14,28,0.9))] px-4 py-8 md:px-8">
       <div className="mx-auto grid w-full max-w-7xl gap-6 md:grid-cols-3">
         <div>
           <div className="flex items-center gap-3">
             <img
               src="/images/ifpc-icon.png"
               alt="IFPC logo"
-              className="h-11 w-11 rounded-full border border-cyan-300/45 object-cover shadow-[0_0_22px_rgba(56,189,248,0.35)]"
+              className="h-11 w-11 rounded-full border border-emerald-300/45 object-cover shadow-[0_0_22px_rgba(56,189,248,0.35)]"
             />
             <div>
-              <p className="text-lg font-black text-cyan-200">IFPC</p>
+              <p className="text-lg font-black text-emerald-200">IFPC</p>
               <p className="text-xs text-slate-300">Ikshana Film and Photography Community</p>
             </div>
           </div>
@@ -18,25 +18,25 @@ function Footer() {
         </div>
 
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-100">Quick Links</p>
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-emerald-100">Quick Links</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-slate-300">
-            <a href="/" className="hover:text-cyan-200">Home</a>
-            <a href="/about" className="hover:text-cyan-200">About</a>
-            <a href="/courses" className="hover:text-cyan-200">Courses</a>
-            <a href="/gallery" className="hover:text-cyan-200">Gallery</a>
-            <a href="/faculty" className="hover:text-cyan-200">Faculty</a>
-            <a href="/contact" className="hover:text-cyan-200">Contact</a>
+            <a href="/" className="hover:text-emerald-200">Home</a>
+            <a href="/about" className="hover:text-emerald-200">About</a>
+            <a href="/courses" className="hover:text-emerald-200">Courses</a>
+            <a href="/gallery" className="hover:text-emerald-200">Gallery</a>
+            <a href="/team" className="hover:text-emerald-200">Team</a>
+            <a href="/contact" className="hover:text-emerald-200">Contact</a>
           </div>
         </div>
 
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.14em] text-cyan-100">Social</p>
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-emerald-100">Social</p>
           <div className="mt-3 flex items-center gap-3">
             <a
               href="https://www.instagram.com/ifp_community_/"
               target="_blank"
               rel="noreferrer"
-              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-cyan-300/50 hover:text-cyan-200"
+              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-emerald-300/50 hover:text-emerald-200"
               aria-label="Instagram"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
@@ -45,7 +45,7 @@ function Footer() {
             </a>
             <a
               href="mailto:ifpc@medicaps.ac.in"
-              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-cyan-300/50 hover:text-cyan-200"
+              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-emerald-300/50 hover:text-emerald-200"
               aria-label="Email"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
@@ -54,7 +54,7 @@ function Footer() {
             </a>
             <a
               href="tel:+910000000000"
-              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-cyan-300/50 hover:text-cyan-200"
+              className="rounded-xl border border-white/15 bg-white/10 p-2.5 text-slate-100 hover:border-emerald-300/50 hover:text-emerald-200"
               aria-label="Phone"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">

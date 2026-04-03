@@ -6,12 +6,12 @@ function Loader({ label = 'Loading...' }) {
       <div className="flex flex-col items-center gap-4">
         <div className="relative h-14 w-14">
           <motion.div
-            className="absolute inset-0 rounded-full border-4 border-cyan-300/20"
+            className="absolute inset-0 rounded-full border-4 border-emerald-300/20"
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1.3, ease: 'linear' }}
           />
           <motion.div
-            className="absolute inset-2 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500"
+            className="absolute inset-2 rounded-full bg-gradient-to-r from-emerald-400 to-green-500"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ repeat: Infinity, duration: 1.2 }}
           />

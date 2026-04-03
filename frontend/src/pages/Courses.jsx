@@ -38,7 +38,7 @@ function Courses() {
   return (
     <PageWrapper>
       <section className="w-full px-4 py-8 sm:px-6 lg:px-10">
-        <div className="rounded-3xl border border-cyan-300/20 bg-[linear-gradient(160deg,rgba(6,12,24,0.85),rgba(12,22,42,0.75))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8">
+        <div className="rounded-3xl border border-emerald-300/20 bg-[linear-gradient(160deg,rgba(6,12,24,0.85),rgba(12,22,42,0.75))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur-xl sm:p-8">
           <h1 className="text-3xl font-black text-white sm:text-4xl">Courses</h1>
           <p className="mt-3 max-w-3xl text-slate-300">
             IFPC courses are designed for practical camera, film, and post-production excellence with a modern portfolio-focused approach.
@@ -53,9 +53,9 @@ function Courses() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.35, delay: index * 0.05 }}
                 whileHover={{ y: -5, scale: 1.01 }}
-                className="rounded-2xl border border-fuchsia-300/25 bg-[linear-gradient(160deg,rgba(10,18,34,0.78),rgba(7,14,27,0.68))] p-5"
+                className="rounded-2xl border border-green-300/25 bg-[linear-gradient(160deg,rgba(10,18,34,0.78),rgba(7,14,27,0.68))] p-5"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200">{course.level}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200">{course.level}</p>
                 <h2 className="mt-2 text-xl font-bold text-white">{course.title}</h2>
                 <p className="mt-2 text-sm text-slate-300">{course.summary}</p>
               </motion.article>

@@ -1,9 +1,11 @@
+import { useEffect, useRef, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../components/DashboardLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
 import AdminRoute from '../components/AdminRoute'
 import MemberRoute from '../components/MemberRoute'
+import BlackCircleRouteTransition from '../components/BlackCircleRouteTransition'
 
 import Home from '../pages/Home'
 import Login from '../pages/Login'
@@ -23,48 +25,75 @@ import Contact from '../pages/Contact'
 import Courses from '../pages/Courses'
 import Gallery from '../pages/Gallery'
 import Faculty from '../pages/Faculty'
+import Developers from '../pages/Developers'
 import NotFound from '../pages/NotFound'
 
 function Mainroutes() {
 	const location = useLocation()
+	const [showTransition, setShowTransition] = useState(false)
+	const isInitialRender = useRef(true)
+
+	useEffect(() => {
+		if (isInitialRender.current) {
+			isInitialRender.current = false
+			return undefined
+		}
+
+		setShowTransition(true)
+
+		const timer = window.setTimeout(() => {
+			setShowTransition(false)
+		}, 1020)
+
+		return () => {
+			window.clearTimeout(timer)
+		}
+	}, [location.pathname])
 
 	return (
-		<AnimatePresence mode="wait">
-			<Routes location={location} key={location.pathname}>
-				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Register />} />
+		<>
+			<AnimatePresence>
+				{showTransition ? <BlackCircleRouteTransition key={`transition-${location.pathname}`} /> : null}
+			</AnimatePresence>
 
-				<Route element={<DashboardLayout />}>
-					<Route path="/" element={<Home />} />
-					<Route path="/events" element={<EventsPage />} />
-					<Route path="/events/:id" element={<EventDetails />} />
-					<Route path="/team" element={<TeamPage />} />
-					<Route path="/about" element={<About />} />
-					<Route path="/courses" element={<Courses />} />
-					<Route path="/gallery" element={<Gallery />} />
-					<Route path="/faculty" element={<Faculty />} />
-					<Route path="/contact" element={<Contact />} />
+			<AnimatePresence mode="wait">
+				<Routes location={location} key={location.pathname}>
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
 
-					<Route element={<ProtectedRoute />}>
-						<Route path="/chat" element={<ChatPage />} />
-						<Route path="/profile" element={<ProfilePage />} />
+					<Route element={<DashboardLayout />}>
+						<Route path="/" element={<Home />} />
+						<Route path="/events" element={<EventsPage />} />
+						<Route path="/events/:id" element={<EventDetails />} />
+						<Route path="/team" element={<TeamPage />} />
+						<Route path="/about" element={<About />} />
+						<Route path="/courses" element={<Courses />} />
+						<Route path="/gallery" element={<Gallery />} />
+						<Route path="/faculty" element={<Faculty />} />
+						<Route path="/developers" element={<Developers />} />
+						<Route path="/contact" element={<Contact />} />
+
+						<Route element={<ProtectedRoute />}>
+							<Route path="/chat" element={<ChatPage />} />
+							<Route path="/profile" element={<ProfilePage />} />
+						</Route>
+
+						<Route element={<AdminRoute />}>
+							<Route path="/admin-dashboard" element={<AdminDashboard />} />
+							<Route path="/members" element={<MembersList />} />
+							<Route path="/add-member" element={<AddMember />} />
+							<Route path="/add-event" element={<AddEventPage />} />
+						</Route>
+
+						<Route element={<MemberRoute />}>
+							<Route path="/member-dashboard" element={<MemberDashboard />} />
+						</Route>
+
+						<Route path="*" element={<NotFound />} />
 					</Route>
-
-					<Route element={<AdminRoute />}>
-						<Route path="/admin-dashboard" element={<AdminDashboard />} />
-						<Route path="/members" element={<MembersList />} />
-						<Route path="/add-member" element={<AddMember />} />
-						<Route path="/add-event" element={<AddEventPage />} />
-					</Route>
-
-					<Route element={<MemberRoute />}>
-						<Route path="/member-dashboard" element={<MemberDashboard />} />
-					</Route>
-
-					<Route path="*" element={<NotFound />} />
-				</Route>
-			</Routes>
-		</AnimatePresence>
+				</Routes>
+			</AnimatePresence>
+		</>
 	)
 }
 

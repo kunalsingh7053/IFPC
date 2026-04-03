@@ -26,13 +26,13 @@ const rolePriority = {
 }
 
 const roleBadgeClass = {
-  president: 'border-amber-300/60 bg-amber-500/20 text-amber-200',
-  'vice-president': 'border-cyan-300/50 bg-cyan-500/15 text-cyan-200',
+  president: 'border-emerald-300/60 bg-emerald-500/20 text-emerald-200',
+  'vice-president': 'border-emerald-300/50 bg-emerald-500/15 text-emerald-200',
   core: 'border-violet-300/45 bg-violet-500/15 text-violet-200',
   secretary: 'border-emerald-300/45 bg-emerald-500/15 text-emerald-200',
   treasurer: 'border-sky-300/45 bg-sky-500/15 text-sky-200',
   head: 'border-rose-300/45 bg-rose-500/15 text-rose-200',
-  admin: 'border-fuchsia-300/45 bg-fuchsia-500/15 text-fuchsia-200',
+  admin: 'border-green-300/45 bg-green-500/15 text-green-200',
   member: 'border-white/20 bg-white/10 text-slate-200',
 }
 
@@ -162,7 +162,7 @@ function TeamPage() {
             onClick={() => setActiveFilter(filter.key)}
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
               activeFilter === filter.key
-                ? 'bg-gradient-to-r from-amber-500 to-emerald-500 text-white'
+                ? 'bg-gradient-to-r from-emerald-500 to-emerald-500 text-white'
                 : 'border border-white/15 bg-white/5 text-slate-300 hover:bg-white/10'
             }`}
           >

@@ -52,7 +52,7 @@ function Faculty() {
   return (
     <PageWrapper>
       <section className="w-full px-4 py-8 sm:px-6 lg:px-10">
-        <div className="rounded-3xl border border-cyan-300/20 bg-[linear-gradient(165deg,rgba(6,12,24,0.85),rgba(11,20,39,0.74))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:p-8">
+        <div className="rounded-3xl border border-emerald-300/20 bg-[linear-gradient(165deg,rgba(6,12,24,0.85),rgba(11,20,39,0.74))] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.38)] backdrop-blur-xl sm:p-8">
           <h1 className="text-3xl font-black text-white sm:text-4xl">Faculty</h1>
           <p className="mt-2 text-slate-300">Meet IFPC leadership and core creative mentors.</p>
 
@@ -73,7 +73,7 @@ function Faculty() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.35, delay: index * 0.05 }}
                   whileHover={{ y: -5 }}
-                  className="rounded-2xl border border-fuchsia-300/25 bg-[linear-gradient(165deg,rgba(10,15,30,0.78),rgba(13,20,39,0.65))] p-4"
+                  className="rounded-2xl border border-green-300/25 bg-[linear-gradient(165deg,rgba(10,15,30,0.78),rgba(13,20,39,0.65))] p-4"
                 >
                   {member?.profileImage ? (
                     <img src={member.profileImage} alt={name} className="h-40 w-full rounded-xl object-cover" />
@@ -83,7 +83,7 @@ function Faculty() {
                     </div>
                   )}
                   <h2 className="mt-3 text-lg font-bold text-white">{name}</h2>
-                  <p className="mt-1 text-sm text-cyan-200">{roleLabel || 'Member'}</p>
+                  <p className="mt-1 text-sm text-emerald-200">{roleLabel || 'Member'}</p>
                   <p className="mt-1 text-xs text-slate-300">{member?.department || 'IFPC Community'}</p>
                 </motion.article>
               )

@@ -3,6 +3,7 @@ import API from '../api/axios'
 import EventCard from '../components/EventCard'
 import Loader from '../components/Loader'
 import PageWrapper from '../components/PageWrapper'
+import dummyEvents from '../utils/dummyEvents'
 
 function EventsPage() {
   const [events, setEvents] = useState([])
@@ -13,9 +14,11 @@ function EventsPage() {
     async function fetchEvents() {
       try {
         const { data } = await API.get('/events')
-        setEvents(data?.data || [])
+        const fetchedEvents = Array.isArray(data?.data) ? data.data : []
+        setEvents(fetchedEvents.length > 0 ? fetchedEvents : dummyEvents)
       } catch (err) {
-        setError(err?.response?.data?.message || 'Failed to load events')
+        setEvents(dummyEvents)
+        setError('')
       } finally {
         setLoading(false)
       }
