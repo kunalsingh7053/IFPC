@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../components/DashboardLayout'
@@ -31,14 +31,8 @@ import NotFound from '../pages/NotFound'
 function Mainroutes() {
 	const location = useLocation()
 	const [showTransition, setShowTransition] = useState(false)
-	const isInitialRender = useRef(true)
 
 	useEffect(() => {
-		if (isInitialRender.current) {
-			isInitialRender.current = false
-			return undefined
-		}
-
 		setShowTransition(true)
 
 		const timer = window.setTimeout(() => {

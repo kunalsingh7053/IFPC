@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
+import { IFPC_LOGO_URL } from '../utils/branding'
 
 const PillNav = ({
   logo,
@@ -19,7 +20,7 @@ const PillNav = ({
   initialLoadAnimation = true,
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor
-  const resolvedLogo = logo || '/images/ifpc-icon.png'
+  const resolvedLogo = logo || IFPC_LOGO_URL
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [logoLoadError, setLogoLoadError] = useState(false)
   const circleRefs = useRef([])

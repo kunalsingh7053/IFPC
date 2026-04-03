@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import PageWrapper from '../components/PageWrapper'
+import { IFPC_LOGO_URL } from '../utils/branding'
 
 const missionPoints = [
   {
@@ -118,7 +119,7 @@ function About() {
       <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: "url('/images/ifpc-icon.png')" }}
+          style={{ backgroundImage: `url('${IFPC_LOGO_URL}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/70 to-emerald-950/75" />
         <motion.div

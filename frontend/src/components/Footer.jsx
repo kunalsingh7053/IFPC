@@ -1,3 +1,5 @@
+import { IFPC_LOGO_URL } from '../utils/branding'
+
 function Footer() {
   return (
     <footer className="mt-8 w-full border-t border-emerald-300/20 bg-[linear-gradient(160deg,rgba(4,8,18,0.95),rgba(8,14,28,0.9))] px-4 py-8 md:px-8">
@@ -5,7 +7,7 @@ function Footer() {
         <div>
           <div className="flex items-center gap-3">
             <img
-              src="/images/ifpc-icon.png"
+              src={IFPC_LOGO_URL}
               alt="IFPC logo"
               className="h-11 w-11 rounded-full border border-emerald-300/45 object-cover shadow-[0_0_22px_rgba(56,189,248,0.35)]"
             />

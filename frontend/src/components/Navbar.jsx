@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import PillNav from './PillNav'
+import { IFPC_LOGO_URL } from '../utils/branding'
 
 const topNavLinks = [
   { to: '/', label: 'Home' },
@@ -40,8 +41,8 @@ function Navbar() {
 
   return (
     <PillNav
-      logo="https://png.pngtree.com/png-vector/20240705/ourmid/pngtree-photography-camera-icon-vector-png-image_7210634.png"
-      logoAlt="Photography camera logo"
+      logo={IFPC_LOGO_URL}
+      logoAlt="IFPC official logo"
       items={visibleLinks}
       activeHref={location.pathname}
       className="custom-nav"

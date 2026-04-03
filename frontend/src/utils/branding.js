@@ -1,0 +1,2 @@
+export const IFPC_LOGO_URL = 'https://ik.imagekit.io/ofm1vl6gr/IFPC-LOGO/IFPC%20White%20Update.png'
+export const IFPC_CANVAS_LOADING_IMAGE_URL = 'https://ik.imagekit.io/ofm1vl6gr/IFPC-PICTURES/DSC_8013.jpg'

@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { IFPC_CANVAS_LOADING_IMAGE_URL } from '../utils/branding'
 
 const TOTAL_FRAMES = 192
 const START_READY_FRAMES = 42
-const HERO_LOADING_IMAGE = 'https://i.pinimg.com/736x/19/6b/c2/196bc2098c5181ef03d84083d8a8e3a4.jpg'
 
 function frameCandidates(index) {
 	const paddedIndex = String(index).padStart(3, '0')
@@ -77,9 +77,10 @@ function AdvancedHeroSlider() {
 	const [isReady, setIsReady] = useState(false)
 
 	const loadingBackgroundStyle = {
-		backgroundImage: `linear-gradient(160deg, rgba(5, 9, 5, 0.76), rgba(11, 20, 16, 0.72) 56%, rgba(16, 32, 23, 0.76)), url('${HERO_LOADING_IMAGE}')`,
+		backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.34)), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
+		backgroundRepeat: 'no-repeat',
 	}
 
 	useEffect(() => {
@@ -99,7 +100,7 @@ function AdvancedHeroSlider() {
 		const updateCanvasSize = () => {
 			const viewportWidth = section.clientWidth || window.innerWidth
 			const viewportHeight = section.clientHeight || window.innerHeight
-			const dpr = Math.min(window.devicePixelRatio || 1, 2)
+			const dpr = Math.min(window.devicePixelRatio || 1, 3)
 
 			canvas.width = Math.floor(viewportWidth * dpr)
 			canvas.height = Math.floor(viewportHeight * dpr)
@@ -226,7 +227,7 @@ function AdvancedHeroSlider() {
 	return (
 		<section ref={sectionRef} className="relative h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-black">
 			<canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="WpDev camera frame animation" />
-			<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(160deg,rgba(6,11,20,0.22),rgba(4,8,16,0.08)_45%,rgba(2,5,10,0.34)),radial-gradient(circle_at_16%_20%,rgba(16,185,129,0.14),transparent_42%),radial-gradient(circle_at_82%_28%,rgba(34,197,94,0.14),transparent_36%)]" />
+			<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.16)_55%,rgba(0,0,0,0.28))]" />
 
 			<div className="relative z-10 flex h-full items-end px-6 pb-14 pt-24 sm:px-10 lg:items-center lg:px-14">
 				<div ref={overlayContentRef} className="max-w-xl rounded-2xl border border-white/10 bg-black/5 p-5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-[1px] sm:p-7">

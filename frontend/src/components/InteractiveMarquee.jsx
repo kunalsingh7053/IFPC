@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
+import { IFPC_LOGO_URL } from '../utils/branding'
 
 const ifpcRows = [
   {
     items: [
-      { label: 'IFPC', icon: '/images/ifpc-icon.png' },
+      { label: 'IFPC', icon: IFPC_LOGO_URL },
       { label: 'CINEMATIC STORYTELLING' },
       { label: 'FILM PRODUCTION' },
       { label: 'VISUAL DIRECTION' },
