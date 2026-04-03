@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const TOTAL_FRAMES = 192
 const START_READY_FRAMES = 42
+const HERO_LOADING_IMAGE = 'https://i.pinimg.com/736x/19/6b/c2/196bc2098c5181ef03d84083d8a8e3a4.jpg'
 
 function frameCandidates(index) {
 	const paddedIndex = String(index).padStart(3, '0')
@@ -73,18 +74,13 @@ function AdvancedHeroSlider() {
 	const targetFrameRef = useRef(0)
 	const renderedFrameRef = useRef(-1)
 	const rafIdRef = useRef(0)
-	const [isBooting, setIsBooting] = useState(true)
 	const [isReady, setIsReady] = useState(false)
 
-	useEffect(() => {
-		const bootTimer = window.setTimeout(() => {
-			setIsBooting(false)
-		}, 900)
-
-		return () => {
-			window.clearTimeout(bootTimer)
-		}
-	}, [])
+	const loadingBackgroundStyle = {
+		backgroundImage: `linear-gradient(160deg, rgba(5, 9, 5, 0.76), rgba(11, 20, 16, 0.72) 56%, rgba(16, 32, 23, 0.76)), url('${HERO_LOADING_IMAGE}')`,
+		backgroundSize: 'cover',
+		backgroundPosition: 'center',
+	}
 
 	useEffect(() => {
 		gsap.registerPlugin(ScrollTrigger)
@@ -261,24 +257,7 @@ function AdvancedHeroSlider() {
 				</div>
 			</div>
 
-			{isBooting ? (
-				<div className="absolute inset-0 z-30 grid place-items-center bg-[radial-gradient(circle_at_22%_18%,rgba(16,185,129,0.2),transparent_36%),radial-gradient(circle_at_78%_28%,rgba(34,197,94,0.22),transparent_40%),linear-gradient(160deg,#050905,#0b1410_56%,#102017)]">
-					<div className="w-[min(24rem,84vw)] rounded-2xl border border-emerald-300/20 bg-black/30 p-6 text-center backdrop-blur-md">
-						<div className="mx-auto h-16 w-16 animate-spin rounded-full border-2 border-white/15 border-t-emerald-300" />
-						<p className="mt-6 text-xl font-bold tracking-[0.24em] text-slate-100">WpDev</p>
-						<p className="mt-2 text-xs uppercase tracking-[0.2em] text-emerald-100/90">Preparing Interactive Sequence</p>
-					</div>
-				</div>
-			) : !isReady ? (
-				<div className="absolute inset-0 z-20 grid place-items-center bg-[linear-gradient(160deg,#050905,#0b1410_56%,#102017)]">
-					<div className="w-[min(26rem,84vw)] rounded-2xl border border-emerald-300/20 bg-black/28 p-6 text-center backdrop-blur-md">
-						<div className="mx-auto h-14 w-14 animate-spin rounded-full border-2 border-white/15 border-t-emerald-300" />
-						<p className="mt-5 text-xl font-bold tracking-[0.24em] text-slate-100">WpDev</p>
-						<p className="mt-2 text-xs uppercase tracking-[0.18em] text-emerald-100/90">Preparing Visual Sequence</p>
-						<p className="mt-3 text-xs text-slate-300">Launching as soon as the first cinematic frames are ready.</p>
-					</div>
-				</div>
-			) : null}
+			{!isReady ? <div className="absolute inset-0 z-20" style={loadingBackgroundStyle} /> : null}
 		</section>
 	)
 }
