@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import PageWrapper from '../components/PageWrapper'
-import { IFPC_LOGO_URL } from '../utils/branding'
+import { IFPC_ABOUT_HERO_IMAGE_URL, IFPC_ABOUT_SCROLL_IMAGES } from '../utils/branding'
 
 const missionPoints = [
   {
@@ -114,12 +115,24 @@ function MissionIcon({ type }) {
 }
 
 function About() {
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActivePhotoIndex((prev) => (prev + 1) % IFPC_ABOUT_SCROLL_IMAGES.length)
+    }, 3000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [])
+
   return (
     <PageWrapper>
       <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: `url('${IFPC_LOGO_URL}')` }}
+          style={{ backgroundImage: `url('${IFPC_ABOUT_HERO_IMAGE_URL}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-slate-900/70 to-emerald-950/75" />
         <motion.div
@@ -174,13 +187,42 @@ function About() {
             </p>
           </div>
 
-          <GlassCard className="border-emerald-200/20 bg-emerald-300/[0.06]">
-            <p className="text-sm uppercase tracking-[0.16em] text-emerald-200">Vision</p>
-            <p className="mt-3 text-slate-100">
-              Build a disciplined creative team that blends storytelling, technical skill, and professional workflow.
-            </p>
-            <p className="mt-4 text-sm text-slate-300">Outcome: students graduate with portfolio-ready project experience.</p>
-          </GlassCard>
+          <div className="space-y-4">
+            <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-black/20">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={IFPC_ABOUT_SCROLL_IMAGES[activePhotoIndex]}
+                  src={IFPC_ABOUT_SCROLL_IMAGES[activePhotoIndex]}
+                  alt="IFPC about showcase"
+                  referrerPolicy="no-referrer"
+                  className="h-56 w-full object-cover md:h-64"
+                  initial={{ opacity: 0, x: 26 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -26 }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </AnimatePresence>
+
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center gap-2 pb-3">
+                {IFPC_ABOUT_SCROLL_IMAGES.map((photo, index) => (
+                  <span
+                    key={photo}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === activePhotoIndex ? 'w-6 bg-emerald-300' : 'w-2 bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <GlassCard className="border-emerald-200/20 bg-emerald-300/[0.06]">
+              <p className="text-sm uppercase tracking-[0.16em] text-emerald-200">Vision</p>
+              <p className="mt-3 text-slate-100">
+                Build a disciplined creative team that blends storytelling, technical skill, and professional workflow.
+              </p>
+              <p className="mt-4 text-sm text-slate-300">Outcome: students graduate with portfolio-ready project experience.</p>
+            </GlassCard>
+          </div>
         </div>
       </motion.section>
 
