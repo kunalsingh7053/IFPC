@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { IFPC_LOGO_URL } from '../utils/branding'
 
@@ -51,9 +52,13 @@ const developerRows = [
   },
 ]
 
-function MarqueeItem({ item }) {
+function MarqueeItem({ item, mobile = false }) {
   return (
-    <motion.span whileHover={{ y: -2, scale: 1.03 }} transition={{ duration: 0.2 }} className="marquee-item">
+    <motion.span
+      whileHover={mobile ? undefined : { y: -2, scale: 1.03 }}
+      transition={{ duration: 0.2 }}
+      className={mobile ? 'marquee-item marquee-item-mobile' : 'marquee-item'}
+    >
       {item.icon ? (
         <span className="marquee-item-icon">
           <img src={item.icon} alt={item.label} loading="lazy" className="h-full w-full object-contain" />
@@ -84,6 +89,44 @@ function MarqueeRow({ row }) {
 function InteractiveMarquee({ variant = 'ifpc', fullScreen = false }) {
   const rows = variant === 'developer' ? developerRows : ifpcRows
   const title = variant === 'developer' ? 'Tech Stack' : 'IFPC Motion Identity'
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  if (isMobile) {
+    return (
+      <section className={`marquee-section marquee-section-mobile px-4 ${fullScreen ? 'py-10' : 'py-8'}`}>
+        <div className="marquee-shell marquee-shell-mobile">
+          <div className="marquee-head marquee-head-mobile">
+            <p>{title}</p>
+          </div>
+
+          {rows.map((row, index) => (
+            <div key={`${variant}-mobile-${index}`} className="marquee-mobile-row">
+              <div
+                className={`marquee-mobile-track ${row.reverse ? 'marquee-mobile-track-reverse' : ''}`}
+                style={{ '--mobile-marquee-duration': `${Math.max(18, row.duration - 10)}s` }}
+              >
+                {[...row.items, ...row.items].map((item, itemIndex) => (
+                  <MarqueeItem key={`${item.label}-${variant}-mobile-${itemIndex}`} item={item} mobile />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className={`marquee-section px-6 sm:px-10 lg:px-16 ${fullScreen ? 'py-12' : 'py-10'}`}>

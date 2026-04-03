@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { IFPC_LOGO_URL } from '../utils/branding'
@@ -32,6 +32,7 @@ const PillNav = ({
   const mobileMenuRef = useRef(null)
   const navItemsRef = useRef(null)
   const logoRef = useRef(null)
+  const navRootRef = useRef(null)
 
   useEffect(() => {
     setLogoLoadError(false)
@@ -167,16 +168,15 @@ const PillNav = ({
     })
   }
 
-  const toggleMobileMenu = () => {
-    const newState = !isMobileMenuOpen
-    setIsMobileMenuOpen(newState)
+  const setMobileMenuState = useCallback((nextOpen) => {
+    setIsMobileMenuOpen(nextOpen)
 
     const hamburger = hamburgerRef.current
     const menu = mobileMenuRef.current
 
     if (hamburger) {
       const lines = hamburger.querySelectorAll('.hamburger-line')
-      if (newState) {
+      if (nextOpen) {
         gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease })
         gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease })
       } else {
@@ -186,7 +186,7 @@ const PillNav = ({
     }
 
     if (menu) {
-      if (newState) {
+      if (nextOpen) {
         gsap.set(menu, { visibility: 'visible' })
         gsap.fromTo(
           menu,
@@ -216,7 +216,36 @@ const PillNav = ({
     }
 
     onMobileMenuClick?.()
+  }, [ease, onMobileMenuClick])
+
+  const toggleMobileMenu = () => {
+    setMobileMenuState(!isMobileMenuOpen)
   }
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return undefined
+
+    const handlePointerDown = (event) => {
+      const root = navRootRef.current
+      if (root && !root.contains(event.target)) {
+        setMobileMenuState(false)
+      }
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setMobileMenuState(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMobileMenuOpen, setMobileMenuState])
 
   const isExternalLink = (href = '') =>
     href.startsWith('http://') ||
@@ -240,7 +269,7 @@ const PillNav = ({
   }
 
   return (
-    <div className="fixed top-[1em] left-0 z-[12000] flex w-full justify-center px-4">
+    <div ref={navRootRef} className="fixed top-[1em] left-0 z-[12000] flex w-full justify-center px-4">
       <nav
         className={`box-border flex w-full items-center justify-between md:w-max md:justify-center ${className}`}
         aria-label="Primary"
@@ -458,7 +487,7 @@ const PillNav = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => setMobileMenuState(false)}
                   >
                     {item.label}
                   </Link>
@@ -469,7 +498,7 @@ const PillNav = ({
                     style={defaultStyle}
                     onMouseEnter={hoverIn}
                     onMouseLeave={hoverOut}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => setMobileMenuState(false)}
                   >
                     {item.label}
                   </a>

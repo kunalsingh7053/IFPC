@@ -614,6 +614,12 @@ html.dark .hello-intro__pulse {
 	backdrop-filter: blur(10px);
 }
 
+.marquee-shell-mobile {
+	padding: 0.85rem;
+	border-radius: 1.2rem;
+	background: linear-gradient(165deg, rgba(6, 16, 11, 0.94), rgba(10, 24, 16, 0.9));
+}
+
 .marquee-head {
 	padding: 0.25rem 0.6rem 0.7rem;
 }
@@ -627,6 +633,11 @@ html.dark .hello-intro__pulse {
 	color: rgba(225, 250, 235, 0.95);
 }
 
+.marquee-head-mobile p {
+	font-size: 0.66rem;
+	letter-spacing: 0.18em;
+}
+
 .marquee-wrapper {
 	position: relative;
 	overflow: hidden;
@@ -637,6 +648,39 @@ html.dark .hello-intro__pulse {
 
 .marquee-wrapper:last-child {
 	margin-bottom: 0;
+}
+
+.marquee-mobile-row {
+	overflow-x: auto;
+	overflow-y: hidden;
+	margin-bottom: 0.65rem;
+	padding-bottom: 0.2rem;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	mask-image: none;
+	-webkit-mask-image: none;
+}
+
+.marquee-mobile-row:last-child {
+	margin-bottom: 0;
+}
+
+.marquee-mobile-row::-webkit-scrollbar {
+	display: none;
+}
+
+.marquee-mobile-track {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	width: max-content;
+	padding-right: 0.1rem;
+	animation: marqueeLeft var(--mobile-marquee-duration, 22s) linear infinite;
+	will-change: transform;
+}
+
+.marquee-mobile-track-reverse {
+	animation-name: marqueeRight;
 }
 
 .marquee-track {
@@ -688,6 +732,13 @@ html.dark .hello-intro__pulse {
 	border-radius: 999px;
 	background: rgba(255, 255, 255, 0.16);
 	padding: 0.18rem;
+}
+
+.marquee-item-mobile {
+	padding: 0.58rem 0.82rem;
+	font-size: 0.72rem;
+	letter-spacing: 0.05em;
+	scroll-snap-align: start;
 }
 
 @media (prefers-reduced-motion: reduce) {
