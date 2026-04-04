@@ -46,6 +46,25 @@ function isProjectGalleryImage(src) {
 	return false
 }
 
+function resolveReelPlayback(url) {
+	if (!url || typeof url !== 'string') return { mode: '', src: '' }
+
+	const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/i)
+	if (driveFileMatch?.[1]) {
+		return {
+			mode: 'iframe',
+			src: `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`,
+		}
+	}
+
+	const normalized = url.toLowerCase().split('?')[0]
+	if (/\.(mp4|webm|ogg)$/.test(normalized)) {
+		return { mode: 'video', src: url }
+	}
+
+	return { mode: 'iframe', src: url }
+}
+
 function Home() {
 	const [events, setEvents] = useState(dummyEvents)
 	const [loadingEvents, setLoadingEvents] = useState(false)
@@ -184,6 +203,56 @@ function Home() {
 		return fromEvents.slice(0, 6)
 	}, [events])
 
+	const reels = useMemo(() => {
+		const extraReels = [
+			{
+				id: 'moonstone-2k26-reel-2',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/1bRB36Cim5cpNGOaFeRws8gOoRTYhjE4m/view?usp=drive_link',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+			{
+				id: 'moonstone-2k26-reel-3',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/14P0CyfZE5ImED0mkGFX1OwNlHy_0EiJa/view?usp=drive_link',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+			{
+				id: 'moonstone-2k26-reel-4',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/15EMeD_7FI6PJmiwO5P_RyBEFO4uco7c6/view?usp=drive_link',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+			{
+				id: 'moonstone-2k26-reel-5',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/1qBG83hO4XPSb2iSSP9LCIpg4kQH9Npes/view?usp=drive_link',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+		]
+
+		const fromEvents = events
+			.filter((event) => typeof event?.reelUrl === 'string' && event.reelUrl.trim())
+			.map((event) => ({
+				id: event._id || event.title,
+				title: 'Moonstone 2K26',
+				reelUrl: event.reelUrl,
+				cover: resolveImageSrc(event.thumbnail) || '/images/ifpc-icon.png',
+			}))
+
+		if (fromEvents.length > 0) return [...fromEvents, ...extraReels]
+
+		return [
+			{
+				id: 'moonstone-2k26-reel',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/1GBhfTe85Yz1MBDgkqnblPAEVsyaPAYmx/view?usp=drive_link',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+			...extraReels,
+		]
+	}, [events])
+
 	return (
 		<PageWrapper>
 			<div className="-mt-20 md:-mt-24">
@@ -315,9 +384,62 @@ function Home() {
 				</div>
 			</section>
 
+			<section id="reels" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_16%_16%,rgba(52,211,153,0.16),transparent_34%),radial-gradient(circle_at_85%_24%,rgba(56,189,248,0.12),transparent_30%),linear-gradient(160deg,#060a14,#0b1324_48%,#111f36)] px-4 py-16 sm:px-10 sm:py-20 lg:px-14">
+				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
+					<div className="mb-6">
+						<h2 className="text-4xl font-black text-white sm:text-5xl">Moonstone 2K26</h2>
+					</div>
+
+					<div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-2 sm:mx-0 sm:grid sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 sm:snap-none sm:grid-cols-2 lg:grid-cols-3">
+						{reels.map((reel) => (
+							(() => {
+								const playback = resolveReelPlayback(reel.reelUrl)
+								return (
+							<motion.article
+								key={reel.id}
+								whileHover={{ y: -4 }}
+								className="w-[82vw] min-w-[82vw] snap-center rounded-[2rem] border border-emerald-300/35 bg-[linear-gradient(160deg,rgba(9,15,28,0.94),rgba(8,18,35,0.82))] p-3 shadow-[0_16px_40px_rgba(0,0,0,0.45)] sm:mx-auto sm:w-full sm:min-w-0 sm:max-w-[320px]"
+							>
+								<div className="overflow-hidden rounded-[1.45rem] border border-white/10 bg-black">
+									{playback.src ? (
+										playback.mode === 'video' ? (
+											<video
+												src={playback.src}
+												controls
+												playsInline
+												className="aspect-[9/16] w-full bg-black object-contain"
+											/>
+										) : (
+											<iframe
+												title={`${reel.title} player`}
+												src={playback.src}
+												allow="autoplay; encrypted-media; picture-in-picture"
+												allowFullScreen
+												className="aspect-[9/16] w-full"
+											/>
+										)
+									) : (
+										<SkeletonImage
+											src={reel.cover}
+											alt={reel.title}
+											fallbackSrc="/images/ifpc-icon.png"
+											referrerPolicy="no-referrer"
+											className="aspect-[9/16] w-full object-cover"
+										/>
+									)}
+								</div>
+								<p className="mt-3 line-clamp-1 text-sm font-semibold text-white">{reel.title}</p>
+							</motion.article>
+								)
+							})()
+						))}
+					</div>
+				</div>
+			</section>
+
 			<section id="gallery" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-black">
 				<div data-scroll-content>
-					<div className="px-6 pb-4 pt-20 sm:px-10 lg:px-14">
+					<div className="px-4 pb-4 pt-16 sm:px-10 sm:pt-20 lg:px-14">
 						<h2 className="text-4xl font-black text-white sm:text-5xl">Gallery</h2>
 						<p className="mt-2 text-sm text-slate-300">Edge-to-edge camera roll. Click any frame to preview.</p>
 					</div>
@@ -327,14 +449,14 @@ function Home() {
 							<p className="text-sm text-slate-300">No project photos available yet.</p>
 						</div>
 					) : (
-						<div className="grid min-h-[calc(100vh-11rem)] grid-cols-2 gap-0 lg:grid-cols-3">
+						<div className="grid gap-3 px-3 pb-4 sm:min-h-[calc(100vh-11rem)] sm:grid-cols-2 sm:gap-0 sm:px-0 sm:pb-0 lg:grid-cols-3">
 							{galleryImages.map((image, index) => (
 								<motion.button
 									key={`${image}-${index}`}
 									type="button"
 									whileHover={{ scale: 1.01 }}
 									onClick={() => setPreviewImage(image)}
-									className="group relative h-full min-h-[28vh] overflow-hidden border border-emerald-300/10 text-left"
+									className="group relative min-h-[34vh] overflow-hidden rounded-2xl border border-emerald-300/20 text-left sm:h-full sm:min-h-[28vh] sm:rounded-none sm:border-emerald-300/10"
 								>
 									<SkeletonImage
 										src={image}

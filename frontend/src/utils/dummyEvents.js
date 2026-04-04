@@ -7,6 +7,7 @@ const dummyEvents = [
 		eventDate: '2026-03-01T10:00:00.000Z',
 		location: 'Medi-Caps University, Indore',
 		thumbnail: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+		reelUrl: 'https://drive.google.com/file/d/1GBhfTe85Yz1MBDgkqnblPAEVsyaPAYmx/view?usp=drive_link',
 		images: [
 			'https://www.medicaps.ac.in/uploads/events/banner_images/moonstone-1.webp',
 			'https://www.medicaps.ac.in/uploads/images/moonstone-2.webp',
