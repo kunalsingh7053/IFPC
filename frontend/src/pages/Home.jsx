@@ -208,25 +208,31 @@ function Home() {
 			{
 				id: 'moonstone-2k26-reel-2',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1bRB36Cim5cpNGOaFeRws8gOoRTYhjE4m/view?usp=drive_link',
+				reelUrl: 'https://drive.google.com/file/d/1BQ0dzI2cyCePSl5BbmuJlpdknl05anvi/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-3',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/14P0CyfZE5ImED0mkGFX1OwNlHy_0EiJa/view?usp=drive_link',
+				reelUrl: 'https://drive.google.com/file/d/1EcXcCahzT8NAnCkLCUM89ttEMIOsDcIT/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-4',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/15EMeD_7FI6PJmiwO5P_RyBEFO4uco7c6/view?usp=drive_link',
+				reelUrl: 'https://drive.google.com/file/d/12AonFjmrsLywv7_Rr2MUdSc3OnQ3ZriC/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-5',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1qBG83hO4XPSb2iSSP9LCIpg4kQH9Npes/view?usp=drive_link',
+				reelUrl: 'https://drive.google.com/file/d/1gqmKK0ieN7y0xTS0-eJwn_rF2yFeFLi4/view?usp=sharing',
+				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+			},
+			{
+				id: 'moonstone-2k26-reel-6',
+				title: 'Moonstone 2K26',
+				reelUrl: 'https://drive.google.com/file/d/1fb70NtlXco-ZRqUpVoOR5IG7AZqvrEk0/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 		]
@@ -246,7 +252,7 @@ function Home() {
 			{
 				id: 'moonstone-2k26-reel',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1GBhfTe85Yz1MBDgkqnblPAEVsyaPAYmx/view?usp=drive_link',
+				reelUrl: 'https://drive.google.com/file/d/1YfUC2V-S3TZu9bQ9WtOlXtaD9Qlt9m9I/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			...extraReels,
