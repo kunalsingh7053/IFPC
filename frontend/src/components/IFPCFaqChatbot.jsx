@@ -12,7 +12,8 @@ const STARTER_MESSAGES = [
 
 const QUICK_REPLIES = [
   'What is IFPC?',
-  'Who is the president?',
+  'Who is head of photography or videography?',
+  'What is Moonstone?',
   'Where is IFPC located?',
   'Tell me upcoming events',
 ]
@@ -27,6 +28,8 @@ function IFPCFaqChatbot() {
   const [voiceSupported, setVoiceSupported] = useState(false)
   const [presidentName, setPresidentName] = useState('')
   const [vicePresidentName, setVicePresidentName] = useState('')
+  const [photographyHeadName, setPhotographyHeadName] = useState('')
+  const [videographyHeadName, setVideographyHeadName] = useState('')
   const listRef = useRef(null)
   const rootRef = useRef(null)
   const recognitionRef = useRef(null)
@@ -48,6 +51,16 @@ function IFPCFaqChatbot() {
           return position === 'vice-president'
         })
 
+        const photographyHead = members.find((member) => {
+          const position = String(member?.position || '').trim().toLowerCase()
+          return position.includes('head') && position.includes('photography')
+        })
+
+        const videographyHead = members.find((member) => {
+          const position = String(member?.position || '').trim().toLowerCase()
+          return position.includes('head') && (position.includes('videography') || position.includes('video'))
+        })
+
         const formatName = (member) => {
           const first = member?.fullName?.firstName || ''
           const last = member?.fullName?.lastName || ''
@@ -56,9 +69,13 @@ function IFPCFaqChatbot() {
 
         setPresidentName(formatName(president))
         setVicePresidentName(formatName(vice))
+        setPhotographyHeadName(formatName(photographyHead))
+        setVideographyHeadName(formatName(videographyHead))
       } catch {
         setPresidentName('')
         setVicePresidentName('')
+        setPhotographyHeadName('')
+        setVideographyHeadName('')
       }
     }
 
@@ -108,7 +125,7 @@ function IFPCFaqChatbot() {
       recognitionRef.current?.stop()
       recognitionRef.current = null
     }
-  }, [presidentName, vicePresidentName])
+  }, [presidentName, vicePresidentName, photographyHeadName, videographyHeadName])
 
   useEffect(() => {
     if (!open) return
@@ -147,11 +164,13 @@ function IFPCFaqChatbot() {
     const q = text.trim().toLowerCase()
     const previousContext = history.slice(-4).map((item) => item.text.toLowerCase()).join(' ')
 
-    const presidentKeywords = /president|presedent|leader|head/
+    const presidentKeywords = /president|presedent|leader/
     const locationKeywords = /location|located|where|address|place/
     const aboutKeywords = /what is ifpc|about ifpc|ifpc|full form|community/
     const teamKeywords = /team|members|vice president|core/
     const eventKeywords = /event|workshop|shoot|coverage/
+    const headsKeywords = /head of photography|head of videography|photography head|videography head|video head/
+    const moonstoneKeywords = /moonstone/
     const followUpKeywords = /where is it|where is this|what about location|tell me more/
 
     if (presidentKeywords.test(q)) {
@@ -170,6 +189,20 @@ function IFPCFaqChatbot() {
       return 'IFPC team includes President, Vice President, Heads, Core Members, and Members. Visit the Team page to view complete profiles.'
     }
 
+    if (headsKeywords.test(q)) {
+      const photo = photographyHeadName ? `Photography Head: ${photographyHeadName}.` : ''
+      const video = videographyHeadName ? ` Videography Head: ${videographyHeadName}.` : ''
+      const headsLine = `${photo}${video}`.trim()
+      if (headsLine) {
+        return headsLine
+      }
+      return 'Head details for photography and videography are managed by IFPC admin. Please check the Team page for latest updates.'
+    }
+
+    if (moonstoneKeywords.test(q)) {
+      return 'Moonstone is IFPC\'s flagship event and creative showcase, featuring photography, videography, and visual storytelling highlights.'
+    }
+
     if (eventKeywords.test(q)) {
       return 'IFPC covers university events, cultural programs, workshops, seminars, photography sessions, and film-making activities.'
     }
@@ -182,7 +215,7 @@ function IFPCFaqChatbot() {
       return 'IFPC is based at MediCaps University, Indore. For exact navigation, open the Contact page map section.'
     }
 
-    return 'I reply only to IFPC-related questions. Please ask about IFPC, president, location, team, or events.'
+    return 'I reply only to IFPC-related questions. Please ask about IFPC, heads, Moonstone, location, team, or events.'
   }
 
   async function requestAssistantReply(userMessage, history) {
@@ -203,6 +236,8 @@ function IFPCFaqChatbot() {
             scope: 'IFPC website assistant',
             presidentName,
             vicePresidentName,
+            photographyHeadName,
+            videographyHeadName,
           },
         }),
       })

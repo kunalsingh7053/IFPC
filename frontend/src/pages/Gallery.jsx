@@ -21,6 +21,7 @@ function isProjectGalleryImage(src) {
 function Gallery() {
   const [events, setEvents] = useState(dummyEvents)
   const [previewImage, setPreviewImage] = useState('')
+  const [activeSlide, setActiveSlide] = useState(0)
 
   useEffect(() => {
     async function loadEvents() {
@@ -51,6 +52,22 @@ function Gallery() {
       .filter(Boolean)
   }, [events])
 
+  useEffect(() => {
+    if (activeSlide >= galleryImages.length) {
+      setActiveSlide(0)
+    }
+  }, [galleryImages.length, activeSlide])
+
+  function moveSlide(direction) {
+    if (galleryImages.length === 0) return
+    setActiveSlide((prev) => {
+      if (direction === 'next') {
+        return (prev + 1) % galleryImages.length
+      }
+      return (prev - 1 + galleryImages.length) % galleryImages.length
+    })
+  }
+
   return (
     <PageWrapper>
       <section className="w-full px-4 py-8 sm:px-6 lg:px-10">
@@ -66,28 +83,75 @@ function Gallery() {
               No project photos available yet.
             </div>
           ) : (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {galleryImages.map((image, index) => (
-                <motion.button
-                  key={`${image}-${index}`}
-                  type="button"
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => setPreviewImage(image)}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10"
-                >
-                  <SkeletonImage
-                    src={image}
-                    alt={`Gallery ${index + 1}`}
-                    fallbackSrc="/images/ifpc-icon.png"
-                    className="h-52 w-full object-cover transition duration-500 group-hover:scale-110"
-                  />
+            <>
+              <div className="mt-6 sm:hidden">
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/30">
+                  <AnimatePresence mode="wait">
+                    <motion.button
+                      key={galleryImages[activeSlide]}
+                      type="button"
+                      onClick={() => setPreviewImage(galleryImages[activeSlide])}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -40 }}
+                      transition={{ duration: 0.24, ease: 'easeOut' }}
+                      className="relative block w-full"
+                    >
+                      <SkeletonImage
+                        src={galleryImages[activeSlide]}
+                        alt={`Gallery ${activeSlide + 1}`}
+                        fallbackSrc="/images/ifpc-icon.png"
+                        className="h-72 w-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                      <p className="absolute bottom-3 left-3 text-xs font-semibold uppercase tracking-wide text-white">
+                        Slide {activeSlide + 1} / {galleryImages.length}
+                      </p>
+                    </motion.button>
+                  </AnimatePresence>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-between p-3">
+                    <button
+                      type="button"
+                      onClick={() => moveSlide('prev')}
+                      className="rounded-full border border-white/30 bg-black/45 px-3 py-1 text-xs font-semibold text-white"
+                    >
+                      Prev
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveSlide('next')}
+                      className="rounded-full border border-white/30 bg-black/45 px-3 py-1 text-xs font-semibold text-white"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-                  <p className="absolute bottom-2 left-3 text-xs font-semibold uppercase text-white">Frame {index + 1}</p>
-                </motion.button>
-              ))}
-            </div>
+              <div className="mt-6 hidden gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {galleryImages.map((image, index) => (
+                  <motion.button
+                    key={`${image}-${index}`}
+                    type="button"
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => setPreviewImage(image)}
+                    className="group relative overflow-hidden rounded-2xl border border-white/10"
+                  >
+                    <SkeletonImage
+                      src={image}
+                      alt={`Gallery ${index + 1}`}
+                      fallbackSrc="/images/ifpc-icon.png"
+                      className="h-52 w-full object-cover transition duration-500 group-hover:scale-110"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+                    <p className="absolute bottom-2 left-3 text-xs font-semibold uppercase text-white">Frame {index + 1}</p>
+                  </motion.button>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>
