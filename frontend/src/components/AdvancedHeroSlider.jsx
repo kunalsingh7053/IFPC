@@ -253,21 +253,7 @@ function AdvancedHeroSlider() {
 					backgroundPosition: 'center',
 					backgroundRepeat: 'no-repeat',
 				}}
-			>
-				<div className="relative z-10 flex h-full items-end px-6 pb-14 pt-24 sm:px-10 lg:items-center lg:px-14">
-					<div className="max-w-xl rounded-2xl border border-white/10 bg-black/5 p-5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-[1px] sm:p-7">
-						<p className="inline-flex rounded-full border border-emerald-300/45 bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
-							WpDev Visual Lab
-						</p>
-						<h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
-							Cinematic Product Disassembly Experience
-						</h1>
-						<p className="mt-4 max-w-2xl text-sm text-slate-200 sm:text-base">
-							A 192-frame DSLR teardown rendered on canvas with GSAP-driven scroll sync for fluid, high-fidelity storytelling.
-						</p>
-					</div>
-				</div>
-			</section>
+			/>
 		)
 	}
 
@@ -276,34 +262,7 @@ function AdvancedHeroSlider() {
 			<canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="WpDev camera frame animation" />
 			<div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.16)_55%,rgba(0,0,0,0.28))]" />
 
-			<div className="relative z-10 flex h-full items-end px-6 pb-14 pt-24 sm:px-10 lg:items-center lg:px-14">
-				<div ref={overlayContentRef} className="max-w-xl rounded-2xl border border-white/10 bg-black/5 p-5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-[1px] sm:p-7">
-					<p className="inline-flex rounded-full border border-emerald-300/45 bg-emerald-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
-						WpDev Visual Lab
-					</p>
-					<h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
-						Cinematic Product Disassembly Experience
-					</h1>
-					<p className="mt-4 max-w-2xl text-sm text-slate-200 sm:text-base">
-						A 192-frame DSLR teardown rendered on canvas with GSAP-driven scroll sync for fluid, high-fidelity storytelling.
-					</p>
-					<div className="mt-6 flex flex-wrap gap-3">
-						<a href="#projects" className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_10px_24px_rgba(34,211,238,0.42)] hover:bg-emerald-400">
-							Explore Work
-						</a>
-						<a href="#contact" className="rounded-xl border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
-							Start Project
-						</a>
-					</div>
-				</div>
-			</div>
-
-			<div className="pointer-events-none absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-center">
-				<p className="animate-pulse text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-200/90">Scroll</p>
-				<div className="mx-auto mt-2 h-9 w-6 rounded-full border border-white/40">
-					<div className="mx-auto mt-1 h-2 w-2 animate-bounce rounded-full bg-emerald-300" />
-				</div>
-			</div>
+			<div ref={overlayContentRef} className="hidden" aria-hidden="true" />
 
 			{!isReady ? <div className="absolute inset-0 z-20" style={loadingBackgroundStyle} /> : null}
 		</section>

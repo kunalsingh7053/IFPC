@@ -271,7 +271,7 @@ const PillNav = ({
   return (
     <div ref={navRootRef} className="fixed top-[1em] left-0 z-[12000] flex w-full justify-center px-4">
       <nav
-        className={`box-border flex w-full items-center justify-between md:w-max md:justify-center ${className}`}
+        className={`box-border flex w-full items-center justify-between rounded-full border border-white/70 px-1 py-1 md:w-max md:justify-center ${className}`}
         aria-label="Primary"
         style={cssVars}
       >
@@ -383,13 +383,6 @@ const PillNav = ({
                       {item.label}
                     </span>
                   </span>
-                  {isActive && (
-                    <span
-                      className="absolute -bottom-[6px] left-1/2 z-[4] h-3 w-3 -translate-x-1/2 rounded-full"
-                      style={{ background: 'var(--base, #000)' }}
-                      aria-hidden="true"
-                    />
-                  )}
                 </>
               )
 
@@ -434,49 +427,62 @@ const PillNav = ({
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
           aria-expanded={isMobileMenuOpen}
-          className="relative flex cursor-pointer flex-col items-center justify-center gap-1 rounded-full border-0 p-0 md:hidden"
+          className="relative flex cursor-pointer flex-col items-center justify-center gap-1 rounded-full border border-emerald-300/35 p-0 shadow-[0_10px_26px_rgba(0,0,0,0.38)] backdrop-blur-xl md:hidden"
           style={{
             width: 'var(--nav-h)',
             height: 'var(--nav-h)',
-            background: 'var(--base, #000)',
+            background: 'linear-gradient(150deg,rgba(10,22,16,0.92),rgba(7,18,13,0.86))',
           }}
         >
           <span
-            className="hamburger-line h-0.5 w-4 origin-center rounded transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-            style={{ background: 'var(--pill-bg, #fff)' }}
+            className="hamburger-line h-0.5 w-4.5 origin-center rounded transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{ background: '#d8ffe5' }}
           />
           <span
-            className="hamburger-line h-0.5 w-4 origin-center rounded transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-            style={{ background: 'var(--pill-bg, #fff)' }}
+            className="hamburger-line h-0.5 w-4.5 origin-center rounded transition-all duration-[10ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{ background: '#d8ffe5' }}
           />
         </button>
       </nav>
 
       <div
         ref={mobileMenuRef}
-        className="absolute left-4 right-4 top-[3em] z-[998] origin-top rounded-[27px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] md:hidden"
+        className="absolute left-4 right-4 top-[3.4em] z-[998] origin-top rounded-[24px] border border-emerald-300/25 shadow-[0_16px_42px_rgba(0,0,0,0.34)] backdrop-blur-2xl md:hidden"
         style={{
           ...cssVars,
-          background: 'var(--base, #f0f0f0)',
+          background: 'linear-gradient(165deg,rgba(8,18,14,0.96),rgba(8,16,13,0.92))',
         }}
       >
-        <ul className="m-0 flex list-none flex-col gap-[3px] p-[3px]">
+        <ul className="m-0 flex list-none flex-col gap-2 p-3">
           {items.map((item) => {
+            const isActive = activeHref === item.href
             const defaultStyle = {
-              background: 'var(--pill-bg, #fff)',
-              color: 'var(--pill-text, #fff)',
+              background: isActive ? 'linear-gradient(140deg,#1db954,#22c55e)' : 'rgba(255,255,255,0.06)',
+              color: isActive ? '#04210f' : '#eafff0',
+              border: isActive ? '1px solid rgba(34,197,94,0.55)' : '1px solid rgba(255,255,255,0.1)',
             }
             const hoverIn = (e) => {
-              e.currentTarget.style.background = 'var(--base)'
-              e.currentTarget.style.color = 'var(--hover-text, #fff)'
+              if (isActive) return
+              e.currentTarget.style.background = 'rgba(29,185,84,0.18)'
+              e.currentTarget.style.color = '#dcffe8'
+              e.currentTarget.style.border = '1px solid rgba(52,211,153,0.45)'
             }
             const hoverOut = (e) => {
-              e.currentTarget.style.background = 'var(--pill-bg, #fff)'
-              e.currentTarget.style.color = 'var(--pill-text, #fff)'
+              if (isActive) {
+                e.currentTarget.style.background = 'linear-gradient(140deg,#1db954,#22c55e)'
+                e.currentTarget.style.color = '#04210f'
+                e.currentTarget.style.border = '1px solid rgba(34,197,94,0.55)'
+                return
+              }
+              e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+              e.currentTarget.style.color = '#eafff0'
+              e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)'
             }
 
             const linkClasses =
-              'block rounded-[50px] px-4 py-3 text-[16px] font-medium transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]'
+              'flex items-center justify-between rounded-[16px] px-4 py-3 text-[15px] font-semibold uppercase tracking-[0.06em] transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]'
+
+            const LabelContent = <span>{item.label}</span>
 
             return (
               <li key={item.href}>
@@ -489,7 +495,7 @@ const PillNav = ({
                     onMouseLeave={hoverOut}
                     onClick={() => setMobileMenuState(false)}
                   >
-                    {item.label}
+                    {LabelContent}
                   </Link>
                 ) : (
                   <a
@@ -500,7 +506,7 @@ const PillNav = ({
                     onMouseLeave={hoverOut}
                     onClick={() => setMobileMenuState(false)}
                   >
-                    {item.label}
+                    {LabelContent}
                   </a>
                 )}
               </li>
