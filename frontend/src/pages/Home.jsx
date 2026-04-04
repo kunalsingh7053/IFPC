@@ -35,7 +35,15 @@ function resolveImageSrc(src) {
 }
 
 function isProjectGalleryImage(src) {
-	return typeof src === 'string' && src.includes('/events/gallery/')
+	if (typeof src !== 'string') return false
+	const normalized = src.toLowerCase()
+	const cleanPath = normalized.split('?')[0]
+
+	if (/\.(jpg|jpeg|png|webp|gif|avif)$/.test(cleanPath)) return true
+	if (normalized.includes('/events/gallery/')) return true
+	if (normalized.includes('/uploads/')) return true
+	if (normalized.includes('/highlights/')) return true
+	return false
 }
 
 function Home() {

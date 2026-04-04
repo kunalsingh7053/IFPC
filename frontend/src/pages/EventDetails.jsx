@@ -7,6 +7,23 @@ import PageWrapper from '../components/PageWrapper'
 import SkeletonImage from '../components/SkeletonImage'
 import dummyEvents from '../utils/dummyEvents'
 
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+
+function resolveImageSrc(src) {
+  if (!src) return ''
+  if (src.startsWith('http')) return src
+  if (src.startsWith('/')) return `${apiBase}${src}`
+  return `${apiBase}/${src}`
+}
+
+function getDetailsThumbnailClass(event) {
+  const identity = `${event?._id || ''} ${event?.title || ''}`.toLowerCase()
+  if (identity.includes('moonstone') && identity.includes('2k26')) {
+    return 'h-64 w-full rounded-2xl object-cover object-top'
+  }
+  return 'h-64 w-full rounded-2xl object-cover'
+}
+
 function EventDetails() {
   const { id } = useParams()
   const [event, setEvent] = useState(null)
@@ -47,9 +64,9 @@ function EventDetails() {
     <PageWrapper>
       <div className="space-y-5">
         <SkeletonImage
-          src={event.thumbnail || 'https://placehold.co/1200x400/0f172a/38bdf8?text=IFPC'}
+          src={resolveImageSrc(event.thumbnail) || 'https://placehold.co/1200x400/0f172a/38bdf8?text=IFPC'}
           alt={event.title}
-          className="h-64 w-full rounded-2xl object-cover"
+          className={getDetailsThumbnailClass(event)}
         />
         <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
           <h1 className="text-3xl font-bold text-white">{event.title}</h1>
@@ -62,21 +79,24 @@ function EventDetails() {
         <div>
           <h2 className="mb-3 text-xl font-semibold text-slate-100">Gallery</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {(event.images || []).map((img) => (
+            {(event.images || []).map((img) => {
+              const resolvedImage = resolveImageSrc(img)
+              return (
               <button
                 key={img}
                 type="button"
-                onClick={() => setPreviewImage(img)}
+                onClick={() => setPreviewImage(resolvedImage)}
                 className="group relative w-full cursor-zoom-in overflow-hidden rounded-xl text-left"
               >
-                <SkeletonImage src={img} alt="event" className="h-64 w-full object-cover transition duration-700 group-hover:scale-105" />
+                <SkeletonImage src={resolvedImage} alt="event" className="h-64 w-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <span className="rounded-full border border-white/90 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-white">
                     View
                   </span>
                 </div>
               </button>
-            ))}
+              )
+            })}
           </div>
         </div>
 

@@ -200,7 +200,7 @@ function IFPCFaqChatbot() {
     }
 
     if (moonstoneKeywords.test(q)) {
-      return 'Moonstone is IFPC\'s flagship event and creative showcase, featuring photography, videography, and visual storytelling highlights.'
+      return 'Moonstone 2K26 was IFPC\'s main 2026 event coverage. Over 3 days, multiple IFPC members handled full photography, videography, editing, and reel production, including day-start and night highlights. It was a memorable showcase; you can also check Medi-Caps and IFPC Instagram pages for more reels and moments.'
     }
 
     if (eventKeywords.test(q)) {

@@ -1,5 +1,19 @@
 const dummyEvents = [
 	{
+		_id: 'demo-event-moonstone-2k26',
+		title: 'Moonstone 2K26',
+		description:
+			'Moonstone 2K26 was the main 2026 event covered by IFPC over 3 days with multiple members. The team captured complete photo and video coverage, edited highlight reels, and created memorable day-wise and night-wise storytelling content. For more highlights, check Medi-Caps and IFPC Instagram pages.',
+		eventDate: '2026-03-01T10:00:00.000Z',
+		location: 'Medi-Caps University, Indore',
+		thumbnail: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
+		images: [
+			'https://www.medicaps.ac.in/uploads/events/banner_images/moonstone-1.webp',
+			'https://www.medicaps.ac.in/uploads/images/moonstone-2.webp',
+			'https://www.medicaps.ac.in/uploads/images/moonstone-3.webp',
+		],
+	},
+	{
 		_id: 'demo-event-esummit-2k24',
 		title: 'E-Summit 2K24',
 		description:
@@ -12,6 +26,9 @@ const dummyEvents = [
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Esummit-2k24/Images/IMG_4425-2.JPG?updatedAt=1775288929757',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Esummit-2k24/Images/Group%20793.jpg?updatedAt=1775288928287',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Esummit-2k24/Images/DSC_0090-3.JPG?updatedAt=1775289090123',
+			'https://www.medicaps.ac.in/public/frontend/images/e-cell-3.webp',
+			'https://www.medicaps.ac.in/public/frontend/images/e-cell-5.webp',
+			'https://www.medicaps.ac.in/public/frontend/images/e-cell-2.webp',
 		],
 	},
 	{
@@ -26,6 +43,8 @@ const dummyEvents = [
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Convocation%202k24/Images/IMG_7174.JPG?updatedAt=1775289779835',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Convocation%202k24/Images/IMG_7200.JPG?updatedAt=1775289949765',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Convocation%202k24/Images/Copy%20of%20NZP_4068.JPG?updatedAt=1775289954153',
+			'https://www.medicaps.ac.in/public/frontend/images/convo6.webp',
+			'https://www.medicaps.ac.in/public/frontend/images/convo8.webp',
 		],
 	},
 	{
@@ -42,6 +61,7 @@ const dummyEvents = [
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Moonstone-2k25/Images/MAP_0641.JPG?updatedAt=1775290726049',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Moonstone-2k25/Images/DSC_9835.JPG?updatedAt=1775290724352',
 			'https://ik.imagekit.io/ofm1vl6gr/events/gallery/Moonstone-2k25/Images/IMG_5988.JPG?updatedAt=1775290721477',
+			'https://www.medicaps.ac.in/uploads/events/banner_images/4-1.webp',
 		],
 	},
 	{

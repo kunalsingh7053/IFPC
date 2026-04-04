@@ -2,6 +2,23 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SkeletonImage from './SkeletonImage'
 
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+
+function resolveImageSrc(src) {
+  if (!src) return ''
+  if (src.startsWith('http')) return src
+  if (src.startsWith('/')) return `${apiBase}${src}`
+  return `${apiBase}/${src}`
+}
+
+function getThumbnailClass(event) {
+  const identity = `${event?._id || ''} ${event?.title || ''}`.toLowerCase()
+  if (identity.includes('moonstone') && identity.includes('2k26')) {
+    return 'h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-110'
+  }
+  return 'h-full w-full object-cover transition-transform duration-700 group-hover:scale-110'
+}
+
 function EventCard({ event }) {
   return (
     <motion.article
@@ -10,9 +27,9 @@ function EventCard({ event }) {
     >
       <div className="relative h-64 w-full overflow-hidden">
         <SkeletonImage
-          src={event.thumbnail || 'https://placehold.co/600x300/0f172a/38bdf8?text=IFPC+Event'}
+          src={resolveImageSrc(event.thumbnail) || 'https://placehold.co/600x300/0f172a/38bdf8?text=IFPC+Event'}
           alt={event.title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className={getThumbnailClass(event)}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/35 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <Link

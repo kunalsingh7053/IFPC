@@ -15,7 +15,15 @@ function resolveImageSrc(src) {
 }
 
 function isProjectGalleryImage(src) {
-  return typeof src === 'string' && src.includes('/events/gallery/')
+  if (typeof src !== 'string') return false
+  const normalized = src.toLowerCase()
+  const cleanPath = normalized.split('?')[0]
+
+  if (/\.(jpg|jpeg|png|webp|gif|avif)$/.test(cleanPath)) return true
+  if (normalized.includes('/events/gallery/')) return true
+  if (normalized.includes('/uploads/')) return true
+  if (normalized.includes('/highlights/')) return true
+  return false
 }
 
 function Gallery() {
@@ -134,15 +142,15 @@ function Gallery() {
                   <motion.button
                     key={`${image}-${index}`}
                     type="button"
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.01 }}
                     onClick={() => setPreviewImage(image)}
-                    className="group relative overflow-hidden rounded-2xl border border-white/10"
+                    className="group relative overflow-hidden rounded-2xl border border-white/10 will-change-transform"
                   >
                     <SkeletonImage
                       src={image}
                       alt={`Gallery ${index + 1}`}
                       fallbackSrc="/images/ifpc-icon.png"
-                      className="h-52 w-full object-cover transition duration-500 group-hover:scale-110"
+                      className="h-52 w-full object-cover transition duration-300 group-hover:scale-[1.03]"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
