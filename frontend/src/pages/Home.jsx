@@ -229,12 +229,6 @@ function Home() {
 				reelUrl: 'https://drive.google.com/file/d/1gqmKK0ieN7y0xTS0-eJwn_rF2yFeFLi4/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
-			{
-				id: 'moonstone-2k26-reel-6',
-				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1fb70NtlXco-ZRqUpVoOR5IG7AZqvrEk0/view?usp=sharing',
-				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
-			},
 		]
 
 		const fromEvents = events
