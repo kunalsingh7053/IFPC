@@ -6,8 +6,8 @@ import PageWrapper from '../components/PageWrapper'
 import dummyEvents from '../utils/dummyEvents'
 
 function EventsPage() {
-  const [events, setEvents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [events, setEvents] = useState(dummyEvents)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -15,9 +15,10 @@ function EventsPage() {
       try {
         const { data } = await API.get('/events')
         const fetchedEvents = Array.isArray(data?.data) ? data.data : []
-        setEvents(fetchedEvents.length > 0 ? fetchedEvents : dummyEvents)
-      } catch (err) {
-        setEvents(dummyEvents)
+        if (fetchedEvents.length > 0) {
+          setEvents(fetchedEvents)
+        }
+      } catch {
         setError('')
       } finally {
         setLoading(false)

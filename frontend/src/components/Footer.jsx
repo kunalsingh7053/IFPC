@@ -24,7 +24,6 @@ function Footer() {
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-slate-300">
             <a href="/" className="hover:text-emerald-200">Home</a>
             <a href="/about" className="hover:text-emerald-200">About</a>
-            <a href="/courses" className="hover:text-emerald-200">Courses</a>
             <a href="/gallery" className="hover:text-emerald-200">Gallery</a>
             <a href="/team" className="hover:text-emerald-200">Team</a>
             <a href="/contact" className="hover:text-emerald-200">Contact</a>

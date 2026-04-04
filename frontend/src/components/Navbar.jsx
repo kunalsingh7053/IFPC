@@ -5,12 +5,11 @@ import { IFPC_LOGO_URL } from '../utils/branding'
 const topNavLinks = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
-  { to: '/courses', label: 'Courses' },
   { to: '/gallery', label: 'Gallery' },
   { to: '/team', label: 'Team' },
-  { to: '/developers', label: 'Developers' },
   { to: '/events', label: 'Projects' },
   { to: '/contact', label: 'Contact' },
+  { to: '/developers', label: 'Developers' },
 ]
 
 function Navbar() {
