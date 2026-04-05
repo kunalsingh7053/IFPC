@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SkeletonImage from './SkeletonImage'
 
-const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc-1.onrender.com/api').replace(/\/api\/?$/, '')
 
 function resolveImageSrc(src) {
   if (!src) return ''

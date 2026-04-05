@@ -17,7 +17,7 @@ const faculty = [
 	{ name: 'Kabir Khan', role: 'Lens, Focus, and Motion' },
 ]
 
-const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc-1.onrender.com/api').replace(/\/api\/?$/, '')
 
 const impactStats = [
 	{ label: 'Years of Experience', value: 12, suffix: '+' },

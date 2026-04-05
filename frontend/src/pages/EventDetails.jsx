@@ -7,7 +7,7 @@ import PageWrapper from '../components/PageWrapper'
 import SkeletonImage from '../components/SkeletonImage'
 import dummyEvents from '../utils/dummyEvents'
 
-const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc-1.onrender.com/api').replace(/\/api\/?$/, '')
 
 function resolveImageSrc(src) {
   if (!src) return ''

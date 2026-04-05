@@ -4,7 +4,7 @@ import Loader from '../components/Loader'
 import PageWrapper from '../components/PageWrapper'
 import SkeletonImage from '../components/SkeletonImage'
 
-const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc-1.onrender.com/api').replace(/\/api\/?$/, '')
 
 const filters = [
   { key: 'all', label: 'All Team' },
