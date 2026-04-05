@@ -2,7 +2,9 @@ import axios from "axios";
 import { clearAuthSession } from "../utils/authSession";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    (import.meta.env.DEV ? "/api" : "https://ifpc-1.onrender.com/api"),
   withCredentials: true,
   timeout: 10000,
 });
