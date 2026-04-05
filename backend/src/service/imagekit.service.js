@@ -25,6 +25,11 @@ function getImageKitClient() {
 }
 
 async function uploadImage(file, folder) {
+  const asset = await uploadImageAsset(file, folder);
+  return asset.url;
+}
+
+async function uploadImageAsset(file, folder) {
   const imagekit = getImageKitClient();
 
   const res = await imagekit.upload({
@@ -32,7 +37,10 @@ async function uploadImage(file, folder) {
     fileName: file.originalname,
     folder
   });
-  return res.url;
+  return {
+    url: res.url,
+    fileId: res.fileId,
+  };
 }
 
 async function uploadMultiple(files, folder) {
@@ -51,4 +59,16 @@ async function uploadMultiple(files, folder) {
   return urls;
 }
 
-module.exports = { uploadImage, uploadMultiple };
+async function deleteImageByFileId(fileId) {
+  if (!fileId) return false;
+
+  try {
+    const imagekit = getImageKitClient();
+    await imagekit.deleteFile(fileId);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+module.exports = { uploadImage, uploadImageAsset, uploadMultiple, deleteImageByFileId };

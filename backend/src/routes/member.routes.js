@@ -13,6 +13,9 @@ router.post(
 router.post("/login", userController.loginMember);
 router.get("/public-members", userController.getPublicMembers);
 router.get("/members", adminAuthMiddleware, userController.getMembers);
+router.patch("/:id/approval", adminAuthMiddleware, userController.updateMemberApproval);
+router.patch("/:id/reject", adminAuthMiddleware, userController.rejectMemberApproval);
+router.delete("/:id", adminAuthMiddleware, userController.deleteMember);
 router.get("/profile", memberAuthMiddleware, userController.getProfile);
 router.post("/logout", memberAuthMiddleware, userController.logoutMember);
 router.patch(

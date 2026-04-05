@@ -21,6 +21,10 @@ async function chatAuthMiddleware(req, res, next) {
         );
 
         if (admin) {
+          if (admin.status !== "allow") {
+            return res.status(403).json({ message: "Admin access blocked" });
+          }
+
           req.admin = admin;
           req.chatUser = {
             type: "admin",
@@ -53,6 +57,14 @@ async function chatAuthMiddleware(req, res, next) {
 
     if (!member) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    if (!member.canLogin) {
+      return res.status(403).json({ message: "Your account is pending admin approval" });
+    }
+
+    if (!member.isActive) {
+      return res.status(403).json({ message: "Your account is blocked. Contact admin" });
     }
 
     req.user = member;

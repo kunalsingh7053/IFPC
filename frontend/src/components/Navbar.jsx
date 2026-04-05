@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom'
 import PillNav from './PillNav'
 import { IFPC_LOGO_URL } from '../utils/branding'
+import { getAuthSession } from '../utils/authSession'
 
 const topNavLinks = [
   { to: '/', label: 'Home' },
@@ -14,7 +15,8 @@ const topNavLinks = [
 
 function Navbar() {
   const location = useLocation()
-  const role = localStorage.getItem('role')
+  const session = getAuthSession()
+  const role = session?.role
 
   const roleLinks =
     role === 'admin'

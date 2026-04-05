@@ -29,6 +29,12 @@ async function adminAuthMiddleware(req, res, next) {
       });
     }
 
+    if (admin.status !== "allow") {
+      return res.status(403).json({
+        message: "Admin access blocked",
+      });
+    }
+
     req.admin = admin;
 
     next();

@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import API from '../api/axios'
 import Loader from '../components/Loader'
 import PageWrapper from '../components/PageWrapper'
+import SkeletonImage from '../components/SkeletonImage'
+
+const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc.onrender.com/api').replace(/\/api\/?$/, '')
 
 const filters = [
   { key: 'all', label: 'All Team' },
@@ -49,6 +52,18 @@ const getRoleLabel = (value = '') => {
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ')
+}
+
+const resolveProfileImage = (src) => {
+  if (!src) return ''
+  const value = String(src).trim()
+
+  if (!value) return ''
+  if (/^https?:\/\//i.test(value)) return encodeURI(value)
+  if (value.startsWith('//')) return encodeURI(`https:${value}`)
+  if (value.startsWith('/')) return encodeURI(`${apiBase}${value}`)
+
+  return encodeURI(`${apiBase}/${value}`)
 }
 
 function TeamPage() {
@@ -116,43 +131,46 @@ function TeamPage() {
       ? `${member.fullName.firstName || ''} ${member.fullName.lastName || ''}`.trim()
       : 'Unnamed Member'
     const normalizedRole = normalizePosition(member?.position || 'member')
+    const resolvedProfileImage = resolveProfileImage(member?.profileImage)
+    const fallbackAvatar = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(name || 'IFPC Member')}&backgroundColor=0f172a,134e4a,14532d`
+    const isTopLeader = normalizedRole === 'president' || normalizedRole === 'vice-president'
+    const photoSizeClass = isTopLeader ? 'h-64' : 'h-56'
 
     return (
       <article
         key={member._id || `${name}-${index}`}
-        className="team-card-enter group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur-sm hover:border-white/25 hover:shadow-[0_16px_45px_rgba(5,10,20,0.5)]"
+        className="team-card-enter group p-2 transition"
         style={{ animationDelay: `${index * 80}ms` }}
       >
-        <div className="mb-3 overflow-hidden rounded-xl border border-white/10 bg-slate-900/50">
-          {member?.profileImage ? (
-            <img
-              src={member.profileImage}
-              alt={name}
-              className="team-avatar-zoom h-56 w-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex h-56 w-full items-center justify-center bg-gradient-to-br from-slate-700 to-slate-900 text-5xl font-bold text-slate-300">
-              {name.slice(0, 1).toUpperCase()}
-            </div>
-          )}
+        <div className="mb-4 flex justify-center">
+          <SkeletonImage
+            src={resolvedProfileImage || fallbackAvatar}
+            fallbackSrc={fallbackAvatar}
+            alt={name}
+            className={`team-avatar-zoom ${photoSizeClass} w-full object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.45)]`}
+            wrapperClassName={`${photoSizeClass} w-full overflow-visible bg-transparent`}
+          />
         </div>
 
-        <h2 className="text-lg font-semibold text-white">{name}</h2>
+        <h2 className="text-center text-lg font-semibold text-white">{name}</h2>
         <p
-          className={`team-badge-glow mt-2 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider ${roleBadgeClass[normalizedRole] || roleBadgeClass.member}`}
+          className={`team-badge-glow mx-auto mt-2 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider ${roleBadgeClass[normalizedRole] || roleBadgeClass.member}`}
         >
           {getRoleLabel(member?.position || 'member')}
         </p>
-        <p className="mt-1 text-sm text-slate-300">{member?.department || 'General Team'}</p>
+        <div className="mt-2 text-center">
+          <p className="text-sm text-slate-300">{member?.department || 'General Team'}</p>
+        </div>
       </article>
     )
   }
 
   return (
     <PageWrapper>
-      <h1 className="text-2xl font-bold text-white">Our Team</h1>
-      <p className="mt-2 text-slate-300">View all team members, including president and vice president.</p>
+      <h1 className="text-3xl font-bold text-white sm:text-4xl">Our Team</h1>
+      <p className="mt-2 max-w-2xl text-slate-300">
+        Meet the IFPC leadership and core contributors with verified profile photos and role details.
+      </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {filters.map((filter) => (

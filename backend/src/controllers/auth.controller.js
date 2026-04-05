@@ -3,7 +3,7 @@ const Admin = require('../models/admin.model');
 const User = require('../models/member.model');
 const Event = require('../models/events.model');
 const bcrypt = require("bcryptjs");
-const { uploadImage} = require("../service/imagekit.service");
+const { uploadImageAsset, deleteImageByFileId } = require("../service/imagekit.service");
 
 const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
 const isMedicapsEmail = (email = "") =>
@@ -112,10 +112,15 @@ async function registerAdmin(req, res) {
       return res.status(400).json({ message: "Only @medicaps.ac.in email is allowed" });
     }
 
-    // check existing admin
-    const existing = await Admin.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ message: "Admin already exists" });
+    // check existing email across admins and members
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const [existingAdmin, existingMember] = await Promise.all([
+      Admin.findOne({ email: normalizedEmail }),
+      User.findOne({ email: normalizedEmail }),
+    ]);
+
+    if (existingAdmin || existingMember) {
+      return res.status(400).json({ message: "Email already exists" });
     }
 
     // hash password
@@ -130,7 +135,7 @@ async function registerAdmin(req, res) {
         firstName,
         lastName
       },
-      email,
+      email: normalizedEmail,
       position: normalizedPosition,
       password: hashedPassword,
       phone,
@@ -203,8 +208,14 @@ async function updateAdminProfile(req, res) {
 
     // profile image upload
     if (req.file) {
-      const imageUrl = await uploadImage(req.file, "admins/profile");
-      admin.profileImage = imageUrl;
+      const oldFileId = admin.profileImageFileId;
+      const uploaded = await uploadImageAsset(req.file, "admins/profile");
+      admin.profileImage = uploaded.url;
+      admin.profileImageFileId = uploaded.fileId;
+
+      if (oldFileId) {
+        await deleteImageByFileId(oldFileId);
+      }
     }
 
     await admin.save();
@@ -275,7 +286,7 @@ async function getAdminDashboardStats(req, res) {
       return acc;
     }, {});
 
-    const corePositions = ["president", "vice-president", "secretary", "treasurer", "head"];
+    const corePositions = ["president", "presedent", "vice-president", "secretary", "treasurer", "head"];
     const coreMembers = corePositions.reduce(
       (sum, role) => sum + (positionCounts[role] || 0),
       0

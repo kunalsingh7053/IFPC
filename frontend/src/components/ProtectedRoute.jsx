@@ -1,9 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import { requireValidSession } from '../utils/authSession'
 
 function ProtectedRoute() {
-  const token = localStorage.getItem('token')
+  const session = requireValidSession()
 
-  if (!token) {
+  if (!session.valid) {
     return <Navigate to="/login" replace />
   }
 

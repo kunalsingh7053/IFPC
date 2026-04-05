@@ -1,8 +1,9 @@
 const User = require("../models/member.model");
 const Admin = require("../models/admin.model");
+const ChatMessage = require("../models/chat.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { uploadImage } = require("../service/imagekit.service");
+const { uploadImageAsset, deleteImageByFileId } = require("../service/imagekit.service");
 
 const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
 const isMedicapsEmail = (email = "") =>
@@ -34,10 +35,14 @@ async function register(req, res) {
       });
     }
 
-    // check existing user
-    const existingUser = await User.findOne({ email });
+    // check existing user across members and admins
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const [existingUser, existingAdmin] = await Promise.all([
+      User.findOne({ email: normalizedEmail }),
+      Admin.findOne({ email: normalizedEmail }),
+    ]);
 
-    if (existingUser) {
+    if (existingUser || existingAdmin) {
       return res.status(400).json({
         success: false,
         message: "Email already exists",
@@ -54,13 +59,13 @@ async function register(req, res) {
         firstName,
         lastName,
       },
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       position,
       department,
 
-      // allow login right after registration
-      canLogin: true,
+      // member must be approved by admin before login
+      canLogin: false,
     });
 
     return res.status(201).json({
@@ -98,7 +103,13 @@ async function loginMember(req, res) {
     // approval check
     if (!user.canLogin) {
       return res.status(403).json({
-        message: "Not approved yet",
+        message: "Your account is pending admin approval",
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        message: "Your account is blocked. Contact admin",
       });
     }
 
@@ -148,6 +159,88 @@ async function loginMember(req, res) {
     });
   }
 }
+
+async function updateMemberApproval(req, res) {
+  try {
+    const { id } = req.params;
+    const { approved } = req.body;
+
+    if (typeof approved !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "approved must be true or false",
+      });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    user.canLogin = approved;
+    if (approved) {
+      user.isActive = true;
+    }
+    user.approvedBy = approved ? req.admin?._id : null;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: approved ? "Member approved successfully" : "Member approval revoked",
+      data: {
+        _id: user._id,
+        email: user.email,
+        canLogin: user.canLogin,
+        approvedBy: user.approvedBy,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+async function rejectMemberApproval(req, res) {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    user.canLogin = false;
+    user.isActive = false;
+    user.approvedBy = null;
+    await user.save();
+
+    return res.json({
+      success: true,
+      message: "Member rejected successfully",
+      data: {
+        _id: user._id,
+        email: user.email,
+        canLogin: user.canLogin,
+        isActive: user.isActive,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 async function getProfile(req, res) {
   try {
     const user = req.user;
@@ -158,6 +251,8 @@ async function getProfile(req, res) {
       fullName: user.fullName,
       position: user.position,
       department: user.department,
+      profileImage: user.profileImage,
+      phone: user.phone,
     });
 
   } catch (error) {
@@ -198,8 +293,14 @@ try {
   if (lastName !== undefined) user.fullName.lastName = lastName;
   // image updates
   if (req.file) {
-    const imageUrl = await uploadImage(req.file, "members/profile");
-    user.profileImage = imageUrl;
+    const oldFileId = user.profileImageFileId;
+    const uploaded = await uploadImageAsset(req.file, "members/profile");
+    user.profileImage = uploaded.url;
+    user.profileImageFileId = uploaded.fileId;
+
+    if (oldFileId) {
+      await deleteImageByFileId(oldFileId);
+    }
   } 
   await user.save();
   res.json({
@@ -220,10 +321,48 @@ try {
 }
 }
 
+async function deleteMember(req, res) {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    // Delete member profile image from ImageKit if tracked.
+    if (user.profileImageFileId) {
+      await deleteImageByFileId(user.profileImageFileId);
+    }
+
+    // Delete all member chat messages.
+    await ChatMessage.deleteMany({
+      senderType: "member",
+      senderId: user._id,
+    });
+
+    await user.deleteOne();
+
+    return res.json({
+      success: true,
+      message: "Member and related data deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 async function getMembers(req, res) {
   try {
     const members = await User.find()
-      .select("fullName email position department profileImage canLogin isActive createdAt")
+      .select("fullName email position department profileImage canLogin isActive approvedBy createdAt")
       .sort({ createdAt: -1 });
 
     return res.json({
@@ -314,6 +453,9 @@ module.exports = {
   getProfile,
   logoutMember,
   updateProfile,
+  updateMemberApproval,
+  rejectMemberApproval,
+  deleteMember,
   getMembers,
   getPublicMembers
 

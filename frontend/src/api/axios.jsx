@@ -1,7 +1,8 @@
 import axios from "axios";
+import { clearAuthSession } from "../utils/authSession";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://ifpc.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   withCredentials: true,
   timeout: 10000,
 });
@@ -24,5 +25,18 @@ API.interceptors.request.use((config) => {
 
   return config;
 });
+
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+
+    if (status === 401 || status === 403) {
+      clearAuthSession();
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default API;

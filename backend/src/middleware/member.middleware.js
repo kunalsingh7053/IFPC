@@ -28,6 +28,18 @@ async function memberAuthMiddleware(req, res, next) {
       });
     }
 
+    if (!user.canLogin) {
+      return res.status(403).json({
+        message: "Your account is pending admin approval",
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        message: "Your account is blocked. Contact admin",
+      });
+    }
+
     req.user = user;
 
     next();

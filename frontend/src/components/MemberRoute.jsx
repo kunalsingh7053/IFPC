@@ -1,14 +1,14 @@
 import { Navigate, Outlet } from 'react-router-dom'
+import { requireValidSession } from '../utils/authSession'
 
 function MemberRoute() {
-  const token = localStorage.getItem('token')
-  const role = localStorage.getItem('role')
+  const session = requireValidSession()
 
-  if (!token) {
+  if (!session.valid) {
     return <Navigate to="/login" replace />
   }
 
-  if (role !== 'member') {
+  if (session.role !== 'member' && session.role !== 'admin') {
     return <Navigate to="/admin-dashboard" replace />
   }
 
