@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import API from '../api/axios'
@@ -19,8 +19,26 @@ function Register() {
     department: '',
   })
   const [loading, setLoading] = useState(false)
+  const [gateLoading, setGateLoading] = useState(true)
+  const [registrationOpen, setRegistrationOpen] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    async function loadRegistrationStatus() {
+      try {
+        setGateLoading(true)
+        const { data } = await API.get('/auth/member-registration-status')
+        setRegistrationOpen(Boolean(data?.data?.memberRegistrationOpen))
+      } catch {
+        setRegistrationOpen(false)
+      } finally {
+        setGateLoading(false)
+      }
+    }
+
+    loadRegistrationStatus()
+  }, [])
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -73,7 +91,23 @@ function Register() {
           <p className="mt-2 text-sm text-slate-300">Create your IFPC member account</p>
           <p className="mt-1 text-xs text-emerald-200/90">Use your Medicaps email only ({MEDICAPS_EMAIL_DOMAIN})</p>
 
-          <form onSubmit={handleSubmit} className="mt-6 grid gap-4 md:grid-cols-2">
+          {gateLoading ? (
+            <p className="mt-6 text-sm text-slate-300">Checking registration availability...</p>
+          ) : !registrationOpen ? (
+            <div className="mt-6 rounded-2xl border border-rose-300/35 bg-rose-500/10 p-4">
+              <p className="text-sm font-semibold text-rose-100">Registration is currently closed by admin.</p>
+              <p className="mt-2 text-xs text-rose-100/90">Please contact admin and try again later.</p>
+            </div>
+          ) : (
+          <>
+          <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-emerald-300/35 bg-emerald-500/10 px-4 py-3">
+            <p className="text-sm font-semibold text-emerald-100">Registration is open now.</p>
+            <span className="animate-pulse rounded-lg border border-emerald-300/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-100">
+              Open
+            </span>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
             <FormInput label="First Name" name="firstName" value={form.firstName} onChange={handleChange} required />
             <FormInput label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} required />
             <FormInput label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
@@ -85,6 +119,8 @@ function Register() {
               {loading ? 'Submitting...' : 'Register'}
             </button>
           </form>
+          </>
+          )}
 
           {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
           {message && <p className="mt-3 text-sm text-emerald-300">{message}</p>}

@@ -30,6 +30,7 @@ function Contact() {
             <div className="mt-4 space-y-2 text-sm text-slate-200">
               <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Location: MediCaps University, Indore</p>
               <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Community: IFPC (Film and Photography)</p>
+              <p className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Email: mulens@medicaps.ac.in</p>
             </div>
 
             <a

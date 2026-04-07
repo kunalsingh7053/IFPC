@@ -2,12 +2,26 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/admin.model');
 const User = require('../models/member.model');
 const Event = require('../models/events.model');
+const SystemSetting = require('../models/systemSetting.model');
 const bcrypt = require("bcryptjs");
 const { uploadImageAsset, deleteImageByFileId } = require("../service/imagekit.service");
 
 const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
 const isMedicapsEmail = (email = "") =>
   String(email).trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN);
+
+async function getOrCreateAppSetting() {
+  let setting = await SystemSetting.findOne({ key: "app-settings" });
+
+  if (!setting) {
+    setting = await SystemSetting.create({
+      key: "app-settings",
+      memberRegistrationOpen: false,
+    });
+  }
+
+  return setting;
+}
 
 
 
@@ -314,6 +328,56 @@ async function getAdminDashboardStats(req, res) {
   }
 }
 
+async function getMemberRegistrationStatus(req, res) {
+  try {
+    const setting = await getOrCreateAppSetting();
+
+    return res.json({
+      success: true,
+      data: {
+        memberRegistrationOpen: Boolean(setting.memberRegistrationOpen),
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+async function updateMemberRegistrationStatus(req, res) {
+  try {
+    const { memberRegistrationOpen } = req.body || {};
+
+    if (typeof memberRegistrationOpen !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "memberRegistrationOpen must be boolean",
+      });
+    }
+
+    const setting = await getOrCreateAppSetting();
+    setting.memberRegistrationOpen = memberRegistrationOpen;
+    await setting.save();
+
+    return res.json({
+      success: true,
+      message: memberRegistrationOpen
+        ? "Member registration is now open"
+        : "Member registration is now closed",
+      data: {
+        memberRegistrationOpen: setting.memberRegistrationOpen,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   loginAdmin,
   registerAdmin,
@@ -321,4 +385,6 @@ module.exports = {
   updateAdminProfile,
   logoutAdmin,
   getAdminDashboardStats,
+  getMemberRegistrationStatus,
+  updateMemberRegistrationStatus,
 };

@@ -28,6 +28,11 @@ const eventSchema = new mongoose.Schema(
       required: true
     },
 
+    thumbnailFileId: {
+      type: String,
+      default: null
+    },
+
     images: {
       type: [String], // ImageKit URLs
       validate: {
@@ -36,6 +41,11 @@ const eventSchema = new mongoose.Schema(
         },
         message: "Maximum 5 images allowed"
       },
+      default: []
+    },
+
+    imageFileIds: {
+      type: [String],
       default: []
     },
 

@@ -4,6 +4,7 @@ import EventCard from '../components/EventCard'
 import Loader from '../components/Loader'
 import PageWrapper from '../components/PageWrapper'
 import dummyEvents from '../utils/dummyEvents'
+import { mergeEvents } from '../utils/mergeEvents'
 
 function EventsPage() {
   const [events, setEvents] = useState(dummyEvents)
@@ -15,9 +16,7 @@ function EventsPage() {
       try {
         const { data } = await API.get('/events')
         const fetchedEvents = Array.isArray(data?.data) ? data.data : []
-        if (fetchedEvents.length > 0) {
-          setEvents(fetchedEvents)
-        }
+        setEvents(mergeEvents(dummyEvents, fetchedEvents))
       } catch {
         setError('')
       } finally {

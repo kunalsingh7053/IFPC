@@ -1,5 +1,6 @@
 const User = require("../models/member.model");
 const Admin = require("../models/admin.model");
+const SystemSetting = require("../models/systemSetting.model");
 const ChatMessage = require("../models/chat.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -11,6 +12,16 @@ const isMedicapsEmail = (email = "") =>
 
 async function register(req, res) {
   try {
+    const setting = await SystemSetting.findOne({ key: "app-settings" });
+    const registrationOpen = Boolean(setting?.memberRegistrationOpen);
+
+    if (!registrationOpen) {
+      return res.status(403).json({
+        success: false,
+        message: "Member registration is currently closed by admin",
+      });
+    }
+
     const {
       firstName,
       lastName,

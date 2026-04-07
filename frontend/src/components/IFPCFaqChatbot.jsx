@@ -12,9 +12,10 @@ const STARTER_MESSAGES = [
 
 const QUICK_REPLIES = [
   'What is IFPC?',
-  'Who is head of photography or videography?',
+  'Who is head of photography?',
   'What is Moonstone?',
   'Where is IFPC located?',
+  'What is IFPC contact email?',
   'Tell me upcoming events',
 ]
 
@@ -28,8 +29,7 @@ function IFPCFaqChatbot() {
   const [voiceSupported, setVoiceSupported] = useState(false)
   const [presidentName, setPresidentName] = useState('')
   const [vicePresidentName, setVicePresidentName] = useState('')
-  const [photographyHeadName, setPhotographyHeadName] = useState('')
-  const [videographyHeadName, setVideographyHeadName] = useState('')
+  const [photographyHeadName, setPhotographyHeadName] = useState('Siddharth Bagora')
   const listRef = useRef(null)
   const rootRef = useRef(null)
   const recognitionRef = useRef(null)
@@ -56,11 +56,6 @@ function IFPCFaqChatbot() {
           return position.includes('head') && position.includes('photography')
         })
 
-        const videographyHead = members.find((member) => {
-          const position = String(member?.position || '').trim().toLowerCase()
-          return position.includes('head') && (position.includes('videography') || position.includes('video'))
-        })
-
         const formatName = (member) => {
           const first = member?.fullName?.firstName || ''
           const last = member?.fullName?.lastName || ''
@@ -69,13 +64,11 @@ function IFPCFaqChatbot() {
 
         setPresidentName(formatName(president))
         setVicePresidentName(formatName(vice))
-        setPhotographyHeadName(formatName(photographyHead))
-        setVideographyHeadName(formatName(videographyHead))
+        setPhotographyHeadName(formatName(photographyHead) || 'Siddharth Bagora')
       } catch {
         setPresidentName('')
         setVicePresidentName('')
-        setPhotographyHeadName('')
-        setVideographyHeadName('')
+        setPhotographyHeadName('Siddharth Bagora')
       }
     }
 
@@ -125,7 +118,7 @@ function IFPCFaqChatbot() {
       recognitionRef.current?.stop()
       recognitionRef.current = null
     }
-  }, [presidentName, vicePresidentName, photographyHeadName, videographyHeadName])
+  }, [presidentName, vicePresidentName, photographyHeadName])
 
   useEffect(() => {
     if (!open) return
@@ -166,10 +159,11 @@ function IFPCFaqChatbot() {
 
     const presidentKeywords = /president|presedent|leader/
     const locationKeywords = /location|located|where|address|place/
+    const contactKeywords = /contact|email|mail|gmail|reach|connect/
     const aboutKeywords = /what is ifpc|about ifpc|ifpc|full form|community/
     const teamKeywords = /team|members|vice president|core/
     const eventKeywords = /event|workshop|shoot|coverage/
-    const headsKeywords = /head of photography|head of videography|photography head|videography head|video head/
+    const headsKeywords = /head of photography|photography head/
     const moonstoneKeywords = /moonstone/
     const followUpKeywords = /where is it|where is this|what about location|tell me more/
 
@@ -185,18 +179,19 @@ function IFPCFaqChatbot() {
       return 'IFPC is based at MediCaps University, Indore, Madhya Pradesh. You can also view the location on the Contact page map.'
     }
 
+    if (contactKeywords.test(q)) {
+      return 'You can contact IFPC at mulens@medicaps.ac.in. You can also use the Contact page for map and collaboration details.'
+    }
+
     if (teamKeywords.test(q)) {
       return 'IFPC team includes President, Vice President, Heads, Core Members, and Members. Visit the Team page to view complete profiles.'
     }
 
     if (headsKeywords.test(q)) {
-      const photo = photographyHeadName ? `Photography Head: ${photographyHeadName}.` : ''
-      const video = videographyHeadName ? ` Videography Head: ${videographyHeadName}.` : ''
-      const headsLine = `${photo}${video}`.trim()
-      if (headsLine) {
-        return headsLine
+      if (photographyHeadName) {
+        return `Photography Head: ${photographyHeadName}.`
       }
-      return 'Head details for photography and videography are managed by IFPC admin. Please check the Team page for latest updates.'
+      return 'Photography Head: Siddharth Bagora.'
     }
 
     if (moonstoneKeywords.test(q)) {
@@ -237,7 +232,6 @@ function IFPCFaqChatbot() {
             presidentName,
             vicePresidentName,
             photographyHeadName,
-            videographyHeadName,
           },
         }),
       })

@@ -4,6 +4,7 @@ import API from '../api/axios'
 import PageWrapper from '../components/PageWrapper'
 import SkeletonImage from '../components/SkeletonImage'
 import dummyEvents from '../utils/dummyEvents'
+import { mergeEvents } from '../utils/mergeEvents'
 
 const apiBase = (import.meta.env.VITE_API_URL || 'https://ifpc-1.onrender.com/api').replace(/\/api\/?$/, '')
 
@@ -36,9 +37,7 @@ function Gallery() {
       try {
         const { data } = await API.get('/events')
         const fetchedEvents = Array.isArray(data?.data) ? data.data : []
-        if (fetchedEvents.length > 0) {
-          setEvents(fetchedEvents)
-        }
+        setEvents(mergeEvents(dummyEvents, fetchedEvents))
       } catch {
         // Keep already rendered fallback events for faster UX.
       }

@@ -44,8 +44,13 @@ async function uploadImageAsset(file, folder) {
 }
 
 async function uploadMultiple(files, folder) {
+  const assets = await uploadMultipleAssets(files, folder);
+  return assets.map((asset) => asset.url);
+}
+
+async function uploadMultipleAssets(files, folder) {
   const imagekit = getImageKitClient();
-  const urls = [];
+  const assets = [];
 
   for (const file of files) {
     const res = await imagekit.upload({
@@ -53,10 +58,13 @@ async function uploadMultiple(files, folder) {
       fileName: file.originalname,
       folder
     });
-    urls.push(res.url);
+    assets.push({
+      url: res.url,
+      fileId: res.fileId,
+    });
   }
 
-  return urls;
+  return assets;
 }
 
 async function deleteImageByFileId(fileId) {
@@ -71,4 +79,29 @@ async function deleteImageByFileId(fileId) {
   }
 }
 
-module.exports = { uploadImage, uploadImageAsset, uploadMultiple, deleteImageByFileId };
+async function deleteImagesByFileIds(fileIds = []) {
+  const uniqueFileIds = [...new Set((fileIds || []).filter(Boolean))];
+  if (uniqueFileIds.length === 0) {
+    return { deleted: 0, failed: 0 };
+  }
+
+  let deleted = 0;
+  let failed = 0;
+
+  for (const fileId of uniqueFileIds) {
+    const ok = await deleteImageByFileId(fileId);
+    if (ok) deleted += 1;
+    else failed += 1;
+  }
+
+  return { deleted, failed };
+}
+
+module.exports = {
+  uploadImage,
+  uploadImageAsset,
+  uploadMultiple,
+  uploadMultipleAssets,
+  deleteImageByFileId,
+  deleteImagesByFileIds,
+};

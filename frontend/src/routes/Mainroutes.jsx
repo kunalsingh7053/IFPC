@@ -16,8 +16,8 @@ import MembersList from '../pages/MembersList'
 import TeamPage from '../pages/TeamPage'
 import AddMember from '../pages/AddMember'
 import EventsPage from '../pages/EventsPage'
+import Equipment from '../pages/Equipment'
 import EventDetails from '../pages/EventDetails'
-import AddEventPage from '../pages/AddEventPage'
 import ChatPage from '../pages/ChatPage'
 import ProfilePage from '../pages/ProfilePage'
 import About from '../pages/About'
@@ -57,6 +57,7 @@ function Mainroutes() {
 					<Route element={<DashboardLayout />}>
 						<Route path="/" element={<Home />} />
 						<Route path="/events" element={<EventsPage />} />
+						<Route path="/equipment" element={<Equipment />} />
 						<Route path="/events/:id" element={<EventDetails />} />
 						<Route path="/team" element={<TeamPage />} />
 						<Route path="/about" element={<About />} />
@@ -74,7 +75,6 @@ function Mainroutes() {
 							<Route path="/admin-dashboard" element={<AdminDashboard />} />
 							<Route path="/members" element={<MembersList />} />
 							<Route path="/add-member" element={<AddMember />} />
-							<Route path="/add-event" element={<AddEventPage />} />
 						</Route>
 
 						<Route element={<MemberRoute />}>

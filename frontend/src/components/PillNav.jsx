@@ -368,19 +368,30 @@ const PillNav = ({
                       circleRefs.current[i] = el
                     }}
                   />
-                  <span className="label-stack relative z-[2] inline-block leading-[1]">
-                    <span className="pill-label relative z-[2] inline-block leading-[1]" style={{ willChange: 'transform' }}>
-                      {item.label}
+                  <span className={`label-stack relative z-[2] inline-flex items-center gap-2 leading-[1] ${item.blink ? 'animate-pulse' : ''}`}>
+                    <span className="pill-label relative z-[2] inline-flex items-center gap-2 leading-[1]" style={{ willChange: 'transform' }}>
+                      <span
+                        aria-hidden="true"
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          isActive ? 'bg-emerald-100 shadow-[0_0_8px_rgba(220,255,235,0.85)]' : 'bg-transparent'
+                        }`}
+                      />
+                      <span>{item.label}</span>
                     </span>
                     <span
-                      className="pill-label-hover absolute left-0 top-0 z-[3] inline-block"
+                      className="pill-label-hover absolute left-0 top-0 z-[3] inline-flex items-center gap-2"
                       style={{
                         color: 'var(--hover-text, #fff)',
                         willChange: 'transform, opacity',
                       }}
                       aria-hidden="true"
                     >
-                      {item.label}
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          isActive ? 'bg-emerald-100 shadow-[0_0_8px_rgba(220,255,235,0.85)]' : 'bg-transparent'
+                        }`}
+                      />
+                      <span>{item.label}</span>
                     </span>
                   </span>
                 </>
@@ -482,7 +493,17 @@ const PillNav = ({
             const linkClasses =
               'flex items-center justify-between rounded-[16px] px-4 py-3 text-[15px] font-semibold uppercase tracking-[0.06em] transition-all duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)]'
 
-            const LabelContent = <span>{item.label}</span>
+            const LabelContent = (
+              <span className={`inline-flex items-center gap-2 ${item.blink ? 'animate-pulse' : ''}`}>
+                <span
+                  aria-hidden="true"
+                  className={`h-2 w-2 rounded-full ${
+                    isActive ? 'bg-emerald-50 shadow-[0_0_10px_rgba(255,255,255,0.85)]' : 'bg-transparent'
+                  }`}
+                />
+                <span>{item.label}</span>
+              </span>
+            )
 
             return (
               <li key={item.href}>

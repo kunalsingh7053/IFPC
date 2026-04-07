@@ -1,5 +1,9 @@
 const Event = require("../models/events.model");
-const { uploadImage, uploadMultiple } = require("../service/imagekit.service");
+const {
+  uploadImageAsset,
+  uploadMultipleAssets,
+  deleteImagesByFileIds,
+} = require("../service/imagekit.service");
 
 // Public: get all events (no login required)
 async function getEvents(req, res) {
@@ -66,19 +70,25 @@ async function createEvent(req, res) {
     }
 
     let thumbnailUrl = null;
+    let thumbnailFileId = null;
     if (req.files?.thumbnail) {
-      thumbnailUrl = await uploadImage(
+      const thumbnailAsset = await uploadImageAsset(
         req.files.thumbnail[0],
         "events/thumbnails"
       );
+      thumbnailUrl = thumbnailAsset.url;
+      thumbnailFileId = thumbnailAsset.fileId;
     }
 
     let imageUrls = [];
+    let imageFileIds = [];
     if (req.files?.images) {
-      imageUrls = await uploadMultiple(
+      const imageAssets = await uploadMultipleAssets(
         req.files.images,
         "events/gallery"
       );
+      imageUrls = imageAssets.map((asset) => asset.url);
+      imageFileIds = imageAssets.map((asset) => asset.fileId);
     }
 
     const event = await Event.create({
@@ -87,7 +97,9 @@ async function createEvent(req, res) {
       eventDate,
       location,
       thumbnail: thumbnailUrl,
+      thumbnailFileId,
       images: imageUrls,
+      imageFileIds,
       createdBy: req.admin._id
     });
 
@@ -120,13 +132,25 @@ async function updateEvent(req, res) {
     }
 
     if (req.files?.thumbnail) {
-      const url = await uploadImage(req.files.thumbnail[0], "events/thumbnails");
-      event.thumbnail = url;
+      const oldThumbnailFileId = event.thumbnailFileId;
+      const thumbnailAsset = await uploadImageAsset(req.files.thumbnail[0], "events/thumbnails");
+      event.thumbnail = thumbnailAsset.url;
+      event.thumbnailFileId = thumbnailAsset.fileId;
+
+      if (oldThumbnailFileId) {
+        await deleteImagesByFileIds([oldThumbnailFileId]);
+      }
     }
 
     if (req.files?.images) {
-      const urls = await uploadMultiple(req.files.images, "events/gallery");
-      event.images = urls;
+      const oldImageFileIds = event.imageFileIds || [];
+      const imageAssets = await uploadMultipleAssets(req.files.images, "events/gallery");
+      event.images = imageAssets.map((asset) => asset.url);
+      event.imageFileIds = imageAssets.map((asset) => asset.fileId);
+
+      if (oldImageFileIds.length > 0) {
+        await deleteImagesByFileIds(oldImageFileIds);
+      }
     }
 
     if (title !== undefined) event.title = title;
@@ -149,6 +173,15 @@ async function deleteEvent(req, res) {
     const event = await Event.findById(id);
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
+    }
+
+    const fileIdsToDelete = [
+      event.thumbnailFileId,
+      ...(event.imageFileIds || []),
+    ].filter(Boolean);
+
+    if (fileIdsToDelete.length > 0) {
+      await deleteImagesByFileIds(fileIdsToDelete);
     }
 
     await event.deleteOne();

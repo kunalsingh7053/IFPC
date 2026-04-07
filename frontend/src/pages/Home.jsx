@@ -9,6 +9,7 @@ import InteractiveMarquee from '../components/InteractiveMarquee'
 import PageWrapper from '../components/PageWrapper'
 import SkeletonImage from '../components/SkeletonImage'
 import dummyEvents from '../utils/dummyEvents'
+import { mergeEvents } from '../utils/mergeEvents'
 import { IFPC_ABOUT_HERO_IMAGE_URL } from '../utils/branding'
 
 const faculty = [
@@ -30,6 +31,7 @@ const impactStats = [
 function resolveImageSrc(src) {
 	if (!src) return ''
 	if (src.startsWith('http')) return src
+	if (src.startsWith('/camera/') || src.startsWith('/images/')) return src
 	if (src.startsWith('/')) return `${apiBase}${src}`
 	return `${apiBase}/${src}`
 }
@@ -80,9 +82,7 @@ function Home() {
 			try {
 				const { data } = await API.get('/events')
 				const fetchedEvents = Array.isArray(data?.data) ? data.data : []
-				if (fetchedEvents.length > 0) {
-					setEvents(fetchedEvents)
-				}
+				setEvents(mergeEvents(dummyEvents, fetchedEvents))
 			} catch {
 				// Keep already rendered fallback events for faster UX.
 			} finally {
@@ -188,7 +188,16 @@ function Home() {
 
 	const formatCounterNumber = (value) => new Intl.NumberFormat('en-IN').format(value)
 
-	const projectCards = useMemo(() => events.slice(0, 3), [events])
+	const projectCards = useMemo(() => {
+		const featuredKeywords = ['moonstone', 'e-summit', 'esummit', 'convocation']
+		const featured = events.filter((event) => {
+			const title = String(event?.title || '').toLowerCase()
+			return featuredKeywords.some((keyword) => title.includes(keyword))
+		})
+		const others = events.filter((event) => !featured.includes(event))
+
+		return [...featured, ...others].slice(0, 3)
+	}, [events])
 
 	const galleryImages = useMemo(() => {
 		const fromEvents = events
