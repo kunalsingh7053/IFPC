@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { IFPC_CANVAS_LOADING_IMAGE_URL } from '../utils/branding'
+import { IFPC_CANVAS_LOADING_IMAGE_URL, IFPC_MOBILE_HERO_IMAGE_URL } from '../utils/branding'
 
 const TOTAL_FRAMES = 192
 const START_READY_FRAMES = 42
+const LAPTOP_MIN_WIDTH = 1024
 const appBaseUrl = import.meta.env.BASE_URL || '/'
 
 function toPublicAsset(pathname) {
@@ -81,7 +82,7 @@ function AdvancedHeroSlider() {
 	const renderedFrameRef = useRef(-1)
 	const rafIdRef = useRef(0)
 	const [isReady, setIsReady] = useState(false)
-	const [isMobileView, setIsMobileView] = useState(() => window.innerWidth < 768)
+	const [isMobileView, setIsMobileView] = useState(() => window.innerWidth < LAPTOP_MIN_WIDTH)
 
 	const loadingBackgroundStyle = {
 		backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.34)), url('${toPublicAsset('camera/_MConverter.eu_Video_Ready_After_Prompt-1.png')}'), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
@@ -92,7 +93,7 @@ function AdvancedHeroSlider() {
 
 	useEffect(() => {
 		const handleResize = () => {
-			setIsMobileView(window.innerWidth < 768)
+			setIsMobileView(window.innerWidth < LAPTOP_MIN_WIDTH)
 		}
 
 		handleResize()
@@ -121,6 +122,9 @@ function AdvancedHeroSlider() {
 		context.imageSmoothingQuality = 'high'
 
 		let isMounted = true
+		let activeTrigger
+		let hasActivatedScrollExperience = false
+		let pendingActivationOnReturnHandler
 
 		const updateCanvasSize = () => {
 			const viewportWidth = section.clientWidth || window.innerWidth
@@ -162,6 +166,35 @@ function AdvancedHeroSlider() {
 			rafIdRef.current = requestAnimationFrame(smoothRenderLoop)
 		}
 
+		const activateScrollExperience = () => {
+			if (hasActivatedScrollExperience || !isMounted) return undefined
+			hasActivatedScrollExperience = true
+
+			rafIdRef.current = requestAnimationFrame(smoothRenderLoop)
+
+			activeTrigger = ScrollTrigger.create({
+				trigger: section,
+				start: 'top top',
+				end: '+=300%',
+				pin: true,
+				scrub: true,
+				anticipatePin: 1,
+				invalidateOnRefresh: true,
+				onUpdate: (self) => {
+					targetFrameRef.current = self.progress * (TOTAL_FRAMES - 1)
+
+					if (overlayContentRef.current) {
+						const fadeWindow = 0.1
+						const contentOpacity = self.progress < fadeWindow ? 1 - self.progress / fadeWindow : 0
+						const contentY = Math.min(28, self.progress * 60)
+						gsap.set(overlayContentRef.current, { autoAlpha: contentOpacity, y: contentY })
+					}
+				},
+			})
+
+			return activeTrigger
+		}
+
 		const loadAllFrames = async () => {
 			let hasStartedExperience = false
 
@@ -176,29 +209,32 @@ function AdvancedHeroSlider() {
 				targetFrameRef.current = initialFrame
 				currentFrameRef.current = initialFrame
 				renderFrame(initialFrame)
-				rafIdRef.current = requestAnimationFrame(smoothRenderLoop)
 
-				const trigger = ScrollTrigger.create({
-					trigger: section,
-					start: 'top top',
-					end: '+=300%',
-					pin: true,
-					scrub: true,
-					anticipatePin: 1,
-					invalidateOnRefresh: true,
-					onUpdate: (self) => {
-						targetFrameRef.current = self.progress * (TOTAL_FRAMES - 1)
-
-						if (overlayContentRef.current) {
-							const fadeWindow = 0.1
-							const contentOpacity = self.progress < fadeWindow ? 1 - self.progress / fadeWindow : 0
-							const contentY = Math.min(28, self.progress * 60)
-							gsap.set(overlayContentRef.current, { autoAlpha: contentOpacity, y: contentY })
+				const sectionTop = section.offsetTop
+				const skipThreshold = sectionTop + Math.min(section.clientHeight * 0.4, 320)
+				const hasUserSkippedHero = window.scrollY > skipThreshold
+				if (hasUserSkippedHero) {
+					const activateOnReturn = () => {
+						if (!isMounted || hasActivatedScrollExperience) {
+							window.removeEventListener('scroll', activateOnReturn)
+							pendingActivationOnReturnHandler = undefined
+							return
 						}
-					},
-				})
 
-				return trigger
+						const reentryThreshold = section.offsetTop + Math.min(section.clientHeight * 0.25, 220)
+						if (window.scrollY <= reentryThreshold) {
+							activateScrollExperience()
+							window.removeEventListener('scroll', activateOnReturn)
+							pendingActivationOnReturnHandler = undefined
+						}
+					}
+
+					pendingActivationOnReturnHandler = activateOnReturn
+					window.addEventListener('scroll', activateOnReturn, { passive: true })
+					return undefined
+				}
+
+				return activateScrollExperience()
 			}
 
 			const imagePromises = []
@@ -235,7 +271,6 @@ function AdvancedHeroSlider() {
 		})
 		resizeObserver.observe(section)
 
-		let activeTrigger
 		loadAllFrames().then((trigger) => {
 			activeTrigger = trigger
 		})
@@ -243,6 +278,9 @@ function AdvancedHeroSlider() {
 		return () => {
 			isMounted = false
 			window.removeEventListener('resize', updateCanvasSize)
+			if (pendingActivationOnReturnHandler) {
+				window.removeEventListener('scroll', pendingActivationOnReturnHandler)
+			}
 			resizeObserver.disconnect()
 			activeTrigger?.kill()
 			cancelAnimationFrame(rafIdRef.current)
@@ -254,7 +292,7 @@ function AdvancedHeroSlider() {
 			<section
 				className="relative h-screen min-h-screen w-full overflow-hidden bg-black md:h-[100dvh] md:min-h-[100svh]"
 				style={{
-					backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.34)), url('${toPublicAsset('camera/_MConverter.eu_Video_Ready_After_Prompt-1.png')}'), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
+					backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.34)), url('${IFPC_MOBILE_HERO_IMAGE_URL}')`,
 					backgroundSize: 'cover',
 					backgroundPosition: 'center',
 					backgroundRepeat: 'no-repeat',
