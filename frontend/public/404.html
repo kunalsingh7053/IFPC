@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFPC</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var path = window.location.pathname + window.location.search + window.location.hash;
+        var base = '/';
+        var segments = path.split('/').filter(Boolean);
+
+        if (segments.length > 0 && segments[0].includes('.')) {
+          return;
+        }
+
+        window.location.replace(base + '?redirect=' + encodeURIComponent(path));
+      })();
+    </script>
+  </body>
+</html>

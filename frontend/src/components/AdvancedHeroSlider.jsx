@@ -5,17 +5,23 @@ import { IFPC_CANVAS_LOADING_IMAGE_URL } from '../utils/branding'
 
 const TOTAL_FRAMES = 192
 const START_READY_FRAMES = 42
+const appBaseUrl = import.meta.env.BASE_URL || '/'
+
+function toPublicAsset(pathname) {
+	const normalizedBase = appBaseUrl.endsWith('/') ? appBaseUrl : `${appBaseUrl}/`
+	return `${normalizedBase}${pathname.replace(/^\/+/, '')}`
+}
 
 function frameCandidates(index) {
 	const paddedIndex = String(index).padStart(3, '0')
 
 	return [
-		`/camera/frame_${paddedIndex}.jpg`,
-		`/camera/frame_${paddedIndex}.png`,
-		`/camera/frame-${paddedIndex}.jpg`,
-		`/camera/frame-${paddedIndex}.png`,
-		`/camera/_MConverter.eu_Video_Ready_After_Prompt-${index}.png`,
-		`/camera/_MConverter.eu_Video_Ready_After_Prompt-${paddedIndex}.png`,
+		toPublicAsset(`camera/frame_${paddedIndex}.jpg`),
+		toPublicAsset(`camera/frame_${paddedIndex}.png`),
+		toPublicAsset(`camera/frame-${paddedIndex}.jpg`),
+		toPublicAsset(`camera/frame-${paddedIndex}.png`),
+		toPublicAsset(`camera/_MConverter.eu_Video_Ready_After_Prompt-${index}.png`),
+		toPublicAsset(`camera/_MConverter.eu_Video_Ready_After_Prompt-${paddedIndex}.png`),
 	]
 }
 
@@ -78,7 +84,7 @@ function AdvancedHeroSlider() {
 	const [isMobileView, setIsMobileView] = useState(() => window.innerWidth < 768)
 
 	const loadingBackgroundStyle = {
-		backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.34)), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
+		backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.24) 62%, rgba(0, 0, 0, 0.34)), url('${toPublicAsset('camera/_MConverter.eu_Video_Ready_After_Prompt-1.png')}'), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
 		backgroundRepeat: 'no-repeat',
@@ -248,7 +254,7 @@ function AdvancedHeroSlider() {
 			<section
 				className="relative h-screen min-h-screen w-full overflow-hidden bg-black md:h-[100dvh] md:min-h-[100svh]"
 				style={{
-					backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.34)), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
+					backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.22) 58%, rgba(0, 0, 0, 0.34)), url('${toPublicAsset('camera/_MConverter.eu_Video_Ready_After_Prompt-1.png')}'), url('${IFPC_CANVAS_LOADING_IMAGE_URL}')`,
 					backgroundSize: 'cover',
 					backgroundPosition: 'center',
 					backgroundRepeat: 'no-repeat',
