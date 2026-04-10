@@ -58,12 +58,14 @@ function Navbar() {
       : []
 
   const visibleLinks = useMemo(() => {
+    const loginLink = !role ? [{ to: '/login', label: 'Login' }] : []
+
     const registrationLink =
       registrationOpen && !role
-        ? [{ to: '/register', label: 'Register Open', blink: true }]
+        ? [{ to: '/login', label: 'Register Open', blink: true }]
         : []
 
-    return [...topNavLinks, ...registrationLink, ...roleLinks].map((item) => ({
+    return [...topNavLinks, ...loginLink, ...registrationLink, ...roleLinks].map((item) => ({
       label: item.label,
       href: item.to,
       blink: Boolean(item.blink),

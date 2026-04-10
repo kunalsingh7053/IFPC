@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../components/DashboardLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
@@ -9,7 +9,6 @@ import BlackCircleRouteTransition from '../components/BlackCircleRouteTransition
 
 import Home from '../pages/Home'
 import Login from '../pages/Login'
-import Register from '../pages/Register'
 import AdminDashboard from '../pages/AdminDashboard'
 import MemberDashboard from '../pages/MemberDashboard'
 import MembersList from '../pages/MembersList'
@@ -52,7 +51,7 @@ function Mainroutes() {
 			<AnimatePresence mode="wait">
 				<Routes location={location} key={location.pathname}>
 					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
+					<Route path="/register" element={<Navigate to="/login" replace />} />
 
 					<Route element={<DashboardLayout />}>
 						<Route path="/" element={<Home />} />

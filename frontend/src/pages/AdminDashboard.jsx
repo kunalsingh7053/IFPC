@@ -455,7 +455,7 @@ function AdminDashboard() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold text-white">Member Registration Gate</h2>
-                <p className="mt-1 text-sm text-slate-300">Open or close member registration from single /register route.</p>
+                <p className="mt-1 text-sm text-slate-300">Open or close member registration section shown on the /login page.</p>
               </div>
               <span
                 className={`rounded-lg border px-3 py-1 text-xs font-semibold uppercase ${

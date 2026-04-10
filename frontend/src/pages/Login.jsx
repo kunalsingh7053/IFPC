@@ -15,6 +15,17 @@ function Login() {
   const [error, setError] = useState('')
   const [gateLoading, setGateLoading] = useState(true)
   const [registrationOpen, setRegistrationOpen] = useState(false)
+  const [registerForm, setRegisterForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    position: 'member',
+    department: '',
+  })
+  const [registerLoading, setRegisterLoading] = useState(false)
+  const [registerMessage, setRegisterMessage] = useState('')
+  const [registerError, setRegisterError] = useState('')
 
   useEffect(() => {
     async function loadRegistrationStatus() {
@@ -34,6 +45,10 @@ function Login() {
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  function handleRegisterChange(e) {
+    setRegisterForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
   async function handleSubmit(e) {
@@ -65,6 +80,36 @@ function Login() {
       setError(apiMessage || validationMessage || 'Login failed')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleRegisterSubmit(e) {
+    e.preventDefault()
+    setRegisterLoading(true)
+    setRegisterMessage('')
+    setRegisterError('')
+
+    if (!isMedicapsEmail(registerForm.email)) {
+      setRegisterError('Only @medicaps.ac.in email is allowed')
+      setRegisterLoading(false)
+      return
+    }
+
+    try {
+      const { data } = await API.post('/users/register', registerForm)
+      setRegisterMessage(data?.message || 'Registration submitted successfully')
+      setRegisterForm({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        position: 'member',
+        department: '',
+      })
+    } catch (err) {
+      setRegisterError(err?.response?.data?.message || 'Registration failed')
+    } finally {
+      setRegisterLoading(false)
     }
   }
 
@@ -139,14 +184,48 @@ function Login() {
 
               <p className="mt-4 text-sm text-slate-300">
                 New member?{' '}
-                {gateLoading ? (
-                  <span className="text-slate-400">Checking registration status...</span>
-                ) : registrationOpen ? (
-                  <Link to="/register" className="font-semibold text-emerald-300">Register here</Link>
-                ) : (
-                  <span className="font-semibold text-amber-300">Currently registration is off</span>
-                )}
+                {gateLoading ? <span className="text-slate-400">Checking registration status...</span> : null}
+                {!gateLoading && !registrationOpen ? <span className="font-semibold text-amber-300">Currently registration is off</span> : null}
+                {!gateLoading && registrationOpen ? <span className="font-semibold text-emerald-300">Use the registration section below</span> : null}
               </p>
+
+              {gateLoading ? (
+                <section className="mt-6 rounded-2xl border border-white/15 bg-white/5 p-4">
+                  <p className="text-sm text-slate-300">Checking registration availability...</p>
+                </section>
+              ) : registrationOpen ? (
+                <section className="mt-6 rounded-2xl border border-emerald-300/30 bg-emerald-500/10 p-4">
+                  <h3 className="text-lg font-semibold text-white">Member Registration</h3>
+                  <p className="mt-1 text-xs text-emerald-100/90">Registration is handled on this login page only.</p>
+
+                  <form onSubmit={handleRegisterSubmit} className="mt-4 grid gap-3 md:grid-cols-2">
+                    <FormInput label="First Name" name="firstName" value={registerForm.firstName} onChange={handleRegisterChange} required />
+                    <FormInput label="Last Name" name="lastName" value={registerForm.lastName} onChange={handleRegisterChange} required />
+                    <FormInput label="Email" name="email" type="email" value={registerForm.email} onChange={handleRegisterChange} required />
+                    <FormInput label="Password" name="password" type="password" value={registerForm.password} onChange={handleRegisterChange} required />
+                    <FormInput label="Position" name="position" value={registerForm.position} onChange={handleRegisterChange} />
+                    <FormInput label="Department" name="department" value={registerForm.department} onChange={handleRegisterChange} />
+
+                    <button
+                      type="submit"
+                      className="md:col-span-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white disabled:opacity-60"
+                      disabled={registerLoading}
+                    >
+                      {registerLoading ? 'Submitting...' : 'Register'}
+                    </button>
+                  </form>
+
+                  {registerError ? <p className="mt-3 text-sm text-rose-300">{registerError}</p> : null}
+                  {registerMessage ? <p className="mt-3 text-sm text-emerald-300">{registerMessage}</p> : null}
+                </section>
+              ) : (
+                <section className="mt-6 rounded-2xl border border-amber-300/35 bg-amber-500/10 p-4">
+                  <h3 className="text-base font-semibold text-amber-100">Login Only Mode</h3>
+                  <p className="mt-1 text-sm text-amber-100/90">
+                    Admin has not opened registration. This page will stay as login only.
+                  </p>
+                </section>
+              )}
             </div>
           </div>
         </div>
