@@ -24,7 +24,7 @@ function DashboardLayout() {
       />
       <div className="relative min-h-screen">
         <Navbar />
-        <main className="w-full pt-20 md:pt-24">
+        <main className="w-full px-3 pt-20 sm:px-4 md:px-6 md:pt-24">
           <Outlet />
         </main>
         <Footer />

@@ -67,7 +67,6 @@ function Mainroutes() {
 						<Route path="/developers" element={<Developers />} />
 
 						<Route element={<ProtectedRoute />}>
-							<Route path="/chat" element={<ChatPage />} />
 							<Route path="/profile" element={<ProfilePage />} />
 						</Route>
 
@@ -79,6 +78,7 @@ function Mainroutes() {
 
 						<Route element={<MemberRoute />}>
 							<Route path="/member-dashboard" element={<MemberDashboard />} />
+							<Route path="/member-dashboard/chat" element={<ChatPage />} />
 						</Route>
 
 						<Route path="*" element={<NotFound />} />

@@ -376,6 +376,7 @@ function AdminDashboard() {
 
   return (
     <PageWrapper>
+      <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 md:px-6">
       <section className="rounded-3xl border border-white/10 bg-slate-950/55 p-6 md:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -391,7 +392,7 @@ function AdminDashboard() {
           </button>
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <button type="button" className={panelButtonClass('overview')} onClick={() => setActivePanel('overview')}>
             Overview
           </button>
@@ -495,7 +496,7 @@ function AdminDashboard() {
                 Open Members
               </Link>
               <Link
-                to="/chat"
+                to="/member-dashboard/chat"
                 className="rounded-xl border border-sky-300/40 bg-sky-500/20 px-4 py-2 text-sm font-semibold text-sky-100"
               >
                 Open Chat
@@ -824,6 +825,7 @@ function AdminDashboard() {
           </div>
         </section>
       )}
+      </div>
     </PageWrapper>
   )
 }

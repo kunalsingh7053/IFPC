@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import API from '../api/axios'
 import FormInput from '../components/FormInput'
@@ -13,6 +13,24 @@ function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [gateLoading, setGateLoading] = useState(true)
+  const [registrationOpen, setRegistrationOpen] = useState(false)
+
+  useEffect(() => {
+    async function loadRegistrationStatus() {
+      try {
+        setGateLoading(true)
+        const { data } = await API.get('/auth/member-registration-status')
+        setRegistrationOpen(Boolean(data?.data?.memberRegistrationOpen))
+      } catch {
+        setRegistrationOpen(false)
+      } finally {
+        setGateLoading(false)
+      }
+    }
+
+    loadRegistrationStatus()
+  }, [])
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -120,7 +138,14 @@ function Login() {
               {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
               <p className="mt-4 text-sm text-slate-300">
-                New member? <Link to="/register" className="font-semibold text-emerald-300">Register here</Link>
+                New member?{' '}
+                {gateLoading ? (
+                  <span className="text-slate-400">Checking registration status...</span>
+                ) : registrationOpen ? (
+                  <Link to="/register" className="font-semibold text-emerald-300">Register here</Link>
+                ) : (
+                  <span className="font-semibold text-amber-300">Currently registration is off</span>
+                )}
               </p>
             </div>
           </div>

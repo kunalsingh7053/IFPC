@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import API from '../api/axios'
 
@@ -41,6 +42,18 @@ function MemberDashboard() {
     () => equipment.find((item) => item._id === form.equipmentId) || null,
     [equipment, form.equipmentId]
   )
+
+  const issueSummary = useMemo(() => {
+    return issues.reduce(
+      (acc, issue) => {
+        const status = issue?.status || 'pending'
+        acc.total += 1
+        acc[status] = (acc[status] || 0) + 1
+        return acc
+      },
+      { total: 0, pending: 0, approved: 0, rejected: 0, received: 0, returned: 0 }
+    )
+  }, [issues])
 
   async function loadData() {
     try {
@@ -110,8 +123,49 @@ function MemberDashboard() {
 
   return (
     <PageWrapper>
+      <div className="mx-auto w-full max-w-7xl">
       <h1 className="text-2xl font-bold text-white">Member Dashboard</h1>
       <p className="mt-2 text-slate-300">Request equipment usage, track approval, and view full issue history.</p>
+
+      <section className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5">
+          <h2 className="text-base font-semibold text-white">Request Insights</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <article className="rounded-xl border border-amber-300/35 bg-amber-500/10 p-3">
+              <p className="text-xs uppercase tracking-[0.13em] text-amber-100">Pending</p>
+              <p className="mt-1 text-2xl font-bold text-amber-100">{issueSummary.pending}</p>
+            </article>
+            <article className="rounded-xl border border-emerald-300/35 bg-emerald-500/10 p-3">
+              <p className="text-xs uppercase tracking-[0.13em] text-emerald-100">Approved</p>
+              <p className="mt-1 text-2xl font-bold text-emerald-100">{issueSummary.approved}</p>
+            </article>
+            <article className="rounded-xl border border-rose-300/35 bg-rose-500/10 p-3">
+              <p className="text-xs uppercase tracking-[0.13em] text-rose-100">Rejected</p>
+              <p className="mt-1 text-2xl font-bold text-rose-100">{issueSummary.rejected}</p>
+            </article>
+          </div>
+          <p className="mt-3 text-xs text-slate-300">Total requests tracked: {issueSummary.total}</p>
+        </div>
+
+        <div className="rounded-2xl border border-sky-300/30 bg-sky-500/10 p-4 sm:p-5">
+          <h2 className="text-base font-semibold text-sky-100">Quick Actions</h2>
+          <p className="mt-1 text-sm text-sky-100/90">Open collaboration tools and manage your activity from one place.</p>
+          <div className="mt-4 flex flex-wrap gap-2.5">
+            <Link
+              to="/member-dashboard/chat"
+              className="rounded-xl border border-sky-300/40 bg-sky-500/20 px-4 py-2 text-sm font-semibold text-sky-100"
+            >
+              Open Chat
+            </Link>
+            <Link
+              to="/profile"
+              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-slate-100"
+            >
+              Open Profile
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {error && <p className="mt-4 rounded-xl border border-rose-300/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">{error}</p>}
       {message && <p className="mt-4 rounded-xl border border-emerald-300/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">{message}</p>}
@@ -235,6 +289,7 @@ function MemberDashboard() {
           </div>
         )}
       </section>
+      </div>
     </PageWrapper>
   )
 }

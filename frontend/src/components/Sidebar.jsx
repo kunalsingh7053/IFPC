@@ -4,7 +4,6 @@ const commonLinks = [
   { to: '/', label: 'Home' },
   { to: '/events', label: 'Events' },
   { to: '/team', label: 'Team' },
-  { to: '/chat', label: 'Chat' },
   { to: '/profile', label: 'Profile' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },

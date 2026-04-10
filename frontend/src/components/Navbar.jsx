@@ -53,7 +53,6 @@ function Navbar() {
       : role === 'member'
       ? [
           { to: '/member-dashboard', label: 'Dashboard' },
-          { to: '/chat', label: 'Chat' },
           { to: '/profile', label: 'Profile' },
         ]
       : []

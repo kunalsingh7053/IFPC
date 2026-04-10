@@ -8,6 +8,7 @@ function ChatBox() {
   const [loading, setLoading] = useState(false)
   const [initialLoading, setInitialLoading] = useState(true)
   const [error, setError] = useState('')
+  const [lastSyncedAt, setLastSyncedAt] = useState(null)
   const bottomRef = useRef(null)
 
   const role = localStorage.getItem('role')
@@ -36,6 +37,7 @@ function ChatBox() {
       const { data } = await API.get('/chat/messages')
       setMessages(data?.data || [])
       setError('')
+      setLastSyncedAt(new Date())
     } catch (err) {
       setError(err?.response?.data?.message || 'Unable to load messages')
     } finally {
@@ -67,6 +69,8 @@ function ChatBox() {
     }
   }
 
+  const canSend = text.trim().length > 0 && !loading
+
   async function removeMessage(id) {
     try {
       await API.delete(`/chat/messages/${id}`)
@@ -96,11 +100,16 @@ function ChatBox() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-base font-semibold text-slate-100">IFPC Community Room</h2>
-            <p className="text-xs text-slate-400">Members and admins collaborate in one live thread</p>
+            <p className="text-xs text-slate-400">Members and admins collaborate in one live thread with auto refresh every 5 seconds</p>
           </div>
           <div className="flex items-center gap-2 text-xs">
             <span className="rounded-full border border-cyan-300/30 bg-cyan-500/10 px-2.5 py-1 font-medium text-cyan-200">
               {participantCount} active participants
+            </span>
+            <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 font-medium text-slate-300">
+              {lastSyncedAt
+                ? `Synced ${lastSyncedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                : 'Syncing...'}
             </span>
             <button
               type="button"
@@ -113,7 +122,7 @@ function ChatBox() {
         </div>
       </div>
 
-      <div className="h-[48vh] max-h-[64vh] space-y-4 overflow-y-auto px-4 py-4 sm:px-5 md:h-[58vh] md:max-h-none">
+      <div className="h-[52dvh] max-h-[70dvh] space-y-4 overflow-y-auto px-3 py-4 sm:h-[58vh] sm:max-h-none sm:px-5">
         {initialLoading ? (
           <div className="space-y-3">
             <div className="h-16 w-2/3 animate-pulse rounded-2xl bg-white/10" />
@@ -170,8 +179,8 @@ function ChatBox() {
             className="max-h-36 min-h-[54px] flex-1 resize-y rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-slate-100 outline-none placeholder:text-slate-400 focus:border-emerald-300/40 focus:bg-white/15"
           />
           <button
-            disabled={loading}
-            className="rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 disabled:opacity-70"
+            disabled={!canSend}
+            className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-900/30 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {loading ? 'Sending...' : 'Send'}
           </button>
