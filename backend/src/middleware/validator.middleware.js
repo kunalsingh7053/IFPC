@@ -53,7 +53,29 @@ respondValidationErrors
 
 ];
 
+const validateForgotPasswordRequest = [
+body('email')
+    .isEmail()
+    .withMessage('Invalid email format')
+    .custom((value) => {
+        if (!isMedicapsEmail(value)) {
+            throw new Error('Only @medicaps.ac.in email is allowed');
+        }
+        return true;
+    }),
+respondValidationErrors
+];
+
+const validateResetPasswordByToken = [
+body('newPassword')
+    .isLength({min:6})
+    .withMessage('Password must be at least 6 characters long'),
+respondValidationErrors
+];
+
 module.exports = {
     validateLogin,
-    validateRegister
+    validateRegister,
+    validateForgotPasswordRequest,
+    validateResetPasswordByToken
 }

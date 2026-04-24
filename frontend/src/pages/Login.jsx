@@ -175,13 +175,14 @@ function Login() {
                 <FormInput label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
                 <FormInput label="Password" name="password" type="password" value={form.password} onChange={handleChange} required />
 
+               
+
                 <button className="mt-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
               </form>
 
               {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
-
               <p className="mt-4 text-sm text-slate-300">
                 New member?{' '}
                 {gateLoading ? <span className="text-slate-400">Checking registration status...</span> : null}

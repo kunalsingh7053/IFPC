@@ -268,10 +268,15 @@ const PillNav = ({
     ['--pill-gap']: pillGap,
   }
 
+  const navRootStyle = {
+    ...cssVars,
+    maxWidth: 'min(100%, 1400px)',
+  }
+
   return (
-    <div ref={navRootRef} className="fixed top-[1em] left-0 z-[12000] flex w-full justify-center px-4">
+    <div ref={navRootRef} className="fixed top-[1em] left-0 z-[12000] flex w-full justify-center px-3 sm:px-4" style={navRootStyle}>
       <nav
-        className={`box-border flex w-full items-center justify-between rounded-full border border-white/70 px-1 py-1 md:w-max md:justify-center ${className}`}
+        className={`box-border flex w-full items-center justify-between rounded-full border border-white/70 px-1 py-1 lg:w-auto lg:max-w-[calc(100vw-2rem)] lg:justify-center ${className}`}
         aria-label="Primary"
         style={cssVars}
       >
@@ -334,7 +339,7 @@ const PillNav = ({
 
         <div
           ref={navItemsRef}
-          className="relative ml-2 hidden items-center rounded-full md:flex"
+          className="relative ml-2 hidden min-w-0 flex-1 items-center overflow-x-auto rounded-full [scrollbar-width:none] [-ms-overflow-style:none] lg:flex lg:flex-none lg:max-w-[calc(100vw-8.5rem)] [&::-webkit-scrollbar]:hidden"
           style={{
             height: 'var(--nav-h)',
             background: 'var(--base, #000)',
@@ -342,7 +347,7 @@ const PillNav = ({
         >
           <ul
             role="menubar"
-            className="m-0 flex h-full list-none items-stretch p-[3px]"
+            className="m-0 flex h-full list-none flex-nowrap items-stretch p-[3px]"
             style={{ gap: 'var(--pill-gap)' }}
           >
             {items.map((item, i) => {
@@ -398,7 +403,7 @@ const PillNav = ({
               )
 
               const basePillClasses =
-                'relative inline-flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-full box-border px-0 text-[16px] font-semibold uppercase leading-[0] tracking-[0.2px] no-underline'
+                'relative inline-flex h-full cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap rounded-full box-border px-0 text-[11px] font-semibold uppercase leading-[0] tracking-[0.16px] no-underline xl:text-[13px] 2xl:text-[15px]'
 
               return (
                 <li key={item.href} role="none" className="flex h-full">
@@ -438,7 +443,7 @@ const PillNav = ({
           onClick={toggleMobileMenu}
           aria-label="Toggle menu"
           aria-expanded={isMobileMenuOpen}
-          className="relative flex cursor-pointer flex-col items-center justify-center gap-1 rounded-full border border-emerald-300/35 p-0 shadow-[0_10px_26px_rgba(0,0,0,0.38)] backdrop-blur-xl md:hidden"
+          className="relative flex cursor-pointer flex-col items-center justify-center gap-1 rounded-full border border-emerald-300/35 p-0 shadow-[0_10px_26px_rgba(0,0,0,0.38)] backdrop-blur-xl lg:hidden"
           style={{
             width: 'var(--nav-h)',
             height: 'var(--nav-h)',
@@ -458,7 +463,7 @@ const PillNav = ({
 
       <div
         ref={mobileMenuRef}
-        className="absolute left-4 right-4 top-[3.4em] z-[998] origin-top rounded-[24px] border border-emerald-300/25 shadow-[0_16px_42px_rgba(0,0,0,0.34)] backdrop-blur-2xl md:hidden"
+        className="absolute left-3 right-3 top-[3.4em] z-[998] origin-top rounded-[24px] border border-emerald-300/25 shadow-[0_16px_42px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:left-4 sm:right-4 lg:hidden"
         style={{
           ...cssVars,
           background: 'linear-gradient(165deg,rgba(8,18,14,0.96),rgba(8,16,13,0.92))',

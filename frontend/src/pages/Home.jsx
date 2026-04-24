@@ -217,25 +217,25 @@ function Home() {
 			{
 				id: 'moonstone-2k26-reel-2',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1BQ0dzI2cyCePSl5BbmuJlpdknl05anvi/view?usp=sharing',
+				reelUrl: 'https://drive.google.com/file/d/1iirX7uL6KrGcnF89JeVs-2Inx4ak0sdi/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-3',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1EcXcCahzT8NAnCkLCUM89ttEMIOsDcIT/view?usp=sharing',
+				reelUrl: 'https://drive.google.com/file/d/1v0jZK5sJSzCwIf-RbUQzmClRJ54K6kcv/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-4',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/12AonFjmrsLywv7_Rr2MUdSc3OnQ3ZriC/view?usp=sharing',
+				reelUrl: 'https://drive.google.com/file/d/1hrvMusT3ryPI_vRh1cM91Jp8Y0pzgmqq/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			{
 				id: 'moonstone-2k26-reel-5',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1gqmKK0ieN7y0xTS0-eJwn_rF2yFeFLi4/view?usp=sharing',
+				reelUrl: 'https://drive.google.com/file/d/1DqDir0iAiix2j1-OCop2G1zT_E5Wk1nF/view?usp=sharing',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 		]
@@ -255,7 +255,7 @@ function Home() {
 			{
 				id: 'moonstone-2k26-reel',
 				title: 'Moonstone 2K26',
-				reelUrl: 'https://drive.google.com/file/d/1YfUC2V-S3TZu9bQ9WtOlXtaD9Qlt9m9I/view?usp=sharing',
+				reelUrl: 'https://drive.google.com/file/d/11PXkp4XtnwNOzL56W2DiwJkn1iZAQpsV/view?usp=drive_link',
 				cover: 'https://ik.imagekit.io/wciaxyg0zo/Highlights/Photos.jpg.jpeg',
 			},
 			...extraReels,
@@ -400,7 +400,7 @@ function Home() {
 					</div>
 
 					<div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-2 sm:mx-0 sm:grid sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 sm:snap-none sm:grid-cols-2 lg:grid-cols-3">
-						{reels.map((reel) => (
+						{reels.slice(1).map((reel) => (
 							(() => {
 								const playback = resolveReelPlayback(reel.reelUrl)
 								return (

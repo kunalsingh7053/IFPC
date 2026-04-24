@@ -264,7 +264,6 @@ async function logoutAdmin(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-
 async function getAdminDashboardStats(req, res) {
   try {
     const now = new Date();

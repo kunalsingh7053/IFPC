@@ -84,8 +84,8 @@ function Navbar() {
       pillColor="#1db954"
       hoveredPillTextColor="#f1fbf3"
       pillTextColor="#f1fbf3"
-      pillGap="9px"
-      pillPadX="24px"
+      pillGap="clamp(4px,0.55vw,8px)"
+      pillPadX="clamp(10px,0.95vw,18px)"
       theme="light"
       initialLoadAnimation
     />
