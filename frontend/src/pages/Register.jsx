@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import API from '../api/axios'
 import FormInput from '../components/FormInput'
 import PageWrapper from '../components/PageWrapper'
 
 const MEDICAPS_EMAIL_DOMAIN = '@medicaps.ac.in'
-const isMedicapsEmail = (email = '') => email.trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN)
+const isMedicapsEmail = (email = '') =>
+  email.trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN)
 
 function Register() {
   const navigate = useNavigate()
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    position: 'member',
+    position: '',
     department: '',
   })
+
   const [loading, setLoading] = useState(false)
   const [gateLoading, setGateLoading] = useState(true)
   const [registrationOpen, setRegistrationOpen] = useState(false)
@@ -41,7 +43,10 @@ function Register() {
   }, [])
 
   function handleChange(e) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   async function handleSubmit(e) {
@@ -56,10 +61,25 @@ function Register() {
       return
     }
 
+    if (!form.position) {
+      setError('Please select your position')
+      setLoading(false)
+      return
+    }
+
     try {
       const { data } = await API.post('/users/register', form)
+
       setMessage(data?.message || 'Registered successfully')
-      setForm({ firstName: '', lastName: '', email: '', password: '', position: 'member', department: '' })
+
+      setForm({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        position: '',
+        department: '',
+      })
     } catch (err) {
       setError(err?.response?.data?.message || 'Registration failed')
     } finally {
@@ -69,65 +89,145 @@ function Register() {
 
   return (
     <PageWrapper>
-      <section className="auth-shell mx-auto flex min-h-[78vh] w-full max-w-6xl items-center justify-center px-4 py-8 sm:px-6 md:py-12">
-        <div className="auth-card auth-animate-in w-full max-w-3xl rounded-3xl border border-white/15 p-5 sm:p-7 md:p-8">
-          <div className="mb-5 flex items-center justify-between gap-3">
+      <section className="mx-auto flex min-h-[80vh] w-full max-w-5xl items-center justify-center px-4 py-10">
+
+        <div className="w-full rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 md:p-8 shadow-2xl">
+
+          {/* HEADER */}
+          <div className="flex justify-between items-center mb-6">
             <button
-              type="button"
               onClick={() => navigate(-1)}
-              className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 hover:bg-white/20"
+              className="text-sm text-slate-300 hover:text-white"
             >
-              Back
+              ← Back
             </button>
-            <Link
-              to="/"
-              className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-200 hover:bg-emerald-500/20"
-            >
+
+            <Link to="/" className="text-emerald-400 text-sm">
               Home
             </Link>
           </div>
 
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">Member Registration</h1>
-          <p className="mt-2 text-sm text-slate-300">Create your IFPC member account</p>
-          <p className="mt-1 text-xs text-emerald-200/90">Use your Medicaps email only ({MEDICAPS_EMAIL_DOMAIN})</p>
+          <h1 className="text-3xl font-bold text-white">
+            Member Registration
+          </h1>
 
+          <p className="text-sm text-slate-400 mt-1">
+            Create your IFPC account
+          </p>
+
+          {/* STATUS */}
           {gateLoading ? (
-            <p className="mt-6 text-sm text-slate-300">Checking registration availability...</p>
+            <p className="mt-6 text-slate-400">
+              Checking availability...
+            </p>
           ) : !registrationOpen ? (
-            <div className="mt-6 rounded-2xl border border-rose-300/35 bg-rose-500/10 p-4">
-              <p className="text-sm font-semibold text-rose-100">Registration is currently closed by admin.</p>
-              <p className="mt-2 text-xs text-rose-100/90">Please contact admin and try again later.</p>
+            <div className="mt-6 bg-red-500/10 border border-red-400/30 p-4 rounded-xl text-red-300">
+              Registration is closed by admin
             </div>
           ) : (
-          <>
-          <div className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-emerald-300/35 bg-emerald-500/10 px-4 py-3">
-            <p className="text-sm font-semibold text-emerald-100">Registration is open now.</p>
-            <span className="animate-pulse rounded-lg border border-emerald-300/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-100">
-              Open
-            </span>
-          </div>
+            <>
+              <div className="mt-6 bg-emerald-500/10 border border-emerald-400/30 p-3 rounded-xl text-emerald-300 text-sm">
+                Registration is open
+              </div>
 
-          <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
-            <FormInput label="First Name" name="firstName" value={form.firstName} onChange={handleChange} required />
-            <FormInput label="Last Name" name="lastName" value={form.lastName} onChange={handleChange} required />
-            <FormInput label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
-            <FormInput label="Password" name="password" type="password" value={form.password} onChange={handleChange} required />
-            <FormInput label="Position" name="position" value={form.position} onChange={handleChange} />
-            <FormInput label="Department" name="department" value={form.department} onChange={handleChange} />
+              {/* FORM */}
+              <form
+                onSubmit={handleSubmit}
+                className="mt-6 grid gap-4 md:grid-cols-2"
+              >
 
-            <button className="md:col-span-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white shadow-[0_10px_30px_rgba(34,211,238,0.28)] hover:brightness-110" disabled={loading}>
-              {loading ? 'Submitting...' : 'Register'}
-            </button>
-          </form>
-          </>
+                <FormInput
+                  label="First Name"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  required
+                />
+
+                <FormInput
+                  label="Last Name"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  required
+                />
+
+                <FormInput
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+
+                <FormInput
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                />
+
+                {/* 🔥 POSITION DROPDOWN (ONLY 3 VALUES) */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm text-slate-200 mb-1">
+                    Position in IFPC
+                  </label>
+
+                  <select
+                    name="position"
+                    value={form.position}
+                    onChange={handleChange}
+                    required
+                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-white outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30 transition"
+                  >
+                    <option value="" disabled>
+                      Select Position
+                    </option>
+
+                    <option value="member">member</option>
+                    <option value="core">core</option>
+                    <option value="head">head</option>
+                  </select>
+                </div>
+
+                <FormInput
+                  label="Department"
+                  name="department"
+                  value={form.department}
+                  onChange={handleChange}
+                />
+
+                {/* SUBMIT */}
+                <button
+                  className="md:col-span-2 w-full rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 py-3 font-semibold text-white hover:scale-[1.02] transition"
+                  disabled={loading}
+                >
+                  {loading ? 'Submitting...' : 'Register'}
+                </button>
+              </form>
+            </>
           )}
 
-          {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
-          {message && <p className="mt-3 text-sm text-emerald-300">{message}</p>}
+          {/* MESSAGES */}
+          {error && (
+            <p className="mt-3 text-red-400 text-sm">{error}</p>
+          )}
 
-          <p className="mt-4 text-sm text-slate-300">
-            Already have an account? <Link to="/login" className="text-emerald-300">Login</Link>
+          {message && (
+            <p className="mt-3 text-emerald-400 text-sm">{message}</p>
+          )}
+
+          {/* FOOTER */}
+          <p className="mt-6 text-sm text-slate-400">
+            Already have an account?{' '}
+            <Link to="/login" className="text-emerald-400">
+              Login
+            </Link>
           </p>
+
         </div>
       </section>
     </PageWrapper>

@@ -483,26 +483,53 @@ function Home() {
 				</div>
 			</section>
 
-			<section id="team" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[linear-gradient(170deg,#060c19,#101a31_52%,#0b1224)] px-6 py-20 sm:px-10 lg:px-14">
-				<div data-scroll-content className="flex min-h-[calc(100vh-10rem)] w-full flex-col justify-center">
-					<h2 className="text-4xl font-black text-white sm:text-5xl">Team</h2>
-					<div className="mt-7 grid gap-4 md:grid-cols-3">
-					{faculty.map((member, index) => (
-						<motion.article
-							key={member.name}
-							initial={{ opacity: 0, y: 12 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.38, delay: index * 0.06 }}
-							className="rounded-2xl border border-green-300/25 bg-[linear-gradient(160deg,rgba(10,15,30,0.76),rgba(12,20,38,0.62))] p-5 backdrop-blur-xl"
-						>
-							<h3 className="text-lg font-bold text-white">{member.name}</h3>
-							<p className="mt-1 text-sm text-emerald-200">{member.role}</p>
-						</motion.article>
-					))}
-					</div>
-				</div>
-			</section>
+			<section
+  id="orientation"
+  data-scroll-reveal
+  className="relative min-h-screen w-full overflow-hidden px-6 py-20 sm:px-10 lg:px-14 bg-[linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)]"
+>
+  {/* background glow */}
+  <div className="absolute -top-20 left-10 w-72 h-72 bg-emerald-500/20 blur-3xl rounded-full" />
+  <div className="absolute bottom-0 right-10 w-72 h-72 bg-blue-500/20 blur-3xl rounded-full" />
+
+  <div data-scroll-content className="flex flex-col items-center justify-center text-center">
+
+    {/* Title */}
+    <h2 className="text-4xl sm:text-5xl font-black text-white">
+      Team Orientation
+    </h2>
+
+    <p className="mt-3 max-w-2xl text-slate-300 text-sm sm:text-base">
+      Get a quick overview of IFPC team structure, workflow, and how we collaborate.
+    </p>
+
+    {/* 🎬 VIDEO CARD */}
+    <div className="mt-10 w-full max-w-4xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] overflow-hidden">
+
+      <div className="relative aspect-video w-full">
+
+        <iframe
+          src="https://drive.google.com/file/d/1hLojpcE1vvx04X7OQGZK39gVoWT3Jtep/preview"
+          className="w-full h-full"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+
+        {/* overlay glow */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      </div>
+    </div>
+
+    {/* BUTTON */}
+    <Link
+      to="/team"
+      className="mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-6 py-3 font-semibold text-white shadow-lg transition hover:scale-105 hover:shadow-[0_15px_40px_rgba(16,185,129,0.4)]"
+    >
+      Meet Our Team →
+    </Link>
+
+  </div>
+</section> don't show video option like full setting   give more advance code or don't show video option like seting full screen that type 
 
 			<section id="contact" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_10%_18%,rgba(16,185,129,0.14),transparent_35%),radial-gradient(circle_at_88%_12%,rgba(34,211,238,0.12),transparent_34%),linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)] px-6 py-20 sm:px-10 lg:px-14">
 				<div className="pointer-events-none absolute -left-20 top-28 h-56 w-56 rounded-full bg-emerald-400/12 blur-3xl" />

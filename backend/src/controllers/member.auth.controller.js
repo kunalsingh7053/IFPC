@@ -13,9 +13,8 @@ const isMedicapsEmail = (email = "") =>
 async function register(req, res) {
   try {
     const setting = await SystemSetting.findOne({ key: "app-settings" });
-    const registrationOpen = Boolean(setting?.memberRegistrationOpen);
 
-    if (!registrationOpen) {
+    if (!setting?.memberRegistrationOpen) {
       return res.status(403).json({
         success: false,
         message: "Member registration is currently closed by admin",
@@ -31,7 +30,7 @@ async function register(req, res) {
       department,
     } = req.body;
 
-    // check required fields
+    // ✅ required check
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -42,12 +41,30 @@ async function register(req, res) {
     if (!isMedicapsEmail(email)) {
       return res.status(400).json({
         success: false,
-        message: "Only @medicaps.ac.in email is allowed",
+        message: "Only @medicaps.ac.in email allowed",
       });
     }
 
-    // check existing user across members and admins
+    // 🔥 POSITION VALIDATION
+    const allowedPositions = [
+      "president",
+      "vice-president",
+      "secretary",
+      "treasurer",
+      "head",
+      "core",
+      "member",
+    ];
+
+    if (position && !allowedPositions.includes(position)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid position selected",
+      });
+    }
+
     const normalizedEmail = String(email).trim().toLowerCase();
+
     const [existingUser, existingAdmin] = await Promise.all([
       User.findOne({ email: normalizedEmail }),
       Admin.findOne({ email: normalizedEmail }),
@@ -60,22 +77,17 @@ async function register(req, res) {
       });
     }
 
-    // hash password
+    // 🔐 hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // create user
+    // 🔥 SAFE CREATE
     const user = await User.create({
-      fullName: {
-        firstName,
-        lastName,
-      },
+      fullName: { firstName, lastName },
       email: normalizedEmail,
       password: hashedPassword,
-      position,
+      position: position || "member", // 🔥 FIX
       department,
-
-      // member must be approved by admin before login
       canLogin: false,
     });
 
@@ -84,6 +96,7 @@ async function register(req, res) {
       message: "Registered successfully. Wait for approval",
       data: user,
     });
+
   } catch (error) {
     console.log(error);
 
@@ -272,7 +285,7 @@ async function getProfile(req, res) {
     });
   }
 }
-
+ 
 async function logoutMember(req, res) {
 
 try {
