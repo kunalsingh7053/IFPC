@@ -106,17 +106,25 @@ async function register(req, res) {
     });
   }
 }
+
+
+
+
 async function loginMember(req, res) {
   try {
     const { email, password } = req.body;
 
-    if (!isMedicapsEmail(email)) {
+    const normalizedEmail = email.toLowerCase();
+
+    if (!isMedicapsEmail(normalizedEmail)) {
       return res.status(400).json({
-        message: "Only @medicaps.ac.in email is allowed",
+        message: "Only @medicaps.ac.in email allowed",
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email: normalizedEmail,
+    });
 
     if (!user) {
       return res.status(401).json({
@@ -124,16 +132,16 @@ async function loginMember(req, res) {
       });
     }
 
-    // approval check
+    // 🔥 MAIN ISSUE FIX (head login problem)
     if (!user.canLogin) {
       return res.status(403).json({
-        message: "Your account is pending admin approval",
+        message: "Admin approval required",
       });
     }
 
     if (!user.isActive) {
       return res.status(403).json({
-        message: "Your account is blocked. Contact admin",
+        message: "Account blocked",
       });
     }
 
@@ -148,22 +156,20 @@ async function loginMember(req, res) {
       });
     }
 
-    // create token
     const token = jwt.sign(
       {
         id: user._id,
-        type: "member",
+        role: user.position,
+        type: "member", // ✅ VERY IMPORTANT
       },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // cookie
     res.cookie("memberToken", token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -171,8 +177,8 @@ async function loginMember(req, res) {
       memberToken: token,
       user: {
         id: user._id,
-        email: user.email,
         fullName: user.fullName,
+        email: user.email,
         position: user.position,
       },
     });
@@ -183,6 +189,7 @@ async function loginMember(req, res) {
     });
   }
 }
+
 
 async function updateMemberApproval(req, res) {
   try {

@@ -1,12 +1,14 @@
-const adminModel = require("../models/admin.model");
+// middleware/adminAuth.middleware.js
+
 const jwt = require("jsonwebtoken");
+const Admin = require("../models/admin.model");
 
 async function adminAuthMiddleware(req, res, next) {
   try {
-    // ✅ read adminToken instead of token
     const token =
       req.cookies.adminToken ||
-      req.headers.admintoken;
+      req.headers.admintoken ||
+      req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -19,9 +21,13 @@ async function adminAuthMiddleware(req, res, next) {
       process.env.JWT_SECRET
     );
 
-    const admin = await adminModel
-      .findById(decoded.id)
-      .select("-password");
+    if (decoded.type !== "admin") {
+      return res.status(403).json({
+        message: "Not an admin",
+      });
+    }
+
+    const admin = await Admin.findById(decoded.id).select("-password");
 
     if (!admin) {
       return res.status(401).json({
@@ -31,13 +37,14 @@ async function adminAuthMiddleware(req, res, next) {
 
     if (admin.status !== "allow") {
       return res.status(403).json({
-        message: "Admin access blocked",
+        message: "Admin blocked",
       });
     }
 
     req.admin = admin;
 
     next();
+
   } catch (error) {
     return res.status(401).json({
       message: "Unauthorized",
@@ -45,6 +52,4 @@ async function adminAuthMiddleware(req, res, next) {
   }
 }
 
-module.exports = {
-  adminAuthMiddleware,
-};
+module.exports = { adminAuthMiddleware };

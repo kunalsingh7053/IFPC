@@ -496,7 +496,7 @@ function Home() {
 
     {/* Title */}
     <h2 className="text-4xl sm:text-5xl font-black text-white">
-      Team Orientation
+      Team Introduction
     </h2>
 
     <p className="mt-3 max-w-2xl text-slate-300 text-sm sm:text-base">
@@ -529,7 +529,7 @@ function Home() {
     </Link>
 
   </div>
-</section> don't show video option like full setting   give more advance code or don't show video option like seting full screen that type 
+</section> 
 
 			<section id="contact" data-scroll-reveal className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_10%_18%,rgba(16,185,129,0.14),transparent_35%),radial-gradient(circle_at_88%_12%,rgba(34,211,238,0.12),transparent_34%),linear-gradient(160deg,#04070f,#0a1221_50%,#121c33)] px-6 py-20 sm:px-10 lg:px-14">
 				<div className="pointer-events-none absolute -left-20 top-28 h-56 w-56 rounded-full bg-emerald-400/12 blur-3xl" />

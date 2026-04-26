@@ -1,3 +1,5 @@
+// middleware/memberAuth.middleware.js
+
 const jwt = require("jsonwebtoken");
 const User = require("../models/member.model");
 
@@ -5,7 +7,8 @@ async function memberAuthMiddleware(req, res, next) {
   try {
     const token =
       req.cookies.memberToken ||
-      req.headers.membertoken;
+      req.headers.membertoken ||
+      req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -18,9 +21,14 @@ async function memberAuthMiddleware(req, res, next) {
       process.env.JWT_SECRET
     );
 
-    const user = await User.findById(
-      decoded.id
-    ).select("-password");
+    // ❌ block admin token
+    if (decoded.type !== "member") {
+      return res.status(403).json({
+        message: "Not a member token",
+      });
+    }
+
+    const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
       return res.status(401).json({
@@ -30,19 +38,20 @@ async function memberAuthMiddleware(req, res, next) {
 
     if (!user.canLogin) {
       return res.status(403).json({
-        message: "Your account is pending admin approval",
+        message: "Pending approval",
       });
     }
 
     if (!user.isActive) {
       return res.status(403).json({
-        message: "Your account is blocked. Contact admin",
+        message: "Blocked",
       });
     }
 
     req.user = user;
 
     next();
+
   } catch (error) {
     return res.status(401).json({
       message: "Unauthorized",
@@ -50,6 +59,4 @@ async function memberAuthMiddleware(req, res, next) {
   }
 }
 
-module.exports = {
-  memberAuthMiddleware,
-};
+module.exports = { memberAuthMiddleware };

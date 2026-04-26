@@ -1,5 +1,6 @@
+// models/member.model.js
+
 const mongoose = require("mongoose");
-const ChatMessage = require("./chat.model");
 
 const memberSchema = new mongoose.Schema(
   {
@@ -12,6 +13,7 @@ const memberSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
 
     password: {
@@ -19,7 +21,6 @@ const memberSchema = new mongoose.Schema(
       required: true,
     },
 
-    // ✅ FIXED (added "core")
     position: {
       type: String,
       enum: [
@@ -28,7 +29,7 @@ const memberSchema = new mongoose.Schema(
         "secretary",
         "treasurer",
         "head",
-        "core",   // 🔥 ADDED
+        "core",
         "member",
       ],
       default: "member",
@@ -38,15 +39,14 @@ const memberSchema = new mongoose.Schema(
 
     canLogin: { type: Boolean, default: false },
 
-    approvedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin",
-      default: null,
-    },
-
     isActive: { type: Boolean, default: true },
 
-    profileImage: String,
+    // ✅ ADD THIS BACK (VERY IMPORTANT)
+    profileImage: {
+      type: String,
+      default: "",
+    },
+
     profileImageFileId: {
       type: String,
       default: null,
@@ -54,23 +54,5 @@ const memberSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// Cascade delete
-memberSchema.pre("deleteOne", { document: true, query: false }, async function () {
-  await ChatMessage.deleteMany({
-    senderType: "member",
-    senderId: this._id,
-  });
-});
-
-memberSchema.pre("findOneAndDelete", async function () {
-  const doc = await this.model.findOne(this.getFilter()).select("_id");
-  if (!doc) return;
-
-  await ChatMessage.deleteMany({
-    senderType: "member",
-    senderId: doc._id,
-  });
-});
 
 module.exports = mongoose.model("members", memberSchema);
