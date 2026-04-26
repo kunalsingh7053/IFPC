@@ -1,5 +1,3 @@
-// models/member.model.js
-
 const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema(
@@ -21,6 +19,13 @@ const memberSchema = new mongoose.Schema(
       required: true,
     },
 
+    // ✅ NEW FIELD
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+ 
     position: {
       type: String,
       enum: [
@@ -38,10 +43,8 @@ const memberSchema = new mongoose.Schema(
     department: String,
 
     canLogin: { type: Boolean, default: false },
-
     isActive: { type: Boolean, default: true },
 
-    // ✅ ADD THIS BACK (VERY IMPORTANT)
     profileImage: {
       type: String,
       default: "",
@@ -55,4 +58,4 @@ const memberSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("members", memberSchema);
+module.exports = mongoose.model("members", memberSchema); 

@@ -482,6 +482,88 @@ function Home() {
 					)}
 				</div>
 			</section>
+			<section
+  id="mentor"
+  data-scroll-reveal
+  className="relative min-h-screen w-full overflow-hidden px-6 py-20 sm:px-10 lg:px-14 bg-[linear-gradient(160deg,#030712,#0a162a_50%,#111f3a)]"
+>
+  {/* Background glow */}
+  <div className="absolute -top-24 left-10 w-80 h-80 bg-emerald-500/20 blur-3xl rounded-full" />
+  <div className="absolute bottom-0 right-10 w-80 h-80 bg-blue-500/20 blur-3xl rounded-full" />
+
+  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+
+    {/* 🔥 LEFT: IMAGE */}
+    <div className="relative group">
+
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_25px_70px_rgba(0,0,0,0.7)]">
+
+ <img
+  src="https://ik.imagekit.io/ofm1vl6gr/admins/profile/WhatsApp_Image_2026-04-26_at_10.45.42_AM_LePHeY6Qbh.jpeg?updatedAt=1777198582593"
+  alt="Anil Patidar"
+  className="w-full h-[520px] object-cover object-[center_10%] transition duration-700 group-hover:scale-105"
+/>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+        {/* ✅ FIXED TEXT (PROPERLY ALIGNED) */}
+        <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent">
+
+          <h3 className="text-3xl font-bold text-white leading-tight">
+            Mr. Anil Patidar
+          </h3>
+
+          <div className="w-12 h-[2px] bg-emerald-400 mt-2 mb-2" />
+
+          <p className="text-emerald-300 text-sm">
+            Mentor • IFPC
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+    {/* 🔥 RIGHT: CONTENT */}
+    <div className="text-white">
+
+      <p className="text-emerald-300 uppercase tracking-[0.25em] text-xs font-semibold">
+        Mentor & Guidance
+      </p>
+
+      <h2 className="mt-3 text-4xl sm:text-5xl font-black leading-tight">
+        Guiding Vision Behind IFPC
+      </h2>
+
+      <p className="mt-6 text-slate-300 text-base leading-relaxed">
+        IFPC is privileged to be guided by <span className="text-white font-semibold">Mr. Anil Patidar</span>,
+        whose experience and leadership continuously inspire the team. His mentorship plays a crucial role
+        in shaping creativity, discipline, and professional excellence within the community.
+      </p>
+
+      {/* Quote */}
+      <div className="mt-6 border-l-4 border-emerald-400 pl-4 italic text-slate-300">
+        “Great creativity comes from guidance, discipline, and vision.”
+      </div>
+
+      {/* Info Cards */}
+      <div className="mt-8 flex flex-wrap gap-4">
+
+        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-xs text-slate-400">Role</p>
+          <p className="font-semibold">Mentor / Admin</p>
+        </div>
+
+        <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-xs text-slate-400">Email</p>
+          <p className="font-semibold">anil.patidar@medicaps.ac.in</p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
 
 			<section
   id="orientation"

@@ -65,6 +65,7 @@ async function syncLeadershipAdminToMember(admin) {
 
 async function register(req, res) {
   try {
+    // 🔒 check if registration open
     const setting = await SystemSetting.findOne({ key: "app-settings" });
 
     if (!setting?.memberRegistrationOpen) {
@@ -74,6 +75,7 @@ async function register(req, res) {
       });
     }
 
+    // ✅ get data
     const {
       firstName,
       lastName,
@@ -81,16 +83,18 @@ async function register(req, res) {
       password,
       position,
       department,
+      phone,
     } = req.body;
 
-    // ✅ required check
-    if (!firstName || !lastName || !email || !password) {
+    // 🚨 required validation
+    if (!firstName || !lastName || !email || !password || !phone) {
       return res.status(400).json({
         success: false,
-        message: "All fields required",
+        message: "All fields including phone are required",
       });
     }
 
+    // 📧 email validation
     if (!isMedicapsEmail(email)) {
       return res.status(400).json({
         success: false,
@@ -98,7 +102,15 @@ async function register(req, res) {
       });
     }
 
-    // 🔥 POSITION VALIDATION
+    // 📱 phone validation (India format)
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid phone number (must be 10 digits)",
+      });
+    }
+
+    // 🔥 position validation
     const allowedPositions = [
       "president",
       "vice-president",
@@ -118,6 +130,7 @@ async function register(req, res) {
 
     const normalizedEmail = String(email).trim().toLowerCase();
 
+    // 🔍 check duplicate in User & Admin
     const [existingUser, existingAdmin] = await Promise.all([
       User.findOne({ email: normalizedEmail }),
       Admin.findOne({ email: normalizedEmail }),
@@ -134,24 +147,29 @@ async function register(req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // 🔥 SAFE CREATE
+    // ✅ create user
     const user = await User.create({
       fullName: { firstName, lastName },
       email: normalizedEmail,
       password: hashedPassword,
-      position: position || "member", // 🔥 FIX
+      phone, // ✅ NEW FIELD
+      position: position || "member",
       department,
-      canLogin: false,
+      canLogin: false, // requires admin approval
     });
 
     return res.status(201).json({
       success: true,
-      message: "Registered successfully. Wait for approval",
-      data: user,
+      message: "Registered successfully. Wait for admin approval",
+      data: {
+        id: user._id,
+        email: user.email,
+        phone: user.phone,
+      },
     });
 
   } catch (error) {
-    console.log(error);
+    console.error("Register Error:", error);
 
     return res.status(500).json({
       success: false,
@@ -159,7 +177,6 @@ async function register(req, res) {
     });
   }
 }
-
 
 
 
