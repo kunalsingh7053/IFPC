@@ -10,6 +10,59 @@ const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
 const isMedicapsEmail = (email = "") =>
   String(email).trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN);
 
+const LEADERSHIP_ADMIN_POSITIONS = ["president", "vice-president", "presedent"];
+
+const normalizeLeadershipPosition = (value = "") => {
+  const normalized = String(value).trim().toLowerCase();
+  if (normalized === "presedent") return "president";
+  if (normalized === "vice president") return "vice-president";
+  return normalized;
+};
+
+async function syncLeadershipAdminToMember(admin) {
+  const normalizedEmail = String(admin.email || "").trim().toLowerCase();
+  const normalizedPosition = normalizeLeadershipPosition(admin.position || admin.role);
+
+  if (!["president", "vice-president"].includes(normalizedPosition)) {
+    return null;
+  }
+
+  const firstName = String(admin.fullName?.firstName || "IFPC").trim() || "IFPC";
+  const lastName = String(admin.fullName?.lastName || "Member").trim() || "Member";
+
+  let user = await User.findOne({ email: normalizedEmail });
+
+  if (!user) {
+    user = await User.create({
+      fullName: { firstName, lastName },
+      email: normalizedEmail,
+      password: admin.password,
+      position: normalizedPosition,
+      department: "Administration",
+      canLogin: true,
+      isActive: true,
+      profileImage: admin.profileImage || "",
+    });
+
+    return user;
+  }
+
+  user.fullName = { firstName, lastName };
+  user.password = admin.password;
+  user.position = normalizedPosition;
+  user.canLogin = true;
+  user.isActive = true;
+  if (admin.profileImage) {
+    user.profileImage = admin.profileImage;
+  }
+  if (!user.department) {
+    user.department = "Administration";
+  }
+  await user.save();
+
+  return user;
+}
+
 async function register(req, res) {
   try {
     const setting = await SystemSetting.findOne({ key: "app-settings" });
@@ -114,7 +167,7 @@ async function loginMember(req, res) {
   try {
     const { email, password } = req.body;
 
-    const normalizedEmail = email.toLowerCase();
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
     if (!isMedicapsEmail(normalizedEmail)) {
       return res.status(400).json({
@@ -122,9 +175,19 @@ async function loginMember(req, res) {
       });
     }
 
-    const user = await User.findOne({
+    let user = await User.findOne({
       email: normalizedEmail,
     });
+
+    const leadershipAdmin = await Admin.findOne({
+      email: normalizedEmail,
+      status: "allow",
+      position: { $in: LEADERSHIP_ADMIN_POSITIONS },
+    });
+
+    if (leadershipAdmin) {
+      user = await syncLeadershipAdminToMember(leadershipAdmin);
+    }
 
     if (!user) {
       return res.status(401).json({

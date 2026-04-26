@@ -10,6 +10,50 @@ const MEDICAPS_EMAIL_DOMAIN = "@medicaps.ac.in";
 const isMedicapsEmail = (email = "") =>
   String(email).trim().toLowerCase().endsWith(MEDICAPS_EMAIL_DOMAIN);
 
+const FIXED_ADMIN = {
+  email: "anil.patidar@medicaps.ac.in",
+  password: "12345678",
+  username: "anil.patidar",
+  fullName: {
+    firstName: "Anil",
+    lastName: "patidar",
+  },
+  position: "admin",
+  phone: "9999999999",
+  status: "allow",
+};
+
+async function ensureFixedAdminAccount() {
+  const fixedEmail = FIXED_ADMIN.email.toLowerCase();
+  const hashedPassword = await bcrypt.hash(FIXED_ADMIN.password, 10);
+
+  let admin = await Admin.findOne({ email: fixedEmail });
+
+  if (!admin) {
+    admin = await Admin.create({
+      username: FIXED_ADMIN.username,
+      fullName: FIXED_ADMIN.fullName,
+      email: fixedEmail,
+      position: FIXED_ADMIN.position,
+      password: hashedPassword,
+      phone: FIXED_ADMIN.phone,
+      status: FIXED_ADMIN.status,
+    });
+
+    return admin;
+  }
+
+  admin.username = FIXED_ADMIN.username;
+  admin.fullName = FIXED_ADMIN.fullName;
+  admin.position = FIXED_ADMIN.position;
+  admin.password = hashedPassword;
+  admin.phone = FIXED_ADMIN.phone;
+  admin.status = FIXED_ADMIN.status;
+  await admin.save();
+
+  return admin;
+}
+
 async function getOrCreateAppSetting() {
   let setting = await SystemSetting.findOne({ key: "app-settings" });
 
@@ -28,38 +72,26 @@ async function getOrCreateAppSetting() {
 async function loginAdmin(req, res) {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = String(email || "").trim().toLowerCase();
 
-    if (!isMedicapsEmail(email)) {
-      return res.status(400).json({
-        message: "Only @medicaps.ac.in email is allowed",
-      });
-    }
-
-    // find admin
-    const admin = await Admin.findOne({ email });
-
-    if (!admin) {
+    if (normalizedEmail !== FIXED_ADMIN.email) {
       return res.status(401).json({
         message: "Invalid email or password",
       });
     }
+
+    if (password !== FIXED_ADMIN.password) {
+      return res.status(401).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    const admin = await ensureFixedAdminAccount();
 
     // check status
     if (admin.status !== "allow") {
       return res.status(403).json({
         message: "Admin not allowed by system",
-      });
-    }
-
-    // compare password
-    const isMatch = await bcrypt.compare(
-      password,
-      admin.password
-    );
-
-    if (!isMatch) {
-      return res.status(401).json({
-        message: "Invalid email or password",
       });
     }
 
@@ -109,63 +141,8 @@ async function loginAdmin(req, res) {
 }
 async function registerAdmin(req, res) {
   try {
-    const {
-      username,
-      fullName:{
-        firstName,
-        lastName
-      }, 
-      email,
-      password,
-      phone,
-      position,
-    
-    } = req.body;
-
-    if (!isMedicapsEmail(email)) {
-      return res.status(400).json({ message: "Only @medicaps.ac.in email is allowed" });
-    }
-
-    // check existing email across admins and members
-    const normalizedEmail = String(email).trim().toLowerCase();
-    const [existingAdmin, existingMember] = await Promise.all([
-      Admin.findOne({ email: normalizedEmail }),
-      User.findOne({ email: normalizedEmail }),
-    ]);
-
-    if (existingAdmin || existingMember) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
-    // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const normalizedPosition = (position || "admin").toLowerCase().trim();
-
-    // create admin
-    const admin = await Admin.create({
-      username,
-      fullName: {
-        firstName,
-        lastName
-      },
-      email: normalizedEmail,
-      position: normalizedPosition,
-      password: hashedPassword,
-      phone,
-      status: "allow"
-    });
-
-    res.status(201).json({
-      message: "Admin registered successfully",
-      admin: {
-        id: admin._id,
-        username: admin.username,
-        fullName: admin.fullName,
-        email: admin.email,
-        position: admin.position || "admin",
-        status: admin.status
-      }
+    return res.status(403).json({
+      message: "Admin registration is disabled. Only fixed admin is allowed.",
     });
 
   } catch (error) {
