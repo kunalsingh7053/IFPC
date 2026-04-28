@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import API from '../api/axios'
+import FundsPanel from '../components/FundsPanel'
 
 const initialRequestForm = {
   equipmentId: '',
@@ -288,6 +289,10 @@ function MemberDashboard() {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="mt-6">
+        <FundsPanel isAdmin={false} />
       </section>
       </div>
     </PageWrapper>

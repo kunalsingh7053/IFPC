@@ -31,8 +31,6 @@ const memberSchema = new mongoose.Schema(
       enum: [
         "president",
         "vice-president",
-        "secretary",
-        "treasurer",
         "head",
         "core",
         "member",

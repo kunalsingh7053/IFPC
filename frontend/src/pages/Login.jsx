@@ -119,38 +119,93 @@ function Login() {
 
   return (
     <PageWrapper>
-      <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="auth-shell min-h-screen px-4 py-8 flex items-center justify-center">
 
-        <div className="grid lg:grid-cols-2 w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+        <div className="auth-card auth-animate-in grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl lg:grid-cols-2">
 
           {/* LEFT PANEL */}
-          <div className="bg-gradient-to-br from-emerald-500 to-green-600 text-white p-10 hidden lg:flex flex-col justify-center">
-            <h1 className="text-3xl font-bold">IFPC Portal</h1>
-            <p className="mt-4 text-sm opacity-90">
-              Manage members, events, and communication in one place.
-            </p>
+          <div className="login-side-panel relative hidden overflow-hidden p-10 text-white lg:flex lg:flex-col lg:justify-between">
+            <div>
+              <p className="inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-100">
+                IFPC Portal
+              </p>
 
-            <ul className="mt-6 space-y-2 text-sm">
-              <li>✔ Secure role-based login</li>
-              <li>✔ Fast dashboard access</li>
-              <li>✔ Only Medicaps email allowed</li>
-            </ul>
+              <h1 className="mt-6 max-w-md text-4xl font-bold leading-tight">
+                Register and sign in with a cleaner, smarter campus workflow.
+              </h1>
+
+              <p className="mt-4 max-w-md text-sm leading-6 text-white/80">
+                Manage members, events, and communication from one polished dashboard designed to match the IFPC experience.
+              </p>
+
+              <ul className="mt-8 space-y-3 text-sm text-white/90">
+                <li className="flex items-center gap-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(110,231,183,0.85)]" />
+                  Secure role-based access
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-lime-300 shadow-[0_0_18px_rgba(190,242,100,0.8)]" />
+                  Fast dashboard entry
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_18px_rgba(103,232,249,0.8)]" />
+                  Medicaps email verification
+                </li>
+              </ul>
+            </div>
+
+            <div className="mt-10 rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-white/85 backdrop-blur-sm">
+              Tip: Use the member role when creating student accounts, and switch to admin for dashboard access.
+            </div>
           </div>
 
           {/* RIGHT PANEL */}
-          <div className="bg-[#0f172a] p-8">
+          <div className="login-form-panel p-6 sm:p-8 lg:p-10">
+
+            <div className="mb-8 flex items-center justify-between gap-4">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 hover:border-emerald-400/40 hover:bg-white/10 hover:text-white"
+              >
+                <span aria-hidden="true">←</span>
+                Back
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="text-sm font-medium text-emerald-300 hover:text-emerald-200"
+              >
+                Home
+              </button>
+            </div>
+
+            <div className="mb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-300/90">
+                Access Center
+              </p>
+              <h2 className="mt-3 text-3xl font-bold text-white">
+                Welcome back to IFPC
+              </h2>
+              <p className="mt-2 max-w-lg text-sm leading-6 text-slate-300">
+                Sign in as admin or member, or register a new account when registration is open.
+              </p>
+            </div>
 
             {/* ROLE SWITCH */}
-            <div className="flex bg-white/10 rounded-xl p-1 mb-6">
+            <div className="mb-6 flex rounded-2xl border border-white/10 bg-white/5 p-1.5 backdrop-blur-sm">
               <button
+                type="button"
                 onClick={() => setRole('admin')}
-                className={`flex-1 py-2 rounded-lg ${role === 'admin' ? 'bg-emerald-500 text-white' : 'text-gray-300'}`}
+                className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold ${role === 'admin' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25' : 'text-slate-300 hover:text-white'}`}
               >
                 Admin
               </button>
               <button
+                type="button"
                 onClick={() => setRole('member')}
-                className={`flex-1 py-2 rounded-lg ${role === 'member' ? 'bg-green-500 text-white' : 'text-gray-300'}`}
+                className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold ${role === 'member' ? 'bg-lime-500 text-slate-950 shadow-lg shadow-lime-500/25' : 'text-slate-300 hover:text-white'}`}
               >
                 Member
               </button>
@@ -163,7 +218,7 @@ function Login() {
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white outline-none"
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20"
               />
 
               <input
@@ -172,39 +227,69 @@ function Login() {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white outline-none"
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20"
               />
 
-              <button className="w-full py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold">
+              <button className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 py-3 font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:scale-[1.01]">
                 {loading ? 'Signing...' : 'Login'}
               </button>
             </form>
 
-            {error && <p className="text-red-400 mt-2">{error}</p>}
+            {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
             {/* REGISTER */}
             {registrationOpen && (
-              <div className="mt-10 border-t border-white/10 pt-6">
-                <h3 className="text-white mb-4">Register</h3>
+              <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+                <div className="mb-5">
+                  <h3 className="text-xl font-semibold text-white">Register</h3>
+                  <p className="mt-1 text-sm text-slate-400">Create your IFPC account with your Medicaps email.</p>
+                </div>
 
-                <form onSubmit={handleRegister} className="grid grid-cols-2 gap-3">
+                <form onSubmit={handleRegister} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
-                  <input name="firstName" placeholder="First Name" value={registerForm.firstName} onChange={handleRegisterChange} className="input" />
-                  <input name="lastName" placeholder="Last Name" value={registerForm.lastName} onChange={handleRegisterChange} className="input" />
+                  <input name="firstName" placeholder="First Name" value={registerForm.firstName} onChange={handleRegisterChange} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20" />
+                  <input name="lastName" placeholder="Last Name" value={registerForm.lastName} onChange={handleRegisterChange} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20" />
 
-                  <input name="email" placeholder="Email" value={registerForm.email} onChange={handleRegisterChange} className="col-span-2 input" />
-                  <input name="password" type="password" placeholder="Password" value={registerForm.password} onChange={handleRegisterChange} className="col-span-2 input" />
+                  <input name="email" placeholder="Email" value={registerForm.email} onChange={handleRegisterChange} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2" />
+                  <input name="password" type="password" placeholder="Password" value={registerForm.password} onChange={handleRegisterChange} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2" />
 
-                  <input name="phone" placeholder="Phone Number" value={registerForm.phone} onChange={handleRegisterChange} className="col-span-2 input" />
+                  <input name="phone" placeholder="Phone Number" value={registerForm.phone} onChange={handleRegisterChange} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2" />
 
-                  <button className="col-span-2 py-2 rounded-xl bg-blue-500 text-white">
+                  <select
+                    name="position"
+                    value={registerForm.position}
+                    onChange={handleRegisterChange}
+                    className="auth-select w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none focus:border-emerald-400/60 focus:bg-slate-950/80 focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2"
+                  >
+                    <option value="member">Member</option>
+                    <option value="core">Core</option>
+                    <option value="head">Head</option>
+                    <option value="vice-president">Vice President</option>
+                    <option value="president">President</option>
+                  </select>
+
+                  <input
+                    name="department"
+                    placeholder="Department"
+                    value={registerForm.department}
+                    onChange={handleRegisterChange}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-emerald-400/20 sm:col-span-2"
+                  />
+
+                  <button className="sm:col-span-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-lime-500 py-3 font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:scale-[1.01]">
                     {registerLoading ? 'Submitting...' : 'Register'}
                   </button>
 
                 </form>
 
-                {registerError && <p className="text-red-400 mt-2">{registerError}</p>}
-                {registerMessage && <p className="text-green-400 mt-2">{registerMessage}</p>}
+                {registerError && <p className="mt-3 text-sm text-rose-300">{registerError}</p>}
+                {registerMessage && <p className="mt-3 text-sm text-emerald-300">{registerMessage}</p>}
+              </div>
+            )}
+
+            {!registrationOpen && (
+              <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-300">
+                Registration is currently closed by admin.
               </div>
             )}
 

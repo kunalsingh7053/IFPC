@@ -8,6 +8,7 @@ const equipmentRoutes = require('./routes/equipment.routes');
 const equipmentIssueRoutes = require('./routes/equipmentIssue.routes');
 const userRoutes = require('./routes/member.routes');
 const chatRoutes = require('./routes/chat.routes');
+const fundsRoutes = require('./routes/funds.routes');
 const isProduction = process.env.NODE_ENV === 'production';
 const allowedOrigins = (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || 'http://localhost:5173,https://ifpc.netlify.app')
 	.split(',')
@@ -42,6 +43,7 @@ app.use('/api/equipment', equipmentRoutes);
 app.use('/api/equipment-issues', equipmentIssueRoutes);
 app.use('/api/users',userRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/funds', fundsRoutes);
 
 app.use((req, res) => {
 	res.status(404).json({

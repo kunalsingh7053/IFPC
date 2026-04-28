@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import PageWrapper from '../components/PageWrapper'
 import API from '../api/axios'
+import FundsPanel from '../components/FundsPanel'
+import AddFundsForm from '../components/AddFundsForm'
 
 const initialEventForm = { title: '', description: '', eventDate: '', location: '' }
 const initialEquipmentForm = { name: '', category: 'camera', imageUrl: '' }
@@ -40,6 +42,9 @@ function issueStatusStyle(status) {
 
 function AdminDashboard() {
   const [activePanel, setActivePanel] = useState('overview')
+  const [showFundsForm, setShowFundsForm] = useState(false)
+  const [funds, setFunds] = useState([])
+  const [fundsSummary, setFundsSummary] = useState(null)
 
   const [stats, setStats] = useState(null)
   const [statsLoading, setStatsLoading] = useState(true)
@@ -104,6 +109,7 @@ function AdminDashboard() {
     loadEquipment()
     loadEquipmentIssues()
     loadRegistrationStatus()
+    loadFunds()
   }, [])
 
   async function loadEvents() {
@@ -134,8 +140,22 @@ function AdminDashboard() {
     }
   }
 
+  async function loadFunds() {
+    try {
+      const [fundsRes, summaryRes] = await Promise.all([
+        API.get('/funds'),
+        API.get('/funds/summary'),
+      ])
+      setFunds(Array.isArray(fundsRes?.data?.data) ? fundsRes.data.data : [])
+      setFundsSummary(summaryRes?.data?.data || null)
+    } catch (err) {
+      setFunds([])
+      setFundsSummary(null)
+    }
+  }
+
   async function refreshAll() {
-    await Promise.all([loadEvents(), loadEquipment(), loadEquipmentIssues(), loadRegistrationStatus()])
+    await Promise.all([loadEvents(), loadEquipment(), loadEquipmentIssues(), loadRegistrationStatus(), loadFunds()])
   }
 
   async function loadRegistrationStatus() {
@@ -401,6 +421,9 @@ function AdminDashboard() {
           </button>
           <button type="button" className={panelButtonClass('equipment')} onClick={() => setActivePanel('equipment')}>
             Equipment Management
+          </button>
+          <button type="button" className={panelButtonClass('funds')} onClick={() => setActivePanel('funds')}>
+            💰 Funds Management
           </button>
         </div>
       </section>
@@ -823,6 +846,31 @@ function AdminDashboard() {
               )}
             </div>
           </div>
+        </section>
+      )}
+
+      {activePanel === 'funds' && (
+        <section className="mt-8">
+          <FundsPanel 
+            isAdmin={true} 
+            onAddClick={() => setShowFundsForm(true)}
+            funds={funds}
+            summary={fundsSummary}
+            onFundDeleted={loadFunds}
+          />
+          {showFundsForm && (
+            <AddFundsForm
+              onClose={() => setShowFundsForm(false)}
+              onSuccess={(newFund) => {
+                if (newFund) {
+                  setFunds(prev => [newFund, ...prev])
+                  loadFunds()
+                } else {
+                  loadFunds()
+                }
+              }}
+            />
+          )}
         </section>
       )}
       </div>
